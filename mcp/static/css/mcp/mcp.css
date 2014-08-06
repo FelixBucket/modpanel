@@ -1,0 +1,137 @@
+/* General Adjustments */
+div#content-wrapper{
+    min-height: 0px;
+}
+
+/* Widget with Nav Tabs and Button */
+.nav.nav-tabs.nav-with-button{
+    position: relative;
+}
+.nav.nav-tabs.nav-with-button > button{
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+/* Dashboard Bulletins */
+.bulletin-inner {
+	padding: 0 0 5px 0;
+	margin-right: 10px;
+}
+.bulletin-item {
+	padding: 5px 0;
+	position: relative;
+}
+.bulletin-item:hover {
+    cursor: pointer;
+}
+.bulletin-body {
+	background: #f5f5f5;
+	font-size: 0.875em;
+	width: auto;
+	margin-left: 0px;
+	padding: 8px 10px;
+	position: relative;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+    transition: background 0.1s linear;
+    -webkit-transition: background 0.1s linear;
+    -moz-transition: background 0.1s linear;
+    -o-transition: background 0.1s linear;
+}
+.bulletin-item:hover .bulletin-body{
+    background: #e0e0e0;
+}
+.bulletin-body.unread{
+    background-color: rgb(220,239,252);
+}
+.bulletin-item:hover .bulletin-body.unread{
+    background: rgb(200, 219, 232);
+}
+.bulletin-body > .title {
+	font-weight: 600;
+	font-size: 1.35em;
+}
+.bulletin-body > .meta{
+    margin-top: 3px;
+}
+.bulletin-body > .meta > *, .bulletin-body > .meta > .user > *{
+    display: inline-block;
+}
+.bulletin-body > .meta > *{
+    margin-right: 10px;
+}
+.bulletin-body > .meta > *:last-child{
+    margin-right: 0px;
+}
+.bulletin-body > .meta > .user > img.user-avatar{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 2px;
+}
+.bulletin-body > .meta > .time:before {
+	content: "\f017";
+	font-family: FontAwesome;
+	padding-right: 3px;
+}
+.bulletin-body > .text {
+	padding-top: 6px;
+}
+
+/* Reminders */
+#tab-tasks{
+    padding-top: 15px;
+}
+
+/* Dashboard Recent Activity */
+.activity-inner {
+	padding: 0 0 5px 0;
+	margin-right: 10px;
+}
+.activity-item {
+	padding: 10px 0;
+	position: relative;
+	border-bottom: 1px solid #EAEAEA;
+}
+.activity-item:last-child {
+	border-bottom: none;
+}
+.activity-user {
+	width: 30px;
+	height: 30px;
+	overflow: hidden;
+	float: left;
+	border-radius: 50%;
+	margin-top: 0px;
+}
+.activity-user img{
+    width: 100%;
+    height: 100%;
+}
+.activity-body {
+	font-size: 0.875em;
+	width: auto;
+	margin-left: 30px;
+	padding: 0px 10px;
+	position: relative;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+.activity-body > .time {
+	font-size: 0.875em;
+	color: #605f5f;
+	font-weight: 300;
+}
+.activity-body > .time:before {
+	content: "\f017";
+	font-family: FontAwesome;
+	font-style: normal;
+	font-weight: normal;
+	text-decoration: inherit;
+	margin-top: 4px;
+	font-size: 0.875em;
+}

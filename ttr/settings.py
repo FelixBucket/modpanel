@@ -46,6 +46,7 @@ THIRD_PARTY_APPS = (
 )
 LOCAL_APPS = (
     'ttr',
+    'mcp',
 )
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -95,6 +96,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
