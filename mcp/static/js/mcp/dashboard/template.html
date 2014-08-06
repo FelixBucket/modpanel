@@ -1,0 +1,245 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li>Panel</li>
+                    <li class="active"><span>Dashboard</span></li>
+                </ol>
+
+                <h1>Dashboard</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="main-box infographic-box">
+                    <i class="fa fa-user red-bg"></i>
+                    <span class="headline">Accounts</span>
+                    <span class="value">80</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="main-box infographic-box">
+                    <i class="fa fa-play emerald-bg"></i>
+                    <span class="headline">Playtimes</span>
+                    <span class="value">658</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="main-box infographic-box">
+                    <i class="fa fa-check green-bg"></i>
+                    <span class="headline">Actions Today</span>
+                    <span class="value">40</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6 col-xs-12">
+                <div class="main-box infographic-box">
+                    <i class="fa fa-asterisk green-bg"></i>
+                    <span class="headline">Total Actions</span>
+                    <span class="value">40</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="main-box clearfix">
+
+                    <div class="tabs-wrapper tabs-no-header">
+                        <ul class="nav nav-tabs nav-with-button">
+                            <li class="active"><a href="#tab-bulletins" data-toggle="tab">Bulletins</a></li>
+                            <li><a href="#tab-tasks" data-toggle="tab">Tasks and Reminders</a></li>
+                            <button class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> New</button>
+                        </ul>
+
+                        <div class="tab-content tab-content-body clearfix">
+                            <div class="tab-pane fade in active" id="tab-bulletins">
+                                <div class="bulletins-wrapper">
+                                    <div class="bulletins-content">
+                                        <div class="bulletins-inner">
+
+                                            <div class="bulletin-item clearfix">
+                                                <div class="bulletin-body unread">
+                                                    <div class="title">
+                                                        Attention everyone, this is important!
+                                                    </div>
+                                                    <div class="meta">
+                                                        <div class="user">
+                                                            <img class="user-avatar" src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" />
+                                                            <div class="user-name">Luke Sapan</div>
+                                                        </div>
+                                                        <div class="time">two hours ago</div>
+                                                        <div class="comments"><i class="fa fa-comments"></i> 2 comments</div>
+                                                    </div>
+                                                    <div class="text">
+                                                        Yeah this is a really important announcement that everyone should read! It is just so important I can't even handle it.
+                                                        So fantastic and everything and yeah and yeah and yeah and yeah and...
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="bulletin-item clearfix">
+                                                <div class="bulletin-body">
+                                                    <div class="title">
+                                                        Something awesome or something.
+                                                    </div>
+                                                    <div class="meta">
+                                                        <div class="user">
+                                                            <img class="user-avatar" src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" />
+                                                            <div class="user-name">Luke Sapan</div>
+                                                        </div>
+                                                        <div class="time">three days ago</div>
+                                                        <div class="comments"><i class="fa fa-comments"></i> 2 comments</div>
+                                                    </div>
+                                                    <div class="text">
+                                                        Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+                                                        lorem can you tell I ran out of stuff to write? Lorem ipsum lorem...
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="tab-tasks">
+                                <p class="text-muted">Tasks and Reminders are coming soon!</p>
+                                <p class="text-muted">Have an idea you'd like to see on the dashboard? Feel free to let us know!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="main-box clearfix">
+                    <header class="main-box-header clearfix">
+                        <h2>Recent Activity</h2>
+                    </header>
+
+                    <div class="main-box-body clearfix">
+                        <div class="activity-wrapper">
+                            <div class="activity-content">
+                                <div class="activity-inner">
+
+                                    <div class="activity-item item-left clearfix">
+                                        <div class="activity-user">
+                                            <img src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" alt=""/>
+                                        </div>
+                                        <div class="activity-body">
+                                            <div class="text">
+                                                Luke Sapan sent a warning to lololol69 for submitting the name "Fuck Everyone".
+                                            </div>
+                                            <div class="time hidden-xs">
+                                                an hour ago
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item item-left clearfix">
+                                        <div class="activity-user">
+                                            <img src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" alt=""/>
+                                        </div>
+                                        <div class="activity-body">
+                                            <div class="text">
+                                                Luke Sapan rejected the name "Fuck Everyone".
+                                            </div>
+                                            <div class="time hidden-xs">
+                                                an hour ago
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item item-left clearfix">
+                                        <div class="activity-user">
+                                            <img src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" alt=""/>
+                                        </div>
+                                        <div class="activity-body">
+                                            <div class="text">
+                                                Luke Sapan approved the name "Roxy Super Muffin".
+                                            </div>
+                                            <div class="time hidden-xs">
+                                                an hour ago
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item item-left clearfix">
+                                        <div class="activity-user">
+                                            <img src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" alt=""/>
+                                        </div>
+                                        <div class="activity-body">
+                                            <div class="text">
+                                                Luke Sapan approved the name "Dandy Bumble Muffin".
+                                            </div>
+                                            <div class="time hidden-xs">
+                                                an hour ago
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item item-left clearfix">
+                                        <div class="activity-user">
+                                            <img src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" alt=""/>
+                                        </div>
+                                        <div class="activity-body">
+                                            <div class="text">
+                                                Luke Sapan rejected the name "I Like Muffins".
+                                            </div>
+                                            <div class="time hidden-xs">
+                                                an hour ago
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item item-left clearfix">
+                                        <div class="activity-user">
+                                            <img src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" alt=""/>
+                                        </div>
+                                        <div class="activity-body">
+                                            <div class="text">
+                                                Luke Sapan approved the comment "jjkoletar: HSD4-LSM2-ATYM"
+                                            </div>
+                                            <div class="time hidden-xs">
+                                                yesterday
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item item-left clearfix">
+                                        <div class="activity-user">
+                                            <img src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" alt=""/>
+                                        </div>
+                                        <div class="activity-body">
+                                            <div class="text">
+                                                Luke Sapan approved the comment "They're not going to just give you a beta key just because you ask for one."
+                                            </div>
+                                            <div class="time hidden-xs">
+                                                yesterday
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item item-left clearfix">
+                                        <div class="activity-user">
+                                            <img src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" alt=""/>
+                                        </div>
+                                        <div class="activity-body">
+                                            <div class="text">
+                                                Luke Sapan approved the comment "OMG you guys are so awesome I can't believe I can finally play Toontown again!!! QUESTION! Can I have a beta ki?"
+                                            </div>
+                                            <div class="time hidden-xs">
+                                                yesterday
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

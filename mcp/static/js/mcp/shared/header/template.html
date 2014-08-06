@@ -1,0 +1,60 @@
+<button class="navbar-toggle" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="fa fa-bars"></span>
+</button>
+
+<div class="nav-no-collapse pull-right" id="header-nav">
+    <ul class="nav navbar-nav pull-right">
+        <li class="mobile-search">
+            <a class="btn">
+                <i class="fa fa-search"></i>
+            </a>
+
+            <div class="drowdown-search">
+                <form role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search...">
+                        <i class="fa fa-search nav-search-icon"></i>
+                    </div>
+                </form>
+            </div>
+
+        </li>
+        <li class="dropdown hidden-xs">
+            <a class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-bell-o"></i>
+                <!--<span class="count">0</span>-->
+            </a>
+            <ul class="dropdown-menu notifications-list">
+                <li class="pointer">
+                    <div class="pointer-inner">
+                        <div class="arrow"></div>
+                    </div>
+                </li>
+                <li class="item-header">You have 0 new notifications</li>
+                <li class="item-footer">
+                    <a href="#">
+                        View all notifications
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="hidden-xs">
+            <a class="btn">
+                <i class="fa fa-cog"></i>
+            </a>
+        </li>
+        <li class="dropdown profile-dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" alt=""/>
+                <span class="hidden-xs">Luke Sapan</span> <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#"><i class="fa fa-user"></i>Profile</a></li>
+                <li class="hidden-md hidden-lg"><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
+                <li class="hidden-md hidden-lg"><a href="#"><i class="fa fa-envelope-o"></i>Messages</a></li>
+                <li><a href="#"><i class="fa fa-power-off"></i>Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
