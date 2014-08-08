@@ -71,12 +71,19 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dustmops_ttpsweb',
-        'USER': 'dustmops_mshsl',
+        'USER': 'dustmops_mshsml',
         'PASSWORD': 'ubercharged',
         'HOST': '205.185.112.51',
         'PORT': '3306',
     }
 }
+
+# Users and Auth
+
+AUTH_USER_MODEL = 'ttr.User'
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher', # Force compatibility with Play
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

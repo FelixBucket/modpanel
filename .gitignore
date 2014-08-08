@@ -34,3 +34,4 @@ docs/_build/
 target/
 ttr_mcp.sublime-project
 ttr_mcp.sublime-workspace
+local_settings.py
