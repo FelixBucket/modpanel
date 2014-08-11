@@ -1,25 +1,33 @@
 define(['toastr'], function(toastr){
     return {
-        //Server Helpers
-        post: function(url, data, options) {
-            function takeFirstNotEmpty(){
-                var args = Array.prototype.slice.call(arguments, 0);
-                for (var a = 0; a < args.length; a++){
-                    if (args[a]) return args[a];
-                }
-            }
 
+        //Server Helpers
+        tastyPost: function(resource, data, resource_id, method, options){
+            var resource_url = '/api/v1/' + resource + '/';
+            if (resource_id) resource_url += resource_id + '/';
+
+            //Determine the appropriate method
+            if (!method) method = (resource_id ? 'PUT' : 'POST');
+            if (!options) options = {};
+            options.method = method;
+            if (options.sendAsJson !== false) options.sendAsJSON = true;
+
+            return this.post(resource_url, data, options);
+        },
+
+        // Returns a Deferred, allowing use of the Deferred interface for callbacks (.done, .fail, .always)
+        // Expects you to return a response with the appropriate HTTP Response Code (2XX = success, 4XX or 5XX = failure)
+        // If you do not specify an error message on a 4XX or 5XX response, it will attempt to explain it in plain English.
+        post: function(url, data, options) {
             var defaults = {
                 splash: true,
                 verbose: "auto",            //can be "success", "fail", "both", "auto" or false (note: "fail" is errors and .fail)
                 formData: false,            //tells rmpost whether the data parameter is a FormData object
+                method: "POST",
+                sendAsJSON: false,
 
                 messageSuccess: "Done.",
                 messageFail: "Something went wrong. Please try again.",
-
-                relativeToSiteRoot: true,
-
-                type: "POST",
 
                 errorMessages: {
                     0: "You do not appear to have an internet connection.",
@@ -35,6 +43,13 @@ define(['toastr'], function(toastr){
                 }
             }
             var settings = $.extend({}, defaults, options);
+
+            function takeFirstNotEmpty(){
+                var args = Array.prototype.slice.call(arguments, 0);
+                for (var a = 0; a < args.length; a++){
+                    if (args[a]) return args[a];
+                }
+            }
 
             var displayMessageForResponse = function(response, success, settings){
                 var json;
@@ -70,31 +85,27 @@ define(['toastr'], function(toastr){
                 }
             }
 
-            if (settings.relativeToSiteRoot){
-                if (url.charAt(0) == '/') url = url.substr(1);
-                url = window.SITE_ROOT + url;
-            }
-            if (url.charAt(url.length-1) != '/') url = url + '/';
-
-            if (settings.splash) toastr.info('Just a sec...', null, {timeOut: 0, extendedTimeOut: 0});
-
             var deferred = $.Deferred();
 
             var ajaxParams = {
-                type: settings.type,
+                type: settings.method,
                 url: url,
                 data: data,
                 dataType: "json",
             };
+
+            if (settings.sendAsJSON){
+                ajaxParams.data = JSON.stringify(data);
+                ajaxParams.contentType = "application/json";
+            }
+
             if (settings.formData){
+                ajaxParams.cache = false;
                 ajaxParams.contentType = false;
                 ajaxParams.processData = false;
             }
 
             $.ajax(ajaxParams)
-            .always(function(){
-                toastr.clear();
-            })
             .done(function(response){
                 if (settings.verbose == "success" || settings.verbose == "both" || (settings.verbose == "auto" && response && response.message))
                     displayMessageForResponse(response, true, settings);
@@ -107,7 +118,9 @@ define(['toastr'], function(toastr){
 
                 deferred.reject(response);
             });
+
             return deferred;
+
         },
         get: function(url){
             if (url.charAt(0) == '/') url = url.substr(1);
