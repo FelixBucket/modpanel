@@ -105,7 +105,12 @@ define(['backbone', 'marionette', 'router', 'jquery', 'toastr', 'bootstrap', 'un
 
     app.SITE_ROOT = window.SITE_ROOT;
     app.STATIC_ROOT = window.STATIC_ROOT;
-    app.user = window.user;
+    app.user = {
+        permissions: window.USER_PERMISSIONS,
+        hasPermission: function(perm){
+            return app.user.permissions.indexOf(perm) > -1;
+        },
+    };
 
     return app;
 });

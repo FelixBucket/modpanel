@@ -42,4 +42,9 @@ def logout(request):
     return render_template(request, 'mcp/login.html', context)
 
 def app(request):
-    return render_template(request, 'mcp/app.html', {})
+    # Load permissions
+    permissions = request.user.get_permissions()
+
+    return render_template(request, 'mcp/app.html', {
+        'permissions': permissions,
+    })

@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import UserManager
 from django.utils.crypto import pbkdf2
 from mcp.models import ModProfile
+from mcp.permissions import permissions
 
 ## TTR Models ##
 # Models where managed = False prevents Django/South from making schema changes
@@ -51,6 +52,13 @@ class User(AbstractBaseUser):
             return ModProfile.objects.get(user=self)
         except:
             return {'first_name': '', 'last_name': '', 'avatar': None}
+
+    def get_permissions(self):
+        perms = []
+        for permission, level_required in permissions.iteritems():
+            if self.level >= level_required:
+                perms.append(permission)
+        return perms
 
 # Scheduled Session from Play
 class ScheduledSession(models.Model):

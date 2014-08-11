@@ -1,3 +1,4 @@
+{% load utils %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -62,6 +63,7 @@
     //To be passed to app
     window.SITE_ROOT = '/';
     window.STATIC_ROOT = '/static/';
+    window.USER_PERMISSIONS = {{ permissions|jsonencode|safe }};
     </script>
 
 </body>
