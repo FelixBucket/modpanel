@@ -13,15 +13,18 @@ def login(request):
         user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
         if user is not None:
             if user.is_active:
-                # Before we create the login cookie, check whether or not "Remember Me" was checked
-                print request.POST.get('remember_me')
-                if request.POST.get('remember_me') != "on":
-                    # It wasn't checked, so tell the cookie to expire when the browser closes
-                    request.session.set_expiry(0)
+                if user.level >= 200:
+                    # Before we create the login cookie, check whether or not "Remember Me" was checked
+                    print request.POST.get('remember_me')
+                    if request.POST.get('remember_me') != "on":
+                        # It wasn't checked, so tell the cookie to expire when the browser closes
+                        request.session.set_expiry(0)
 
-                # Login and redirect to '/' if a next parameter wasn't passed
-                auth.login(request, user)
-                return redirect(request.GET.get('next', 'mcp:panel'))
+                    # Login and redirect to '/' if a next parameter wasn't passed
+                    auth.login(request, user)
+                    return redirect(request.GET.get('next', 'mcp:panel'))
+                else:
+                    context = dict(auth_message_type='warning', auth_message='You are not authorized to come in here.')
             else:
                 context = dict(auth_message_type='warning', auth_message='Your account was disabled by the administrator.')
         else:
