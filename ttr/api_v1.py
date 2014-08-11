@@ -118,3 +118,6 @@ class BulletinResource(DirectModelResource):
         max_limit = None
         authorization = UserLevelAuthorization('post_bulletin')
         always_return_data = True
+
+    def obj_create(self, bundle, **kwargs):
+        return super(BulletinResource, self).obj_create(bundle, author=bundle.request.user)
