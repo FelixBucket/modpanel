@@ -1,7 +1,9 @@
-define(['app', 'marionette', 'text!./template.html', 'slimscroll'], function(app, Marionette, template){
+define(['app', 'marionette', 'text!./template.html', './stats/view', 'slimscroll'], function(app, Marionette, template, StatsView){
     return Marionette.View.extend({
         render: function(){
             this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT}));
+
+            this.stats_view = new StatsView({el: this.$el.find('#dashboard-stats')});
 
             /** TEMPORARY **/
             /* This logic will be moved into individual widgets */
@@ -22,6 +24,9 @@ define(['app', 'marionette', 'text!./template.html', 'slimscroll'], function(app
                 wheelStep: 6,
                 allowPageScroll: false
             });
+        },
+        destroy: function(){
+            this.stats_view.destroy();
         }
     });
 });

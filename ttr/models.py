@@ -51,3 +51,14 @@ class User(AbstractBaseUser):
             return ModProfile.objects.get(user=self)
         except:
             return {'first_name': '', 'last_name': '', 'avatar': None}
+
+# Scheduled Session from Play
+class ScheduledSession(models.Model):
+    user = models.ForeignKey(User, null=True)
+    start = models.DateTimeField(null=True)
+    end = models.DateTimeField(null=True)
+    approved = models.BooleanField(default=False)
+
+    class Meta:
+        managed = False
+        db_table = 'scheduled_session'

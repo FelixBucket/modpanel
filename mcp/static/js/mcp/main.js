@@ -12,6 +12,8 @@ requirejs.config({
         toastr: '../../lib/toastr.min',
         nanoscroller: '../../lib/jquery.nanoscroller.min',
         slimscroll: '../../lib/jquery.slimscroll.min',
+
+        server: 'shared/services/server',
     },
     shim: {
         bootstrap: ['jquery'],
