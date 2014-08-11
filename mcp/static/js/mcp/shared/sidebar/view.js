@@ -22,6 +22,15 @@ define(['app', 'marionette', 'text!./template.html', 'jquery'], function(app, Ma
                     $item.children('.submenu').slideUp('fast');
                 }
             });
-        }
+        },
+        updateCounts: function(counts){
+            var emptyIfZero = function(val){
+                if (!val || val == 0) return "";
+                return val;
+            }
+
+            this.$el.find('#sidebar-ct-toon-names').text(emptyIfZero(counts.toon_names));
+            this.$el.find('#sidebar-ct-comments').text(emptyIfZero(counts.comments));
+        },
     });
 });

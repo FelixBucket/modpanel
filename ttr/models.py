@@ -70,3 +70,31 @@ class ScheduledSession(models.Model):
     class Meta:
         managed = False
         db_table = 'scheduled_session'
+
+# News Items and Comments from Play
+class NewsItem(models.Model):
+    author = models.ForeignKey(User, null=True)
+    post_time = models.DateTimeField(null=True)
+    release_time = models.DateTimeField(null=True)
+    author_name = models.CharField(max_length=255, null=True)
+    title = models.CharField(max_length=255, null=True)
+    body = models.TextField(null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'news_item'
+
+class NewsItemComment(models.Model):
+    body = models.TextField(null=True)
+    ip_address = models.CharField(max_length=255, db_column='ip', null=True)
+    user = models.ForeignKey(User, null=True)
+    post = models.ForeignKey(NewsItem, null=True)
+    parent = models.ForeignKey('self', null=True)
+    author = models.CharField(max_length=255, null=True)
+    css = models.CharField(max_length=255, null=True)
+    approved = models.BooleanField(default=False)
+    posted = models.DateTimeField(null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'comment'

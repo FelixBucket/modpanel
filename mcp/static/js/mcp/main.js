@@ -8,6 +8,7 @@ requirejs.config({
         backbone: '../../lib/backbone-min',
         marionette: '../../lib/backbone.marionette.min',
         moment: '../../lib/moment.min',
+        livestamp: '../../lib/livestamp.min',
         bootbox: '../../lib/bootbox.min',
         toastr: '../../lib/toastr.min',
         nanoscroller: '../../lib/jquery.nanoscroller.min',
@@ -32,6 +33,7 @@ requirejs.config({
         moment: {
             exports: 'moment',
         },
+        livestamp: ['moment'],
         bootbox:{
             deps:['jquery', 'bootstrap'],
             exports: 'bootbox',

@@ -35,6 +35,11 @@ class DirectModelResource(ModelResource):
 # None Yet
 
 ### MCP Model Resources ###
+def SidebarCountsResource(request):
+    toon_names_count = 0
+    comments_count = NewsItemComment.objects.filter(approved=False).count()
+    return api.response(dict(toon_names=toon_names_count, comments=comments_count))
+
 def DashboardStatsResource(request):
     accounts_count = User.objects.all().count()
     playtimes_count = ScheduledSession.objects.all().count()
