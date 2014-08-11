@@ -76,10 +76,10 @@ STATIC_URL = '/static/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dustmops_ttpsweb',
-        'USER': 'dustmops_mshsml',
-        'PASSWORD': 'ubercharged',
-        'HOST': '205.185.112.51',
+        'NAME': 'toontownrewritten_dev',
+        'USER': 'ttr_dev_user',
+        'PASSWORD': 'this_is_so_secure_it_blows_your_mind',
+        'HOST': '23.92.16.247',
         'PORT': '3306',
     }
 }
