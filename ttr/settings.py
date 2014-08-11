@@ -57,12 +57,18 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'ttr.middleware.ttr_middleware.RequireLoginMiddleware',
 )
 
 ROOT_URLCONF = 'ttr.urls'
 
 WSGI_APPLICATION = 'ttr.wsgi.application'
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
+STATIC_ROOT = BASE_DIR + '/static/'
+STATIC_URL = '/static/'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
@@ -85,6 +91,18 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher', # Force compatibility with Play
 )
 
+# Automatic Login Required URLs
+LOGIN_URL = '/login/'
+
+LOGIN_REQUIRED_URLS = (
+    r'/(.*)$',
+)
+LOGIN_REQUIRED_URLS_EXCEPTIONS = (
+    r'/login(.*)$',
+    r'/logout(.*)$',
+    STATIC_URL,
+)
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -97,9 +115,3 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
-STATIC_ROOT = BASE_DIR + '/static/'
-STATIC_URL = '/static/'

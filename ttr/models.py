@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import UserManager
 from django.utils.crypto import pbkdf2
+from mcp.models import ModProfile
 
 ## TTR Models ##
 # Models where managed = False prevents Django/South from making schema changes
@@ -29,6 +30,10 @@ class User(AbstractBaseUser):
         managed = False
         db_table = 'user'
 
+    def get_short_name(self):
+        profile = self.get_mod_profile()
+        return profile.get('first_name')
+
     def check_password(self, raw_password):
         # Convert Play format to Django format
         iterations, salt, pbkdf2_hash = self.password.split(':')
@@ -36,4 +41,13 @@ class User(AbstractBaseUser):
         new_raw_hash = pbkdf2(raw_password, base64.b16decode(salt.upper()), iterations, 24, hashlib.sha1)
         new_hash = base64.b16encode(new_raw_hash).lower()
 
+        print pbkdf2_hash
+        print new_hash
+
         return pbkdf2_hash == new_hash
+
+    def get_mod_profile(self):
+        try:
+            return ModProfile.objects.get(user=self)
+        except:
+            return {'first_name': '', 'last_name': '', 'avatar': None}
