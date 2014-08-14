@@ -2,7 +2,7 @@ define(['app', './view', 'server'], function(app, SidebarView, server){
     app.module('sidebar', function(sidebar, app){
 
         sidebar.loadCounts = function(){
-            server.get('/api/v1/sidebar_counts/').done(function(counts){
+            server.get('/api/v1/pending_counts/').done(function(counts){
                 sidebar.view.updateCounts(counts);
             });
         };

@@ -35,6 +35,10 @@ class User(AbstractBaseUser):
         profile = self.get_mod_profile()
         return profile.get('first_name')
 
+    def get_long_name(self):
+        profile = self.get_mod_profile()
+        return profile.get('first_name') + ' ' + profile.get('last_name')
+
     def check_password(self, raw_password):
         # Convert Play format to Django format
         iterations, salt, pbkdf2_hash = self.password.split(':')
@@ -49,7 +53,11 @@ class User(AbstractBaseUser):
 
     def get_mod_profile(self):
         try:
-            return ModProfile.objects.get(user=self)
+            return {
+                'first_name': self.mod_profile.first_name,
+                'last_name': self.mod_profile.last_name,
+                'avatar': self.mod_profile.avatar,
+            }
         except:
             return {'first_name': '', 'last_name': '', 'avatar': None}
 

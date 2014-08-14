@@ -1,0 +1,16 @@
+<div class="bulletin-item clearfix">
+    <div class="bulletin-body unread">
+        <div class="title">
+            <%= title %>
+        </div>
+        <div class="meta">
+            <div class="user">
+                <img class="user-avatar" src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" />
+                <div class="user-name"><%= author.long_name %></div>
+            </div>
+            <div class="time" data-livestamp="<%= timestamp %>"></div>
+            <div class="comments"><i class="fa fa-comments"></i> 0 comments</div>
+        </div>
+        <div class="text"><%= content %></div>
+    </div>
+</div>

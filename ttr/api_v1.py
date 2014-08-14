@@ -100,7 +100,17 @@ class UserLevelAuthorization(Authorization):
 # None Yet
 
 ### MCP Model Resources ###
-def SidebarCountsResource(request):
+def user_dict(bundle, user_prop_name):
+    user = getattr(bundle.obj, user_prop_name)
+    profile = user.get_mod_profile()
+    return {
+        'id': user.id,
+        'short_name': user.get_short_name(),
+        'long_name': user.get_long_name(),
+        'avatar': profile.get('avatar'),
+    }
+
+def PendingCountsResource(request):
     toon_names_count = 0
     comments_count = NewsItemComment.objects.filter(approved=False).count()
     return api.response(dict(toon_names=toon_names_count, comments=comments_count))
@@ -113,11 +123,15 @@ def DashboardStatsResource(request):
 class BulletinResource(DirectModelResource):
     class Meta:
         queryset = Bulletin.objects.all()
-        resource_name = 'bulletin'
+        resource_name = 'bulletins'
         limit = 20
         max_limit = None
         authorization = UserLevelAuthorization('post_bulletin')
         always_return_data = True
+
+    def dehydrate(self, bundle):
+        bundle.data['author'] = user_dict(bundle, 'author')
+        return bundle
 
     def obj_create(self, bundle, **kwargs):
         return super(BulletinResource, self).obj_create(bundle, author=bundle.request.user)

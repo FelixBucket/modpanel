@@ -15,6 +15,7 @@ requirejs.config({
         slimscroll: '../../lib/jquery.slimscroll.min',
 
         server: 'shared/services/server',
+        util: 'shared/services/util',
     },
     shim: {
         bootstrap: ['jquery'],

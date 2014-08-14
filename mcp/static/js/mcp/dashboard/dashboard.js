@@ -5,8 +5,8 @@ define(['app', 'marionette', './view'], function(app, Marionette, DashboardView)
             app.mainRegion.show(this.view);
             app.setTitle('Dashboard');
         },
-        onClose: function(){
-            this.view.close();
+        onDestroy: function(){
+            this.view.destroy();
         }
     });
 });

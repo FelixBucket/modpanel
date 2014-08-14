@@ -8,7 +8,7 @@ define(['backbone', 'marionette', 'router', 'jquery', 'toastr', 'bootstrap', 'un
     //Private App Methods
     var swapController = function(controller, args){
         var _this = this;
-        if (this.activeController) this.activeController.close();
+        if (this.activeController) this.activeController.destroy();
         this.activeController = false;
         this.activeControllerClass = controller;
         this.trigger('viewChange', controller);
@@ -101,6 +101,10 @@ define(['backbone', 'marionette', 'router', 'jquery', 'toastr', 'bootstrap', 'un
 
     app.setTitle = function(title){
         document.title = title + ' | Toontown Rewritten MCP';
+    }
+
+    app.api = function(resource){
+        return app.SITE_ROOT + 'api/v1/' + resource;
     }
 
     app.SITE_ROOT = window.SITE_ROOT;
