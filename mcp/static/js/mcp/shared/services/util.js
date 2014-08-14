@@ -58,6 +58,7 @@ define(['app', 'backbone', 'marionette', 'underscore'], function(app, Backbone, 
                 return _.template(template, $.extend(serialized_data, {
                     SITE_ROOT: app.SITE_ROOT,
                     STATIC_ROOT: app.STATIC_ROOT,
+                    active_user: app.user,
                     static: staticUtil,
                 }));
             }

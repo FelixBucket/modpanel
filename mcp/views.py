@@ -47,6 +47,12 @@ def app(request):
     permissions = request.user.get_permissions()
 
     return render_template(request, 'mcp/app.html', {
+        'user': {
+            'id': request.user.id,
+            'short_name': request.user.get_short_name(),
+            'long_name': request.user.get_long_name(),
+            'avatar': request.user.mod_profile.avatar,
+        },
         'permissions': permissions,
     })
 

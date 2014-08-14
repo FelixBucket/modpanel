@@ -1,7 +1,7 @@
 define(['app', 'marionette', 'text!./template.html', 'jquery'], function(app, Marionette, template, $){
     return Marionette.View.extend({
         render: function(){
-            this.$el.html(_.template(template, {STATIC_ROOT: window.STATIC_ROOT}));
+            this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, user: app.user}));
 
             this.$el.find('#sidebar-nav .dropdown-toggle').click(function (e) {
                 e.preventDefault();
