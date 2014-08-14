@@ -142,6 +142,7 @@ def LoginResource(request):
             'short_name': request.user.get_short_name(),
             'long_name': request.user.get_long_name(),
             'avatar': request.user.mod_profile.avatar,
+            'level': request.user.level
         },
         'permissions': permissions,
     }
