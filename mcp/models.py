@@ -14,3 +14,6 @@ class Bulletin(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='bulletins')
     timestamp = models.IntegerField(default=lambda: int(time.time()))
     read_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='read_bulletins')
+
+    def check_read(self, user_id):
+        return self.read_by.filter(id=user_id).count() != 0

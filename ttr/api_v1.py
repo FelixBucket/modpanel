@@ -131,8 +131,19 @@ class BulletinResource(DirectModelResource):
 
     def dehydrate(self, bundle):
         bundle.data['author'] = user_dict(bundle, 'author')
-        bundle.data['unread'] = bundle.obj.read_by.filter(id=bundle.request.user.id).count() == 0
+        bundle.data['unread'] = not bundle.obj.check_read(bundle.request.user.id)
         return bundle
 
+    # Mark the bulletin as read if it is pulled directly
+    def obj_get(self, bundle, **kwargs):
+        obj = super(BulletinResource, self).obj_get(bundle, **kwargs)
+
+        user = bundle.request.user
+        if not bundle.obj.check_read(user.id):
+            bundle.obj.read_by.add(user)
+
+        return obj
+
+    # Ensure the logged in user gets saved as the author
     def obj_create(self, bundle, **kwargs):
         return super(BulletinResource, self).obj_create(bundle, author=bundle.request.user)
