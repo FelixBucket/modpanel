@@ -59,6 +59,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'ttr.middleware.ttr_middleware.RequireLoginMiddleware',
+    'ttr.middleware.ttr_middleware.RequireModProfile',
 )
 
 ROOT_URLCONF = 'ttr.urls'
@@ -100,6 +101,19 @@ LOGIN_REQUIRED_URLS = (
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (
     r'/login(.*)$',
     r'/logout(.*)$',
+    STATIC_URL,
+)
+
+# Mod Profile Requirement
+MODP_CREATE_URL = 'mcp:first_time'
+
+MODP_REQUIRED_URLS = (
+    r'/(.*)$',
+)
+MODP_REQUIRED_URLS_EXCEPTIONS = (
+    r'/login(.*)$',
+    r'/logout(.*)$',
+    r'/first_time/$',
     STATIC_URL,
 )
 

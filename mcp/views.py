@@ -1,6 +1,7 @@
 from django.contrib import auth
 from django.shortcuts import redirect
 from ttr.util import *
+from .forms import *
 
 def login(request):
     # Check to make sure the user isn't logged in, and redirect if they are
@@ -48,3 +49,22 @@ def app(request):
     return render_template(request, 'mcp/app.html', {
         'permissions': permissions,
     })
+
+def first_time(request):
+    # If the user already has a mod profile, send them right in
+    if hasattr(request.user, 'mod_profile'):
+        return redirect('mcp:panel')
+
+    # If the request is POST, let's try to process their additional information
+    context = {}
+    if request.method == 'POST':
+        post = request.POST.copy()
+        post['user'] = request.user.id
+        form = ModProfileForm(post)
+        try:
+            profile = form.save()
+            return redirect('mcp:panel')
+        except:
+            context = dict(auth_message_type='warning', auth_message='Please fill out all the fields. You can make up information if you like.')
+
+    return render_template(request, 'mcp/first_time.html', context)
