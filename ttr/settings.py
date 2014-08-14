@@ -99,6 +99,7 @@ LOGIN_REQUIRED_URLS = (
     r'/(.*)$',
 )
 LOGIN_REQUIRED_URLS_EXCEPTIONS = (
+    r'/api/v1/login/$',
     r'/login(.*)$',
     r'/logout(.*)$',
     STATIC_URL,
@@ -111,6 +112,7 @@ MODP_REQUIRED_URLS = (
     r'/(.*)$',
 )
 MODP_REQUIRED_URLS_EXCEPTIONS = (
+    r'/api/v1/login/$',
     r'/login(.*)$',
     r'/logout(.*)$',
     r'/first_time/$',

@@ -10,6 +10,7 @@ v1_api.register(BulletinResource())
 urlpatterns = patterns('',
     # API Endpoints First
     url(r'^api/', include(v1_api.urls)),
+    url(r'^api/v1/login/', 'ttr.api_v1.LoginResource'),
     url(r'^api/v1/pending_counts/', 'ttr.api_v1.PendingCountsResource'),
     url(r'^api/v1/dashboard_stats/', 'ttr.api_v1.DashboardStatsResource'),
 

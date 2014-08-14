@@ -1,3 +1,5 @@
+from django.contrib import auth
+from django.views.decorators.csrf import csrf_exempt
 from tastypie import fields
 from tastypie.authorization import Authorization
 from tastypie.exceptions import Unauthorized
@@ -109,6 +111,41 @@ def user_dict(bundle, user_prop_name):
         'long_name': user.get_long_name(),
         'avatar': profile.get('avatar'),
     }
+
+@csrf_exempt
+def LoginResource(request):
+    # Check to make sure the user isn't logged in already, if they are we'll return the same data below
+    if not request.user.is_authenticated():
+        user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
+        if user is not None:
+            if user.is_active:
+                if user.level >= 200:
+                    # Login
+                    auth.login(request, user)
+                else:
+                    return api.error(403, errors='You are not authorized to come in here.')
+            else:
+                return api.error(403, errors='Your account was disabled by the administrator.')
+        else:
+            return api.error(400, errors='Your username or password was incorrect.')
+    else:
+        user = request.user
+
+    if not hasattr(user, 'mod_profile'):
+        return api.error(400, errors='Please login from the website to set up your account for the first time.')
+
+    # Fetch user information
+    permissions = user.get_permissions()
+    response = {
+        'user': {
+            'id': request.user.id,
+            'short_name': request.user.get_short_name(),
+            'long_name': request.user.get_long_name(),
+            'avatar': request.user.mod_profile.avatar,
+        },
+        'permissions': permissions,
+    }
+    return api.response(response)
 
 def PendingCountsResource(request):
     toon_names_count = 0
