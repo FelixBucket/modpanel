@@ -131,6 +131,7 @@ class BulletinResource(DirectModelResource):
 
     def dehydrate(self, bundle):
         bundle.data['author'] = user_dict(bundle, 'author')
+        bundle.data['unread'] = bundle.obj.read_by.filter(id=bundle.request.user.id).count() == 0
         return bundle
 
     def obj_create(self, bundle, **kwargs):

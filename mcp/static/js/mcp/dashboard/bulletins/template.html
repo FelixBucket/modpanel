@@ -1,11 +1,11 @@
 <div class="bulletin-item clearfix">
-    <div class="bulletin-body unread">
+    <div class="bulletin-body <%= unread ? "unread" : "" %>">
         <div class="title">
             <%= title %>
         </div>
         <div class="meta">
             <div class="user">
-                <img class="user-avatar" src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" />
+                <img class="user-avatar" src="<%= static.pathForUserAvatar(author.avatar) %>" />
                 <div class="user-name"><%= author.long_name %></div>
             </div>
             <div class="time" data-livestamp="<%= timestamp %>"></div>

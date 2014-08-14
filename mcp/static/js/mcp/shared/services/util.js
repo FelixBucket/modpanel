@@ -3,6 +3,17 @@ define(['app', 'backbone', 'marionette', 'underscore'], function(app, Backbone, 
     app.collection_classes = {};
     app.model_classes = {};
 
+    var staticUtil = {
+        pathForUserAvatar: function(img){
+            if (!img){
+                return app.STATIC_ROOT + 'img/mcp/default_avatar.png';
+            }else{
+                //TODO: Point to AWS
+                return "";
+            }
+        }
+    };
+
     var models = {
         factory: function(name){
 
@@ -44,7 +55,11 @@ define(['app', 'backbone', 'marionette', 'underscore'], function(app, Backbone, 
     var views = {
         templateFactory: function(template){
             return function(serialized_data){
-                return _.template(template, serialized_data);
+                return _.template(template, $.extend(serialized_data, {
+                    SITE_ROOT: app.SITE_ROOT,
+                    STATIC_ROOT: app.STATIC_ROOT,
+                    static: staticUtil,
+                }));
             }
         },
 
@@ -61,6 +76,7 @@ define(['app', 'backbone', 'marionette', 'underscore'], function(app, Backbone, 
     };
 
     return {
+        static: staticUtil,
         collections: collections,
         models: models,
         views: views,
