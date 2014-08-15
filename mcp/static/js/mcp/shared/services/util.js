@@ -68,9 +68,6 @@ define(['app', 'backbone', 'marionette', 'underscore'], function(app, Backbone, 
             return Marionette.CollectionView.extend({
                 collection: collection,
                 childView: childView,
-                initialize: function(){
-                    this.render();
-                }
             });
         },
         readyCollectionViewFactory: function(collection, childView, constructor_options){

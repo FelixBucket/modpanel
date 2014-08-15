@@ -26,7 +26,8 @@ define(['app', 'marionette', 'text!./template.html', 'jquery', 'bootbox'], funct
             this.listenTo(app, 'viewChange', this.updateHighlightedRoute);
             this.updateHighlightedRoute();
 
-            this.$el.find('#sidebar-items > li > a').click(function(){
+            this.$el.find('#sidebar-items > li > a').click(function(e){
+                e.preventDefault();
                 if ($(this).data('route') == null){
                     bootbox.alert("Whoa there cowboy, that's not ready yet! Check back soon!");
                     return;

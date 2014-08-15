@@ -93,7 +93,7 @@ define(['backbone', 'marionette', 'router', 'jquery', 'toastr', 'bootstrap', 'un
         //Initialize and start the router
         app.router = new Router();
         app.listenTo(app.router, 'route', swapController);
-        Backbone.history.start({pushState: true, root: window.SITE_ROOT});
+        Backbone.history.start({pushState: false, root: window.SITE_ROOT});
 
         //Initialize Header and Sidebar
         require(['shared/header/header', 'shared/sidebar/sidebar']);

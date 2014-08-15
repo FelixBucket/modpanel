@@ -1,8 +1,7 @@
 define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'shared/wysiwygModal/view', 'text!./bulletins/template.html', 'text!./activities/template.html', 'bootbox', 'server', 'slimscroll', 'livestamp', 'clamp'], function(app, Marionette, util, template, StatsView, WysiwygModal, bulletin_template, activity_template, bootbox, server){
 
     //Bulletin Definitions
-    var bulletins = util.collections.readyFactory('bulletins');
-    bulletins.fetch();
+    var bulletins;
 
     var BulletinView = Marionette.ItemView.extend({
         template: util.views.templateFactory(bulletin_template),
@@ -23,14 +22,19 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'sh
     });
 
     //Recent Activity Definition
-    var recent_activity = util.collections.readyFactory('activities');
-    recent_activity.fetch();
-
+    var recent_activity;
     var ActivityView = Marionette.ItemView.extend({
         template: util.views.templateFactory(activity_template),
     });
 
     return Marionette.View.extend({
+        initialize: function(){
+            bulletins = util.collections.readyFactory('bulletins');
+            bulletins.fetch();
+
+            recent_activity = util.collections.readyFactory('activities');
+            recent_activity.fetch();
+        },
         render: function(){
             var _this = this;
             this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT}));
