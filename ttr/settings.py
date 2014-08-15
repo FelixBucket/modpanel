@@ -74,17 +74,8 @@ STATIC_URL = '/static/' + VERSION + '/'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'toontownrewritten_dev',
-        'USER': 'ttr_dev_user',
-        'PASSWORD': 'this_is_so_secure_it_blows_your_mind',
-        'HOST': '23.92.16.247',
-        'PORT': '3306',
-    }
-}
+import dj_database_url
+DATABASES = {'default': dj_database_url.config()}
 
 # Users and Auth
 
