@@ -8,12 +8,18 @@ class ModProfile(models.Model):
     last_name = models.CharField(max_length=50)
     avatar = models.CharField(max_length=100, blank=True, null=True)
 
+class ActivityManager(models.Manager):
+    def log(self, description, user=None, action=True, icon=None):
+        activity = Activity(user=user, description=description, icon=icon, action=action)
+        activity.save()
 class Activity(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='activity', blank=True, null=True)
     description = models.TextField()
     timestamp = models.IntegerField(default=lambda: int(time.time()))
     icon = models.CharField(max_length=50, blank=True, null=True) # Only for cases where there is no user
     action = models.BooleanField(default=True) # Defines whether or not to count it as an action
+
+    objects = ActivityManager()
 
 class Bulletin(models.Model):
     title = models.CharField(max_length=100)

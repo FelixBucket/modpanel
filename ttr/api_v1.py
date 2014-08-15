@@ -1,3 +1,4 @@
+import datetime, time
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
@@ -73,9 +74,15 @@ def PendingCountsResource(request):
     return api.response(dict(toon_names=toon_names_count, comments=comments_count))
 
 def DashboardStatsResource(request):
+    today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
+    today_timestamp = time.mktime(today.timetuple())
+
     accounts_count = User.objects.all().count()
     playtimes_count = ScheduledSession.objects.all().count()
-    return api.response(dict(accounts=accounts_count, playtimes=playtimes_count, actions_today=0, total_actions=0))
+    actions_today_count = Activity.objects.filter(action=True, timestamp__gte=today_timestamp).count()
+    total_actions_count = Activity.objects.filter(action=True).count()
+    return api.response(dict(accounts=accounts_count, playtimes=playtimes_count,
+                            actions_today=actions_today_count, total_actions=total_actions_count))
 
 class ActivityResource(DirectModelResource):
     class Meta:
@@ -113,10 +120,12 @@ class BulletinResource(DirectModelResource):
         return obj
 
     # Ensure the logged in user gets saved as the author
-    # Also mark it as read for the writer
+    # Also mark it as read for the writer and create an activity event
     def obj_create(self, bundle, **kwargs):
-        bundle = super(BulletinResource, self).obj_create(bundle, author=bundle.request.user)
-        bundle.obj.read_by.add(bundle.request.user)
+        user = bundle.request.user
+        bundle = super(BulletinResource, self).obj_create(bundle, author=user)
+        bundle.obj.read_by.add(user)
+        Activity.objects.log(user.get_long_name() + ' posted a bulletin titled "' + bundle.obj.title + '".', user)
         return bundle
 
 class UserResource(DirectModelResource):
