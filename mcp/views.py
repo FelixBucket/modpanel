@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import auth
 from django.shortcuts import redirect
 from ttr.util import *
@@ -54,6 +55,7 @@ def app(request):
             'avatar': request.user.mod_profile.avatar,
         },
         'permissions': permissions,
+        'version': settings.VERSION,
     })
 
 def first_time(request):

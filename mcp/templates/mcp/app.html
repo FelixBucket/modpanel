@@ -63,7 +63,7 @@
     <script>
     //To be passed to app
     window.SITE_ROOT = '/';
-    window.STATIC_ROOT = '/static/';
+    window.STATIC_ROOT = "/static/{{ version }}/";
     window.USER = {{ user|jsonencode|safe }};
     window.USER_PERMISSIONS = {{ permissions|jsonencode|safe }};
     </script>
