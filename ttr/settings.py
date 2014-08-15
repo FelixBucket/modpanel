@@ -134,3 +134,8 @@ USE_TZ = True
 
 # Tastypie
 TASTYPIE_DEFAULT_FORMATS = ['json']
+
+# Pusher Settings
+PUSHER_APP_ID = '85566'
+PUSHER_KEY_ID = 'a15e68a0fae7ee180ce2'
+PUSHER_SECRET = '1d25d81aa43375f641ac'
