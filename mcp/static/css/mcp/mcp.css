@@ -79,6 +79,7 @@ div#content-wrapper{
 }
 .bulletin-body > .text {
 	padding-top: 6px;
+    max-height: 60px;
 }
 
 /* Reminders */
