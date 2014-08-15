@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from tastypie import fields
 from tastypie.authorization import Authorization
 from tastypie.exceptions import Unauthorized
-from tastypie.resources import ModelResource
+from tastypie.resources import ModelResource, ALL
 from . import api
 from . import util
 from .models import *
@@ -98,6 +98,52 @@ class UserLevelAuthorization(Authorization):
             return True
         else:
             return False
+
+# A convenience version of UserLevelAuthorization that is strictly for reading
+class ReadOnlyUserLevelAuthorization(Authorization):
+    def __init__(self, permission, read_mode=MODE_ALWAYS_ALLOW, delete_mode=MODE_NEVER_ALLOW, user_property='user'):
+        self.permission = permission
+        self.read_mode = read_mode
+        self.delete_mode = delete_mode
+        self.user_property = user_property
+
+    def read_list(self, object_list, bundle):
+        if self.read_mode == MODE_ALWAYS_ALLOW:
+            return object_list
+        elif self.read_mode == MODE_MATCH_LEVEL and bundle.request.user.level >= permissions[self.permission]:
+            return object_list
+        elif self.read_mode == MODE_ALLOW_CREATOR:
+            return object_list.filter(**{self.user_property: bundle.request.user})
+        else:
+            raise Unauthorized("You do not have permission to see that.")
+
+    def read_detail(self, object_list, bundle):
+        if self.read_mode == MODE_ALWAYS_ALLOW:
+            return True
+        elif self.read_mode == MODE_MATCH_LEVEL and bundle.request.user.level >= permissions[self.permission]:
+            return True
+        elif self.read_mode == MODE_ALLOW_CREATOR and bundle.obj.get(self.user_property) == bundle.request.user:
+            return True
+        else:
+            return False
+
+    def create_list(self, object_list, bundle):
+        raise Unauthorized("You do not have permission to create that.")
+
+    def create_detail(self, object_list, bundle):
+        return False
+
+    def update_list(self, object_list, bundle):
+        raise Unauthorized("You do not have permission to update that.")
+
+    def update_detail(self, object_list, bundle):
+        return False
+
+    def delete_list(self, object_list, bundle):
+        raise Unauthorized("You do not have permission to delete that.")
+
+    def delete_detail(self, object_list, bundle):
+        return False
 
 ### TTR Model Resources
 # None Yet
@@ -205,3 +251,17 @@ class BulletinResource(DirectModelResource):
         bundle = super(BulletinResource, self).obj_create(bundle, author=bundle.request.user)
         bundle.obj.read_by.add(bundle.request.user)
         return bundle
+
+class UserResource(DirectModelResource):
+    class Meta:
+        queryset = User.objects.all()
+        resource_name = 'users'
+        excludes = ['password']
+        filtering = {
+            'id': ALL,
+            'username': ALL,
+            'email': ALL,
+        }
+        limit = 100
+        max_limit = None
+        authorization = ReadOnlyUserLevelAuthorization('find_user', MODE_MATCH_LEVEL)

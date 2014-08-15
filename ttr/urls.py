@@ -7,6 +7,7 @@ from .api_v1 import *
 v1_api = Api(api_name='v1')
 v1_api.register(ActivityResource())
 v1_api.register(BulletinResource())
+v1_api.register(UserResource())
 
 urlpatterns = patterns('',
     # API Endpoints First
