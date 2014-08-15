@@ -164,6 +164,17 @@ def DashboardStatsResource(request):
     playtimes_count = ScheduledSession.objects.all().count()
     return api.response(dict(accounts=accounts_count, playtimes=playtimes_count, actions_today=0, total_actions=0))
 
+class ActivityResource(DirectModelResource):
+    class Meta:
+        queryset = Activity.objects.all()
+        resource_name = 'activities'
+        limit = 50
+        max_limit = None
+
+    def dehydrate(self, bundle):
+        bundle.data['user'] = user_dict(bundle, 'user')
+        return bundle
+
 class BulletinResource(DirectModelResource):
     class Meta:
         queryset = Bulletin.objects.all()
