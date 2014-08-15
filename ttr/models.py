@@ -33,7 +33,10 @@ class User(AbstractBaseUser):
 
     def get_mini_name(self):
         profile = self.get_mod_profile()
-        mini_name = profile.get('first_name') + ' ' + profile.get('last_name')[0]
+        last_name = profile.get('last_name', '')
+        if len(last_name) == 0:
+            last_name = ' '
+        mini_name = profile.get('first_name') + ' ' + last_name[0]
 
         # Check and see if we already have a period
         if not mini_name[-1:] == '.':
@@ -117,3 +120,20 @@ class NewsItemComment(models.Model):
         managed = False
         db_table = 'comment'
         ordering = ['id']
+
+# Toon Names from Play
+class ToonName(models.Model):
+    toon_id = models.IntegerField(null=True)
+    user_id = models.IntegerField(blank=True, null=True)
+    candidate_name = models.CharField(max_length=255, null=True)
+    current_name = models.CharField(max_length=255, blank=True, null=True)
+    received = models.DateTimeField(null=True)
+    processed = models.DateTimeField(blank=True, null=True)
+    submitted = models.DateTimeField(blank=True, null=True)
+    was_rejected = models.BooleanField()
+    reviewer = models.ForeignKey(User, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'toon_name'
+        ordering = ['received']

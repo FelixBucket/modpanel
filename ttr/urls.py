@@ -8,6 +8,7 @@ v1_api = Api(api_name='v1')
 v1_api.register(ActivityResource())
 v1_api.register(BulletinResource())
 v1_api.register(UserResource())
+v1_api.register(ToonNameResource())
 v1_api.register(NewsItemCommentResource())
 
 urlpatterns = patterns('',
@@ -15,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/login/$', 'ttr.api_v1.LoginResource'),
     url(r'^api/v1/pending_counts/$', 'ttr.api_v1.PendingCountsResource'),
     url(r'^api/v1/dashboard_stats/$', 'ttr.api_v1.DashboardStatsResource'),
+    url(r'^api/v1/toon_names/(\d+)/moderate/$', 'ttr.api_v1.ToonNameModerateAction'),
     url(r'^api/v1/news_item_comments/(\d+)/moderate/$', 'ttr.api_v1.NewsItemCommentModerateAction'),
     url(r'^api/', include(v1_api.urls)),
 

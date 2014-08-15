@@ -196,3 +196,93 @@ div#content-wrapper{
 .moderation-comment > .reject:hover{
     background-color: rgba(199, 64, 64, 0.6);
 }
+
+/* Name Moderation */
+.moderation-name{
+    padding: 15px 15px 15px 15px;
+    height: 130px;
+    width: 100%;
+    position: relative;
+    display: table;
+}
+.moderation-name:hover{
+    cursor: pointer;
+}
+.moderation-name > .moderation-name-text-wrapper{
+    display: table-cell;
+    height: 70px;
+    vertical-align: middle;
+    text-align: center;
+}
+.moderation-name > .moderation-name-text-wrapper > .moderation-name-text{
+    color: transparent;
+    text-shadow: 0px 0px 0px black;
+    margin: 0px;
+    padding: 0px;
+    display: inline-block;
+    font-size: 1.15em;
+    font-weight: bold;
+
+    -moz-transition: text-shadow 0.15s linear;
+    -o-transition: text-shadow 0.15s linear;
+    -webkit-transition: text-shadow 0.15s linear;
+    transition: text-shadow 0.15s linear;
+}
+.moderation-name:hover > .moderation-name-text-wrapper > .moderation-name-text, .moderation-name.done > .moderation-name-text-wrapper > .moderation-name-text{
+    text-shadow: 0px 0px 10px black;
+}
+.moderation-name > .moderation-name-action{
+    position: absolute;
+    top: 0px;
+    height: 100%;
+    width: 33%;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    opacity: 0;
+
+    -moz-transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
+    -o-transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
+    -webkit-transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
+    transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
+}
+.moderation-name:hover > .moderation-name-action{
+    opacity: 1.0;
+}
+.moderation-name > .moderation-name-action > i{
+    font-size: 3em;
+}
+.moderation-name > .approve{
+    left: 0;
+    background-color: rgba(34, 139, 34, 0.6);
+    color: rgba(0, 115, 0, 1.0);
+    border-radius: 3px 0px 0px 3px;
+}
+.moderation-name > .reject{
+    right: 0;
+    background-color: rgba(139, 34, 34, 0.6);
+    color: rgba(115, 0, 0, 1.0);
+    border-radius: 0px 3px 3px 0px
+}
+.moderation-name > .discuss{
+    left: 33%;
+    width: 34%;
+    background-color: rgba(51, 143, 235, 0.6);
+    color: rgba(0, 0, 115, 1.0);
+}
+.moderation-name > .approve:hover, .moderation-name > .approve.selected{
+    background-color: rgba(64, 199, 64, 0.6);
+}
+.moderation-name > .reject:hover, .moderation-name > .reject.selected{
+    background-color: rgba(199, 64, 64, 0.6);
+}
+.moderation-name > .discuss:hover, .moderation-name > .discuss.selected{
+    background-color: rgba(101, 193, 255, 0.6);
+}
+.moderation-name > .moderation-name-action.selected{
+    width: 100%;
+    opacity: 1.0 !important;
+}
+.moderation-name > .moderation-name-action.not-selected{
+    opacity: 0;
+}
