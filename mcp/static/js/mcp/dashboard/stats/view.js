@@ -18,10 +18,10 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server'], fu
             });
         },
         updateStats: function(stats){
-            this.$el.find('#ds-accounts').text(stats.accounts);
-            this.$el.find('#ds-playtimes').text(stats.playtimes);
-            this.$el.find('#ds-actions-today').text(stats.actions_today);
-            this.$el.find('#ds-total-actions').text(stats.total_actions);
+            this.$el.find('#ds-accounts').text(_.numberFormat(stats.accounts));
+            this.$el.find('#ds-playtimes').text(_.numberFormat(stats.playtimes));
+            this.$el.find('#ds-actions-today').text(_.numberFormat(stats.actions_today));
+            this.$el.find('#ds-total-actions').text(_.numberFormat(stats.total_actions));
         }
     });
 });
