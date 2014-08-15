@@ -1,4 +1,5 @@
 from django.contrib import auth
+from django.core.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 from tastypie import fields
 from tastypie.authorization import Authorization
@@ -136,13 +137,18 @@ def LoginResource(request):
 
     # Fetch user information
     permissions = user.get_permissions()
+
+    csrf_holder = {}
+    csrf_holder.update(csrf(request))
+
     response = {
         'user': {
             'id': request.user.id,
             'short_name': request.user.get_short_name(),
             'long_name': request.user.get_long_name(),
             'avatar': request.user.mod_profile.avatar,
-            'level': request.user.level
+            'level': request.user.level,
+            'csrf_token': unicode(csrf_holder.get('csrf_token')),
         },
         'permissions': permissions,
     }
