@@ -50,6 +50,7 @@ def app(request):
     return render_template(request, 'mcp/app.html', {
         'user': {
             'id': request.user.id,
+            'mini_name': request.user.get_mini_name(),
             'short_name': request.user.get_short_name(),
             'long_name': request.user.get_long_name(),
             'avatar': request.user.mod_profile.avatar,

@@ -31,6 +31,10 @@ class User(AbstractBaseUser):
         managed = False
         db_table = 'user'
 
+    def get_mini_name(self):
+        profile = self.get_mod_profile()
+        return profile.get('first_name') + ' ' + profile.get('last_name')[0]
+
     def get_short_name(self):
         profile = self.get_mod_profile()
         return profile.get('first_name')

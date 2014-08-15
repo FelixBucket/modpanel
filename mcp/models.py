@@ -12,6 +12,7 @@ class ActivityManager(models.Manager):
     def log(self, description, user=None, action=True, icon=None):
         activity = Activity(user=user, description=description, icon=icon, action=action)
         activity.save()
+
 class Activity(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='activity', blank=True, null=True)
     description = models.TextField()

@@ -22,6 +22,7 @@ def user_dict(bundle, user_prop_name):
     profile = user.get_mod_profile()
     return {
         'id': user.id,
+        'mini_name': user.get_mini_name(),
         'short_name': user.get_short_name(),
         'long_name': user.get_long_name(),
         'avatar': profile.get('avatar'),
@@ -58,6 +59,7 @@ def LoginResource(request):
     response = {
         'user': {
             'id': request.user.id,
+            'mini_name': user.get_mini_name(),
             'short_name': request.user.get_short_name(),
             'long_name': request.user.get_long_name(),
             'avatar': request.user.mod_profile.avatar,
@@ -125,7 +127,7 @@ class BulletinResource(DirectModelResource):
         user = bundle.request.user
         bundle = super(BulletinResource, self).obj_create(bundle, author=user)
         bundle.obj.read_by.add(user)
-        Activity.objects.log(user.get_long_name() + ' posted a bulletin titled "' + bundle.obj.title + '".', user)
+        Activity.objects.log(user.get_mini_name() + ' posted a bulletin titled "' + bundle.obj.title + '".', user)
         return bundle
 
 class UserResource(DirectModelResource):
@@ -171,9 +173,9 @@ def NewsItemCommentModerateAction(request, comment_id):
     if int(request.POST.get('approve', 0)) == 1:
         comment.approved = True
         comment.save()
-        Activity.objects.log(user.get_long_name() + ' approved the comment "' + comment.body + '".', user)
+        Activity.objects.log(user.get_mini_name() + ' approved the comment "' + comment.body + '".', user)
     else:
-        Activity.objects.log(user.get_long_name() + ' rejected the comment "' + comment.body + '".', user)
+        Activity.objects.log(user.get_mini_name() + ' rejected the comment "' + comment.body + '".', user)
         comment.delete()
 
     return api.response(status=201)
