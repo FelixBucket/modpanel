@@ -1,10 +1,8 @@
 define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_template.html', 'server'], function(app, Marionette, util, template, comment_template, server){
 
-    //Bulletin Definitions
     comments = util.collections.readyFactory('news_item_comments');
 
     var loadMoreComments = function(){
-        console.log("Loading more");
         server.get('/api/v1/news_item_comments/?approved=false').done(function(loaded){
             comments.set(loaded);
         });

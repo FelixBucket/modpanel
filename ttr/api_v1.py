@@ -18,15 +18,18 @@ from mcp.permissions import permissions
 
 ### MCP Model Resources ###
 def user_dict(bundle, user_prop_name):
-    user = getattr(bundle.obj, user_prop_name)
-    profile = user.get_mod_profile()
-    return {
-        'id': user.id,
-        'mini_name': user.get_mini_name(),
-        'short_name': user.get_short_name(),
-        'long_name': user.get_long_name(),
-        'avatar': profile.get('avatar'),
-    }
+    try:
+        user = getattr(bundle.obj, user_prop_name)
+        profile = user.get_mod_profile()
+        return {
+            'id': user.id,
+            'mini_name': user.get_mini_name(),
+            'short_name': user.get_short_name(),
+            'long_name': user.get_long_name(),
+            'avatar': profile.get('avatar'),
+        }
+    except:
+        return None
 
 @csrf_exempt
 def LoginResource(request):
@@ -143,6 +146,46 @@ class UserResource(DirectModelResource):
         limit = 100
         max_limit = None
         authorization = ReadOnlyUserLevelAuthorization('find_user', MODE_MATCH_LEVEL)
+
+class ToonNameResource(DirectModelResource):
+    class Meta:
+        queryset = ToonName.objects.all()
+        resource_name = 'toon_names'
+        filtering = {
+            'processed': ALL,
+        }
+        limit = 40
+        max_limit = None
+        authorization = ReadOnlyUserLevelAuthorization('approve_name', MODE_MATCH_LEVEL)
+
+    def dehydrate(self, bundle):
+        bundle.data['reviewer'] = user_dict(bundle, 'reviewer')
+        return bundle
+
+def ToonNameModerateAction(request, name_id):
+    if not request.method == "POST":
+        return api.error(405)
+
+    user = request.user
+
+    try:
+        name = ToonName.objects.get(pk=name_id, processed=None)
+    except:
+        return api.response(status=201) # If it wasn't been found, it has already been moderated
+
+    name.processed = datetime.datetime.now()
+    name.reviewer = user
+
+    if int(request.POST.get('approve', 0)) == 1:
+        name.was_rejected = False
+        Activity.objects.log(user.get_mini_name() + ' approved the name "' + name.candidate_name + '".', user)
+    else:
+        name.was_rejected = True
+        Activity.objects.log(user.get_mini_name() + ' rejected the name "' + name.candidate_name + '".', user)
+
+    name.save()
+
+    return api.response(status=201)
 
 class NewsItemCommentResource(DirectModelResource):
     class Meta:
