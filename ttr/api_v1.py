@@ -146,7 +146,10 @@ class NewsItemCommentResource(DirectModelResource):
     class Meta:
         queryset = NewsItemComment.objects.all()
         resource_name = 'news_item_comments'
-        limit = 100
+        filtering = {
+            'approved': ALL,
+        }
+        limit = 40
         max_limit = None
         authorization = ReadOnlyUserLevelAuthorization('approve_comment', MODE_MATCH_LEVEL)
 
@@ -158,12 +161,14 @@ def NewsItemCommentModerateAction(request, comment_id):
     if not request.method == "POST":
         return api.error(405)
 
+    user = request.user
+
     try:
         comment = NewsItemComment.objects.get(pk=comment_id)
     except:
-        return api.error(404)
+        return api.response(status=201) # If it wasn't been found, it likely was already rejected
 
-    if request.POST.get('approve', 0) == 1:
+    if int(request.POST.get('approve', 0)) == 1:
         comment.approved = True
         comment.save()
         Activity.objects.log(user.get_long_name() + ' approved the comment "' + comment.body + '".', user)

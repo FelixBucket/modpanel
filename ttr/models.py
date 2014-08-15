@@ -106,3 +106,4 @@ class NewsItemComment(models.Model):
     class Meta:
         managed = False
         db_table = 'comment'
+        ordering = ['id']
