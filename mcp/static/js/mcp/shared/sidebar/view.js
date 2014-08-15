@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'text!./template.html', 'jquery'], function(app, Marionette, template, $){
+define(['app', 'marionette', 'text!./template.html', 'jquery', 'bootbox'], function(app, Marionette, template, $, bootbox){
     return Marionette.View.extend({
         render: function(){
             this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, user: app.user}));
@@ -27,6 +27,10 @@ define(['app', 'marionette', 'text!./template.html', 'jquery'], function(app, Ma
             this.updateHighlightedRoute();
 
             this.$el.find('#sidebar-items > li > a').click(function(){
+                if ($(this).data('route') == null){
+                    bootbox.alert("Whoa there cowboy, that's not ready yet! Check back soon!");
+                    return;
+                }
                 app.router.navigate($(this).data('route'), {trigger: true});
             });
         },

@@ -8,5 +8,6 @@
 permissions = {
     'post_bulletin': 200,
     'approve_name': 200,
+    'approve_comment': 200,
     'find_user': 400,
 }
