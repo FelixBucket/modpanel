@@ -133,6 +133,6 @@ PUSHER_KEY_ID = 'a15e68a0fae7ee180ce2'
 PUSHER_SECRET = '1d25d81aa43375f641ac'
 
 # RPC Settings
-# RPC_ENDPOINT = os.environ.get('RPC_ENDPOINT', '')
-# RPC_USERNAME = os.environ.get('RPC_USERNAME', '')
-# RPC_PASSWORD = os.environ.get('RPC_PASSWORD', '')
+RPC_ENDPOINT = os.environ.get('RPC_ENDPOINT', '')
+RPC_USERNAME = os.environ.get('RPC_USERNAME', '')
+RPC_PASSWORD = os.environ.get('RPC_PASSWORD', '')
