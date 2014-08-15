@@ -33,7 +33,13 @@ class User(AbstractBaseUser):
 
     def get_mini_name(self):
         profile = self.get_mod_profile()
-        return profile.get('first_name') + ' ' + profile.get('last_name')[0]
+        mini_name = profile.get('first_name') + ' ' + profile.get('last_name')[0]
+
+        # Check and see if we already have a period
+        if not mini_name[-1:] == '.':
+            mini_name + '.'
+
+        return mini_name
 
     def get_short_name(self):
         profile = self.get_mod_profile()
