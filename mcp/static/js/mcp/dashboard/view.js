@@ -1,5 +1,6 @@
-define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'shared/wysiwygModal/view', 'text!./bulletins/template.html', 'bootbox', 'server', 'slimscroll', 'livestamp', 'clamp'], function(app, Marionette, util, template, StatsView, WysiwygModal, bulletin_template, bootbox, server){
+define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'shared/wysiwygModal/view', 'text!./bulletins/template.html', 'text!./activities/template.html', 'bootbox', 'server', 'slimscroll', 'livestamp', 'clamp'], function(app, Marionette, util, template, StatsView, WysiwygModal, bulletin_template, activity_template, bootbox, server){
 
+    //Bulletin Definitions
     var bulletins = util.collections.readyFactory('bulletins');
     bulletins.fetch();
 
@@ -19,6 +20,14 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'sh
             this.model.set('unread', false);
             bootbox.alert('<h4>' + this.model.get('title') + '</h4><p class="text-muted">Posted by ' + this.model.get('author').long_name + '</p>' + this.model.get('content'));
         }
+    });
+
+    //Recent Activity Definition
+    var recent_activity = util.collections.readyFactory('activities');
+    recent_activity.fetch();
+
+    var ActivityView = Marionette.ItemView.extend({
+        template: util.views.templateFactory(activity_template),
     });
 
     return Marionette.View.extend({
@@ -48,6 +57,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'sh
             });
 
             //Recent Activity Widget
+            this.recent_activity_view = util.views.readyCollectionViewFactory(recent_activity, ActivityView, {el: this.$el.find('#activity-list')});
             this.$el.find('.activity-inner').slimScroll({
                 height: '400px',
                 alwaysVisible: false,
