@@ -13,6 +13,7 @@ requirejs.config({
         toastr: '../../lib/toastr.min',
         nanoscroller: '../../lib/jquery.nanoscroller.min',
         slimscroll: '../../lib/jquery.slimscroll.min',
+        clamp: '../../lib/clamp.min',
 
         server: 'shared/services/server',
         util: 'shared/services/util',

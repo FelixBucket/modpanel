@@ -1,10 +1,20 @@
-define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'text!./bulletins/template.html', 'slimscroll', 'livestamp'], function(app, Marionette, util, template, StatsView, bulletin_template){
+define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'text!./bulletins/template.html', 'bootbox', 'server', 'slimscroll', 'livestamp', 'clamp'], function(app, Marionette, util, template, StatsView, bulletin_template, bootbox, server){
 
     var bulletins = util.collections.readyFactory('bulletins');
     bulletins.fetch();
 
     var BulletinView = Marionette.ItemView.extend({
         template: util.views.templateFactory(bulletin_template),
+        onRender: function(){
+            $clamp(this.$el.find('.text')[0], {clamp: 3});
+        },
+        events: {
+            'click': 'view',
+        },
+        view: function(){
+            server.get('/api/v1/bulletins/' + this.model.get('id'));
+            bootbox.alert('<h4>' + this.model.get('title') + '</h4><p class="text-muted">Posted by ' + this.model.get('author').long_name + '</p>' + this.model.get('content'));
+        }
     });
 
     return Marionette.View.extend({
