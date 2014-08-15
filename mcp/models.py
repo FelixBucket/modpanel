@@ -21,6 +21,9 @@ class Activity(models.Model):
 
     objects = ActivityManager()
 
+    class Meta:
+        ordering = ['-timestamp']
+
 class Bulletin(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()

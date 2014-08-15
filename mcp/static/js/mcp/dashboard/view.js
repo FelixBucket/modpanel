@@ -66,8 +66,10 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'sh
                 allowPageScroll: false
             });
         },
-        destroy: function(){
+        onDestroy: function(){
             this.stats_view.destroy();
+            this.bulletins_view.destroy();
+            this.recent_activity_view.destroy();
         }
     });
 });

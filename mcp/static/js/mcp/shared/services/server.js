@@ -85,6 +85,8 @@ define(['toastr'], function(toastr){
                 }
             }
 
+            if (settings.splash) toastr.info('Just a sec...', null, {timeOut: 0, extendedTimeOut: 0});
+
             var deferred = $.Deferred();
 
             var ajaxParams = {
@@ -106,6 +108,9 @@ define(['toastr'], function(toastr){
             }
 
             $.ajax(ajaxParams)
+            .always(function(){
+                toastr.clear();
+            })
             .done(function(response){
                 if (settings.verbose == "success" || settings.verbose == "both" || (settings.verbose == "auto" && response && response.message))
                     displayMessageForResponse(response, true, settings);

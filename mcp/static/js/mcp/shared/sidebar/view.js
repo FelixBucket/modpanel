@@ -22,6 +22,13 @@ define(['app', 'marionette', 'text!./template.html', 'jquery'], function(app, Ma
                     $item.children('.submenu').slideUp('fast');
                 }
             });
+
+            this.listenTo(app, 'viewChange', this.updateHighlightedRoute);
+            this.updateHighlightedRoute();
+
+            this.$el.find('#sidebar-items > li > a').click(function(){
+                app.router.navigate($(this).data('route'), {trigger: true});
+            });
         },
         updateCounts: function(counts){
             var emptyIfZero = function(val){
@@ -31,6 +38,11 @@ define(['app', 'marionette', 'text!./template.html', 'jquery'], function(app, Ma
 
             this.$el.find('#sidebar-ct-toon-names').text(emptyIfZero(counts.toon_names));
             this.$el.find('#sidebar-ct-comments').text(emptyIfZero(counts.comments));
+        },
+        updateHighlightedRoute: function(){
+            var controller = app.activeControllerClass;
+            this.$el.find('#sidebar-items > li').removeClass('active');
+            this.$el.find('#sidebar-items > li[data-controller="' + controller + '"]').addClass('active');
         },
     });
 });

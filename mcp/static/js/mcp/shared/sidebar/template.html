@@ -13,9 +13,9 @@
             </div>
         </div>
         <div class="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
-            <ul class="nav nav-pills nav-stacked">
-                <li class="active">
-                    <a href="#">
+            <ul class="nav nav-pills nav-stacked" id="sidebar-items">
+                <li data-controller="dashboard/dashboard">
+                    <a href="#" data-route="">
                         <i class="fa fa-dashboard"></i>
                         <span>Dashboard</span>
                     </a>
@@ -29,8 +29,8 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="#">
+                <li data-controller="news_comments/news_comments">
+                    <a href="#" data-route="comment_approval">
                         <i class="fa fa-comments"></i>
                         <span>Comments</span>
                         <span class="label label-primary pull-right" id="sidebar-ct-comments"></span>
