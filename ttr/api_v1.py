@@ -164,6 +164,45 @@ def DashboardStatsResource(request):
     playtimes_count = ScheduledSession.objects.all().count()
     return api.response(dict(accounts=accounts_count, playtimes=playtimes_count, actions_today=0, total_actions=0))
 
+def FindUser(request):
+    requestUser = request.user
+    username = request.POST.get('username')
+    userId = request.POST.get('userId')
+    email = request.POST.get('email')
+
+    if not username or userId:
+        return api.error(200, errors='You must specify a username or account ID to lookup')
+
+    permissions = requestUser.get_permissions()
+    if not 'find_user' in permissions:
+        return api.error(403, errors='You are not authorized to come in here.')
+
+    # Search the database for the user
+    # activate_date, activated, api_key, bulletins, email, gs_user_id, id, keyed, last_login, level, logentry, mod_profile, newsitem, newsitemcomment, password, read_bulletins, register_date, register_ip, scheduledsession, toonbook_user_id, totp_secret, username, verified
+    user = None
+    try:
+        if username:
+            user = User.objects.get(username=username)
+        elif userId:
+            user = User.objects.get(id=userId)
+        elif email:
+            user = User.objects.get(email=email)
+    except Exception, e:
+        raise e
+
+    # Fetch user information
+    response = {
+        'id': user.id,
+        'register_date': user.register_date,
+        'last_login': user.last_login,
+        'keyed': user.keyed,
+        'username': user.username,
+        'email': user.email,
+        'gsId': user.gs_user_id,
+        'level': user.level
+    }
+    return api.response(response)
+
 class BulletinResource(DirectModelResource):
     class Meta:
         queryset = Bulletin.objects.all()

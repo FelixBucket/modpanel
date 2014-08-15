@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/login/', 'ttr.api_v1.LoginResource'),
     url(r'^api/v1/pending_counts/', 'ttr.api_v1.PendingCountsResource'),
     url(r'^api/v1/dashboard_stats/', 'ttr.api_v1.DashboardStatsResource'),
+    url(r'^api/v1/find_user/', 'ttr.api_v1.FindUser'),
 
     # This is the entry point to the application
     # In the future if we add different components, the MCP can be moved to a subdirectory
