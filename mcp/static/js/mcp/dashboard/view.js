@@ -11,8 +11,12 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'te
         events: {
             'click': 'view',
         },
+        modelEvents: {
+            'change': 'render'
+        },
         view: function(){
             server.get('/api/v1/bulletins/' + this.model.get('id'));
+            this.model.set('unread', false);
             bootbox.alert('<h4>' + this.model.get('title') + '</h4><p class="text-muted">Posted by ' + this.model.get('author').long_name + '</p>' + this.model.get('content'));
         }
     });
