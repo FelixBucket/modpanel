@@ -189,5 +189,8 @@ class BulletinResource(DirectModelResource):
         return obj
 
     # Ensure the logged in user gets saved as the author
+    # Also mark it as read for the writer
     def obj_create(self, bundle, **kwargs):
-        return super(BulletinResource, self).obj_create(bundle, author=bundle.request.user)
+        bundle = super(BulletinResource, self).obj_create(bundle, author=bundle.request.user)
+        bundle.obj.read_by.add(bundle.request.user)
+        return bundle

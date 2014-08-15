@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'text!./bulletins/template.html', 'bootbox', 'server', 'slimscroll', 'livestamp', 'clamp'], function(app, Marionette, util, template, StatsView, bulletin_template, bootbox, server){
+define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'shared/wysiwygModal/view', 'text!./bulletins/template.html', 'bootbox', 'server', 'slimscroll', 'livestamp', 'clamp'], function(app, Marionette, util, template, StatsView, WysiwygModal, bulletin_template, bootbox, server){
 
     var bulletins = util.collections.readyFactory('bulletins');
     bulletins.fetch();
@@ -23,6 +23,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'te
 
     return Marionette.View.extend({
         render: function(){
+            var _this = this;
             this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT}));
 
             //Stats
@@ -36,6 +37,14 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'te
                 railVisible: true,
                 wheelStep: 6,
                 allowPageScroll: false
+            });
+            this.$el.find('#dashboard-new-bulletin-task').click(function(){
+                var editor = new WysiwygModal('Post a New Bulletin', '', true);
+                _this.listenTo(editor, 'finish', function(entry, title){
+                    server.tastyPost('bulletins', {title: title, content: entry}).done(function(new_bulletin){
+                        bulletins.unshift(new_bulletin);
+                    });
+                });
             });
 
             //Recent Activity Widget

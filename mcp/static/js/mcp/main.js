@@ -14,6 +14,8 @@ requirejs.config({
         nanoscroller: '../../lib/jquery.nanoscroller.min',
         slimscroll: '../../lib/jquery.slimscroll.min',
         clamp: '../../lib/clamp.min',
+        hotkeys: '../../lib/jquery.hotkeys',
+        'bootstrap-wysiwyg': '../../lib/bootstrap-wysiwyg',
 
         server: 'shared/services/server',
         util: 'shared/services/util',
@@ -40,6 +42,7 @@ requirejs.config({
             deps:['jquery', 'bootstrap'],
             exports: 'bootbox',
         },
+        'bootstrap-wysiwyg': ['jquery', 'bootstrap', 'hotkeys'],
     },
 });
 

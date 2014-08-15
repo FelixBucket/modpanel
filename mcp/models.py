@@ -15,5 +15,8 @@ class Bulletin(models.Model):
     timestamp = models.IntegerField(default=lambda: int(time.time()))
     read_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='read_bulletins')
 
+    class Meta:
+        ordering = ['-timestamp']
+
     def check_read(self, user_id):
         return self.read_by.filter(id=user_id).count() != 0
