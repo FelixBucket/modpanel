@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'ttr.wsgi.application'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-VERSION = '3'
+VERSION = '4'
 STATIC_ROOT = BASE_DIR + '/static/'
 STATIC_URL = '/static/' + VERSION + '/'
 
@@ -128,9 +128,10 @@ USE_TZ = True
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
 # Pusher Settings
-PUSHER_APP_ID = '85566'
-PUSHER_KEY_ID = 'a15e68a0fae7ee180ce2'
-PUSHER_SECRET = '1d25d81aa43375f641ac'
+# Default to dev settings if env variable is not set
+PUSHER_APP_ID = os.environ.get('PUSHER_APP_ID', '85566')
+PUSHER_KEY_ID = os.environ.get('PUSHER_KEY_ID', 'a15e68a0fae7ee180ce2')
+PUSHER_SECRET = os.environ.get('PUSHER_SECRET', '1d25d81aa43375f641ac')
 
 # RPC Settings
 RPC_ENDPOINT = os.environ.get('RPC_ENDPOINT', '')

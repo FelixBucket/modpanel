@@ -1,4 +1,4 @@
-define(['backbone', 'marionette', 'router', 'jquery', 'toastr', 'bootstrap', 'underscore-string'], function(Backbone, Marionette, Router, $, toastr){
+define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'bootstrap', 'underscore-string'], function(Backbone, Marionette, Router, pusher, $, toastr){
     //Prepare underscore mixins
     _.mixin(_.string.exports());
 
@@ -90,6 +90,9 @@ define(['backbone', 'marionette', 'router', 'jquery', 'toastr', 'bootstrap', 'un
     });
 
     app.on('start', function(){
+        //Connect to pusher
+        pusher.startWithAppKey(window.PUSHER_KEY_ID);
+
         //Initialize and start the router
         app.router = new Router();
         app.listenTo(app.router, 'route', swapController);

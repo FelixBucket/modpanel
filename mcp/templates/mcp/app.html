@@ -82,6 +82,7 @@
     window.STATIC_ROOT = "/static/{{ version }}/";
     window.USER = {{ user|jsonencode|safe }};
     window.USER_PERMISSIONS = {{ permissions|jsonencode|safe }};
+    window.PUSHER_KEY_ID = "{{ pusher_key_id }}";
     </script>
 
 </body>

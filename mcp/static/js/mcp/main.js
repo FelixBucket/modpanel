@@ -1,5 +1,4 @@
 requirejs.config({
-    //urlArgs: "bust=v1",
     paths: {
         jquery: '../../lib/jquery-2.1.1.min',
         underscore: '../../lib/lodash.underscore.min',
@@ -16,9 +15,11 @@ requirejs.config({
         clamp: '../../lib/clamp.min',
         hotkeys: '../../lib/jquery.hotkeys',
         'bootstrap-wysiwyg': '../../lib/bootstrap-wysiwyg',
+        'pusher-lib': '//js.pusher.com/2.2/pusher.min',
 
         server: 'shared/services/server',
         util: 'shared/services/util',
+        pusher: 'shared/services/pusher',
     },
     shim: {
         bootstrap: ['jquery'],

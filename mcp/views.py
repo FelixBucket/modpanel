@@ -57,6 +57,7 @@ def app(request):
         },
         'permissions': permissions,
         'version': settings.VERSION,
+        'pusher_key_id': settings.PUSHER_KEY_ID,
     })
 
 def first_time(request):
