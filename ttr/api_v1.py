@@ -1,6 +1,7 @@
 import datetime, time
 from django.contrib import auth
 from django.core.context_processors import csrf
+from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
 from tastypie import fields
 from tastypie.authorization import Authorization
@@ -261,3 +262,10 @@ class BasicShardHistoryResource(DirectModelResource):
         limit = 200
         max_limit = None
         authorization = ReadOnlyUserLevelAuthorization('view_basic_shard_history', MODE_MATCH_LEVEL)
+
+@require_permission('view_basic_shard_history')
+def PopulationHistoryResource(request):
+    cursor = connection.cursor()
+    cursor.execute("SELECT fetched as timestamp, SUM(population) as population FROM mcp_shardcheckin GROUP BY fetched;")
+    population = cursor.fetchall()
+    return api.response(population)
