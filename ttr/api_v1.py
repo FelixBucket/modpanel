@@ -175,6 +175,7 @@ def ToonNameModerateAction(request, name_id):
         return api.response(status=201) # If it wasn't been found, it has already been moderated
 
     name.processed = datetime.datetime.now()
+    name.submitted = datetime.datetime.now()
     name.reviewer = user
 
     rpc = RPC()
