@@ -16,6 +16,8 @@ requirejs.config({
         hotkeys: '../../lib/jquery.hotkeys',
         'bootstrap-wysiwyg': '../../lib/bootstrap-wysiwyg',
         'pusher-lib': '//js.pusher.com/2.2/pusher.min',
+        raphael: '../../lib/raphael-min',
+        morris: '../../lib/morris.min',
 
         server: 'shared/services/server',
         util: 'shared/services/util',
@@ -44,6 +46,7 @@ requirejs.config({
             exports: 'bootbox',
         },
         'bootstrap-wysiwyg': ['jquery', 'bootstrap', 'hotkeys'],
+        morris: ['jquery', 'raphael'],
     },
 });
 
