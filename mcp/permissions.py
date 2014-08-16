@@ -10,5 +10,5 @@ permissions = {
     'approve_name': 200,
     'approve_comment': 200,
     'find_user': 400,
-    'view_shards': 200,
+    'view_shards': 400,
 }
