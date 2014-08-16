@@ -75,7 +75,7 @@ def LoginResource(request):
     return api.response(response)
 
 def PendingCountsResource(request):
-    toon_names_count = 0
+    toon_names_count = ToonName.objects.filter(processed=None).count()
     comments_count = NewsItemComment.objects.filter(approved=False).count()
     return api.response(dict(toon_names=toon_names_count, comments=comments_count))
 
