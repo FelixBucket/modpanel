@@ -235,3 +235,14 @@ def ShardsResource(request):
 
     rpc = RPC()
     return api.response(rpc.client.listShards())
+
+def FindAccountFromAvId(request):
+    if request.user.level < permissions['find_user']:
+        return api.error(403)
+
+    avId = request.GET['avId']
+
+    rpc = RPC()
+    accountId = rpc.client.getAccountByAvatarID(avId=avId)
+    response = {"accountId": accountId}
+    return api.response(response)
