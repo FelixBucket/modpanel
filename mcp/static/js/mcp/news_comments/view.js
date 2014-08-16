@@ -1,10 +1,10 @@
-define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_template.html', 'server'], function(app, Marionette, util, template, comment_template, server){
+define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_template.html', 'server', 'pusher'], function(app, Marionette, util, template, comment_template, server, pusher){
 
     comments = util.collections.readyFactory('news_item_comments');
 
     var loadMoreComments = function(){
         server.get('/api/v1/news_item_comments/?approved=false').done(function(loaded){
-            comments.set(loaded);
+            comments.push(loaded);
         });
     };
 
@@ -14,18 +14,52 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_tem
             'click .approve': 'approve',
             'click .reject': 'reject',
         },
+        modelEvents:{
+            'moderated_remotely': 'moderated_remotely',
+        },
         approve: function(){
+            if (this.model.get('processed')) return;
+            this.$el.find('.approve').addClass('selected').html('<i class="fa fa-check"></i><p>Approved</p>');
+            this.$el.find('.reject, .discuss').addClass('not-selected');
             this.moderate(1);
         },
         reject: function(){
+            if (this.model.get('processed')) return;
+            this.$el.find('.reject').addClass('selected').html('<i class="fa fa-times"></i><p>Rejected</p>');
+            this.$el.find('.approve, .discuss').addClass('not-selected');
             this.moderate(0);
         },
         moderate: function(approve){
+            this.$el.find('.moderation-comment').addClass('done');
             app.pending_counts.set('comments', app.pending_counts.get('comments')-1);
-            server.post('/api/v1/news_item_comments/' + this.model.get('id') + '/moderate/', {approve: approve});
+
             var collection = this.model.collection;
-            collection.remove(this.model);
-            if (collection.length == 0) loadMoreComments();
+            this.model.set('processed', true);  //Yes I know this isn't a realistic value, but it doesn't matter
+
+            server.post('/api/v1/news_item_comments/' + this.model.get('id') + '/moderate/', {approve: approve})
+            .done(function(){
+                if (collection.where({processed: undefined}) == 0) loadMoreComments();
+            }).fail(function(){
+                _this.model.set('processed', false);
+                app.pending_counts.set('comments', app.pending_counts.get('comments')+1);
+                _this.render();
+            });
+        },
+        moderated_remotely: function(approve, moderator){
+            this.$el.find('.moderation-comment').addClass('done');
+            app.pending_counts.set('comments', app.pending_counts.get('comments')-1);
+
+            if (approve){
+                this.$el.find('.approve').addClass('selected').html('<i class="fa fa-check"></i><p>Approved by ' + moderator + '</p>');
+                this.$el.find('.reject, .discuss').addClass('not-selected');
+            }else{
+                this.$el.find('.reject').addClass('selected').html('<i class="fa fa-times"></i><p>Rejected by ' + moderator + '</p>');
+                this.$el.find('.approve, .discuss').addClass('not-selected');
+            }
+
+            var collection = this.model.collection;
+            this.model.set('processed', true);  //Yes I know this isn't a realistic value, but it doesn't matter
+            if (collection.where({processed: undefined}) == 0) loadMoreComments();
         }
     });
 
@@ -36,6 +70,10 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_tem
     });
 
     return Marionette.View.extend({
+        initialize: function(){
+            this.channel = pusher.subscribe('news_comments');
+            this.channel.bind('moderated', this.remoteModeration, this);
+        },
         render: function(){
             var _this = this;
             loadMoreComments();
@@ -52,7 +90,18 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_tem
 
             this.commentsView = new CommentCollectionView({el: this.$el.find('#moderation-comments')});
         },
+        remoteModeration: function(payload){
+            //A comment has been moderated by someone else (or potentially us), let's see if we have it loaded
+            var comment = comments.findWhere({id: payload.comment_id});
+
+            //If we don't have it loaded or have already moderated it ourselves, ignore it
+            if (!comment || comment.get('processed')) return;
+
+            //Notify the comment view by triggering the model's event
+            comment.trigger('moderated_remotely', payload.approve, payload.moderator);
+        },
         onDestroy: function(){
+            pusher.unsubscribe('news_comments');
             this.commentsView.destroy();
         }
     });

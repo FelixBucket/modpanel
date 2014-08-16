@@ -145,6 +145,9 @@ div#content-wrapper{
 .moderation-comment:hover{
     cursor: pointer;
 }
+.moderation-comment.done:hover{
+    cursor: default;
+}
 .moderation-comment > .moderation-comment-text{
     color: transparent;
     text-shadow: 0px 0px 0px black;
@@ -154,7 +157,7 @@ div#content-wrapper{
     -webkit-transition: text-shadow 0.15s linear;
     transition: text-shadow 0.15s linear;
 }
-.moderation-comment:hover > .moderation-comment-text{
+.moderation-comment:hover > .moderation-comment-text, .moderation-comment.done > .moderation-comment-text{
     text-shadow: 0px 0px 10px black;
 }
 .moderation-comment > .moderation-comment-action{
@@ -167,10 +170,10 @@ div#content-wrapper{
     padding: 10px;
     opacity: 0;
 
-    -moz-transition: opacity 0.15s linear, background-color 0.15s linear;
-    -o-transition: opacity 0.15s linear, background-color 0.15s linear;
-    -webkit-transition: opacity 0.15s linear, background-color 0.15s linear;
-    transition: opacity 0.15s linear, background-color 0.15s linear;
+    -moz-transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
+    -o-transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
+    -webkit-transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
+    transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
 }
 .moderation-comment:hover > .moderation-comment-action{
     opacity: 1.0;
@@ -196,6 +199,19 @@ div#content-wrapper{
 .moderation-comment > .reject:hover{
     background-color: rgba(199, 64, 64, 0.6);
 }
+.moderation-comment > .approve:hover, .moderation-comment > .approve.selected{
+    background-color: rgba(64, 199, 64, 0.6);
+}
+.moderation-comment > .reject:hover, .moderation-comment > .reject.selected{
+    background-color: rgba(199, 64, 64, 0.6);
+}
+.moderation-comment > .moderation-comment-action.selected{
+    width: 100%;
+    opacity: 1.0 !important;
+}
+.moderation-comment > .moderation-comment-action.not-selected{
+    opacity: 0;
+}
 
 /* Name Moderation */
 .moderation-name{
@@ -207,6 +223,9 @@ div#content-wrapper{
 }
 .moderation-name:hover{
     cursor: pointer;
+}
+.moderation-name.done:hover{
+    cursor: default;
 }
 .moderation-name > .moderation-name-text-wrapper{
     display: table-cell;

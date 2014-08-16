@@ -45,7 +45,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
 
             server.post('/api/v1/toon_names/' + this.model.get('id') + '/moderate/', {approve: approve})
             .done(function(){
-                if (collection.where({processed: null}) == 0) loadMoreNames();
+                if (collection.where({processed: undefined}) == 0) loadMoreNames();
             }).fail(function(){
                 _this.model.set('processed', false);
                 app.pending_counts.set('toon_names', app.pending_counts.get('toon_names')+1);
@@ -66,7 +66,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
 
             var collection = this.model.collection;
             this.model.set('processed', true);  //Yes I know this isn't a realistic value, but it doesn't matter
-            if (collection.where({processed: null}) == 0) loadMoreNames();
+            if (collection.where({processed: undefined}) == 0) loadMoreNames();
         }
     });
 

@@ -232,6 +232,8 @@ def NewsItemCommentModerateAction(request, comment_id):
         Activity.objects.log(user.get_mini_name() + ' rejected the comment "' + comment.body + '".', user)
         comment.delete()
 
+    util.send_pusher_message('news_comments', 'moderated', dict(comment_id=int(comment_id), moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
+
     return api.response(status=201)
 
 @require_permission('view_shards')
