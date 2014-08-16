@@ -26,6 +26,9 @@ define(['app', 'marionette', 'text!./template.html', 'jquery', 'bootbox'], funct
             this.listenTo(app, 'viewChange', this.updateHighlightedRoute);
             this.updateHighlightedRoute();
 
+            this.listenTo(app.pending_counts, 'change', this.updateCounts);
+            this.updateCounts();
+
             this.$el.find('#sidebar-items > li > a').click(function(e){
                 e.preventDefault();
                 if ($(this).data('route') == null){
@@ -35,14 +38,14 @@ define(['app', 'marionette', 'text!./template.html', 'jquery', 'bootbox'], funct
                 app.router.navigate($(this).data('route'), {trigger: true});
             });
         },
-        updateCounts: function(counts){
+        updateCounts: function(){
             var emptyIfZero = function(val){
                 if (!val || val == 0) return "";
                 return val;
             }
 
-            this.$el.find('#sidebar-ct-toon-names').text(emptyIfZero(counts.toon_names));
-            this.$el.find('#sidebar-ct-comments').text(emptyIfZero(counts.comments));
+            this.$el.find('#sidebar-ct-toon-names').text(emptyIfZero(app.pending_counts.get('toon_names')));
+            this.$el.find('#sidebar-ct-comments').text(emptyIfZero(app.pending_counts.get('comments')));
         },
         updateHighlightedRoute: function(){
             var controller = app.activeControllerClass;

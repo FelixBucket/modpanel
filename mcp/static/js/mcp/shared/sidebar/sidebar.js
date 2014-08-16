@@ -1,16 +1,18 @@
-define(['app', './view', 'server'], function(app, SidebarView, server){
+define(['app', './view', 'server', 'backbone'], function(app, SidebarView, server, Backbone){
     app.module('sidebar', function(sidebar, app){
 
-        sidebar.loadCounts = function(){
-            server.get('/api/v1/pending_counts/').done(function(counts){
-                sidebar.view.updateCounts(counts);
-            });
-        };
-
         sidebar.addInitializer(function(){
+            var PendingCountsModel = Backbone.Model.extend({
+                urlRoot: '/api/v1/pending_counts/',
+            });
+            app.pending_counts = new PendingCountsModel({
+                toon_names: 0,
+                comments: 0,
+            });
+
             sidebar.view = new SidebarView();
             app.sidebarRegion.show(sidebar.view);
-            sidebar.loadCounts();
+            app.pending_counts.fetch();
         });
 
     });

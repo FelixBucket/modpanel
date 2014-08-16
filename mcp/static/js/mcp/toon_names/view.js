@@ -3,7 +3,6 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
     names = util.collections.readyFactory('news_item_comments');
 
     var loadMoreNames = function(){
-        console.log("Loading more names");
         server.get('/api/v1/toon_names/?processed=None').done(function(loaded){
             names.push(loaded);
         });
@@ -34,6 +33,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
         },
         moderate: function(approve){
             this.$el.find('.moderation-name').addClass('done');
+            app.pending_counts.set('toon_names', app.pending_counts.get('toon_names')-1);
             server.post('/api/v1/toon_names/' + this.model.get('id') + '/moderate/', {approve: approve});
             var collection = this.model.collection;
             this.model.set('processed', true);  //Yes I know this isn't a realistic value, but it doesn't matter

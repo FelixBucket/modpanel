@@ -21,6 +21,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_tem
             this.moderate(0);
         },
         moderate: function(approve){
+            app.pending_counts.set('comments', app.pending_counts.get('comments')-1);
             server.post('/api/v1/news_item_comments/' + this.model.get('id') + '/moderate/', {approve: approve});
             var collection = this.model.collection;
             collection.remove(this.model);
