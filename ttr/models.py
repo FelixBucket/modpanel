@@ -38,15 +38,12 @@ class User(AbstractBaseUser):
 
         mini_name = first_name
 
-        # Make sure we have a last name, and if not, use their first name
+        # If we have a last name, we only want to display an initial.
         if last_name:
-            mini_name = first_name + ' ' + last_name[0]
-        else:
-            mini_name = first_name + ' ' + first_name[0]
-
-        # Check and see if we already have a period
-        if not mini_name[-1:] == '.':
-            mini_name = mini_name + '.'
+            mini_name += ' ' + last_name[0]
+            # Append period if we don't already have one.
+            if not mini_name.endswith('.'):
+                mini_name += '.'
 
         return mini_name
 
