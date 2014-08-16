@@ -257,7 +257,7 @@ class BasicShardHistoryResource(DirectModelResource):
         filtering = {
             'district': ALL,
         }
-        excludes = ['district_id', 'channel', 'heap_objects', 'heap_garbage']
+        excludes = ['district_id', 'channel', 'heap_objects', 'heap_garbage', 'frame_rate', 'cpu_usage', 'mem_usage']
         limit = 200
         max_limit = None
         authorization = ReadOnlyUserLevelAuthorization('view_basic_shard_history', MODE_MATCH_LEVEL)
