@@ -193,6 +193,8 @@ def ToonNameModerateAction(request, name_id):
             name.save()
             Activity.objects.log(user.get_mini_name() + ' rejected the name "' + name.candidate_name + '".', user)
 
+    util.send_pusher_message('toon_names', 'moderated', dict(toon_name_id=name.id, moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
+
     return api.response(status=201)
 
 class NewsItemCommentResource(DirectModelResource):

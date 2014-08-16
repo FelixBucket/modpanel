@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_template.html', 'server', 'bootbox'], function(app, Marionette, util, template, name_template, server, bootbox){
+define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_template.html', 'server', 'bootbox', 'pusher'], function(app, Marionette, util, template, name_template, server, bootbox, pusher){
 
     names = util.collections.readyFactory('news_item_comments');
 
@@ -14,6 +14,9 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
             'click .approve': 'approve',
             'click .reject': 'reject',
             'click .discuss': 'discuss',
+        },
+        modelEvents:{
+            'moderated_remotely': 'moderated_remotely',
         },
         approve: function(){
             if (this.model.get('processed')) return;
@@ -38,6 +41,22 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
             var collection = this.model.collection;
             this.model.set('processed', true);  //Yes I know this isn't a realistic value, but it doesn't matter
             if (collection.where({processed: null}) == 0) loadMoreNames();
+        },
+        moderated_remotely: function(approve, moderator){
+            this.$el.find('.moderation-name').addClass('done');
+            app.pending_counts.set('toon_names', app.pending_counts.get('toon_names')-1);
+
+            if (approve){
+                this.$el.find('.approve').addClass('selected').html('<i class="fa fa-check"></i><p>Approved by ' + moderator + '</p><p>' + this.model.get('candidate_name') + '</p>');
+                this.$el.find('.reject, .discuss').addClass('not-selected');
+            }else{
+                this.$el.find('.reject').addClass('selected').html('<i class="fa fa-times"></i><p>Rejected by ' + moderator + '</p><p>' + this.model.get('candidate_name') + '</p>');
+                this.$el.find('.approve, .discuss').addClass('not-selected');
+            }
+
+            var collection = this.model.collection;
+            this.model.set('processed', true);  //Yes I know this isn't a realistic value, but it doesn't matter
+            if (collection.where({processed: null}) == 0) loadMoreNames();
         }
     });
 
@@ -48,6 +67,10 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
     });
 
     return Marionette.View.extend({
+        initialize: function(){
+            this.channel = pusher.subscribe('toon_names');
+            this.channel.bind('moderated', this.remoteModeration, this);
+        },
         render: function(){
             var _this = this;
             loadMoreNames();
@@ -64,7 +87,18 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
 
             this.namesView = new NameCollectionView({el: this.$el.find('#moderation-names')});
         },
+        remoteModeration: function(payload){
+            //A name has been moderated by someone else (or potentially us), let's see if we have it loaded
+            var name = names.findWhere({id: payload.toon_name_id});
+
+            //If we don't have it loaded or have already moderated it ourselves, ignore it
+            if (!name || name.get('processed')) return;
+
+            //Notify the name view by triggering the model's event
+            name.trigger('moderated_remotely', payload.approve, payload.moderator);
+        },
         onDestroy: function(){
+            pusher.unsubscribe('toon_names');
             this.namesView.destroy();
         }
     });

@@ -1,3 +1,5 @@
+import pusher
+from django.conf import settings
 from django.template import RequestContext
 from django.shortcuts import render, render_to_response
 from .templatetags.utils import *
@@ -14,3 +16,11 @@ def boilerplate_render(template):
         response = render_template(request, template, kwargs)
         return response
     return view
+
+def send_pusher_message(channel, event, data):
+    p = pusher.Pusher(
+        app_id=settings.PUSHER_APP_ID,
+        key=settings.PUSHER_KEY_ID,
+        secret=settings.PUSHER_SECRET,
+    )
+    p[channel].trigger(event, data)
