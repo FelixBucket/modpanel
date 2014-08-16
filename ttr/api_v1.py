@@ -12,6 +12,7 @@ from .tasty_util import *
 from .models import *
 from mcp.models import *
 from mcp.permissions import permissions
+from ttr.rpc import RPC
 
 ### TTR Model Resources
 # None Yet
@@ -176,14 +177,18 @@ def ToonNameModerateAction(request, name_id):
     name.processed = datetime.datetime.now()
     name.reviewer = user
 
+    rpc = RPC()
+
     if int(request.POST.get('approve', 0)) == 1:
         name.was_rejected = False
-        Activity.objects.log(user.get_mini_name() + ' approved the name "' + name.candidate_name + '".', user)
+        if rpc.client.approveName(avId=name.toon_id, name=name.candidate_name) == None:
+            name.save()
+            Activity.objects.log(user.get_mini_name() + ' approved the name "' + name.candidate_name + '".', user)
     else:
         name.was_rejected = True
-        Activity.objects.log(user.get_mini_name() + ' rejected the name "' + name.candidate_name + '".', user)
-
-    name.save()
+        if rpc.client.rejectName(avId=name.toon_id) == None:
+            name.save()
+            Activity.objects.log(user.get_mini_name() + ' rejected the name "' + name.candidate_name + '".', user)
 
     return api.response(status=201)
 
