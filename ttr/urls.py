@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^api/v1/news_item_comments/(\d+)/moderate/$', 'ttr.api_v1.NewsItemCommentModerateAction'),
     url(r'^api/v1/shards/$', 'ttr.api_v1.ShardsResource'),
     url(r'^api/v1/avatar/$', 'ttr.api_v1.FindAccountFromAvId'),
+    url(r'^api/v1/population_history/$', 'ttr.api_v1.PopulationHistoryResource'),
     url(r'^api/', include(v1_api.urls)),
 
     # This is the entry point to the application

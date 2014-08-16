@@ -53,6 +53,7 @@ class ShardCheckIn(models.Model):
     population = models.IntegerField()
 
     timestamp = models.IntegerField(db_index=True)
+    fetched = models.IntegerField(default=lambda: int(time.time()))
 
     class Meta:
         ordering = ['-timestamp']
