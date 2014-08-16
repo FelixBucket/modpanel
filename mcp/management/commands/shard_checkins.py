@@ -27,7 +27,7 @@ class Command(BaseCommand):
             check_in = ShardCheckIn(district=shard.get('districtName'), district_id=shard.get('districtId'), channel=shard.get('channel'),
                                     frame_rate=shard.get('avg-frame-rate'), invasion=shard.get('invasion'), population=shard.get('population'),
                                     heap_objects=shard.get('heap', {}).get('objects'), heap_garbage=shard.get('heap', {}).get('garbage'),
-                                    timestamp=shard.get('lastSeen'))
+                                    cpu_usage=str(shard.get('cpu-usage')), mem_usage=shard.get('mem-usage'), timestamp=shard.get('lastSeen'))
             check_in.save()
             updated_count += 1
 

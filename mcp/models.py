@@ -43,9 +43,12 @@ class ShardCheckIn(models.Model):
     district_id = models.IntegerField()
     channel = models.IntegerField()
 
+    cpu_usage = models.CharField(max_length=50, blank=True, null=True)
+    mem_usage = models.DecimalField(max_digits=8, decimal_places=5, blank=True, null=True)
     frame_rate = models.DecimalField(max_digits=8, decimal_places=5)
     heap_objects = models.IntegerField()
     heap_garbage = models.IntegerField()
+
     invasion = models.CharField(max_length=255, blank=True, null=True)
     population = models.IntegerField()
 
