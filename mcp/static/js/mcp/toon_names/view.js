@@ -48,6 +48,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
                 if (collection.where({processed: null}) == 0) loadMoreNames();
             }).fail(function(){
                 _this.model.set('processed', false);
+                app.pending_counts.set('toon_names', app.pending_counts.get('toon_names')+1);
                 _this.render();
             });
         },
