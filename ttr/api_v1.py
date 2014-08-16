@@ -228,3 +228,10 @@ def NewsItemCommentModerateAction(request, comment_id):
         comment.delete()
 
     return api.response(status=201)
+
+def ShardsResource(request):
+    if request.user.level < permissions['view_shards']:
+        return api.error(403)
+
+    rpc = RPC()
+    return api.response(rpc.client.listShards())
