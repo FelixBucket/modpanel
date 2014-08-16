@@ -12,6 +12,7 @@ from .tasty_util import *
 from .models import *
 from mcp.models import *
 from mcp.permissions import permissions
+from mcp.util import require_permission
 from ttr.rpc import RPC
 
 ### TTR Model Resources
@@ -163,6 +164,7 @@ class ToonNameResource(DirectModelResource):
         bundle.data['reviewer'] = user_dict(bundle, 'reviewer')
         return bundle
 
+@require_permission('approve_name')
 def ToonNameModerateAction(request, name_id):
     if not request.method == "POST":
         return api.error(405)
@@ -208,6 +210,7 @@ class NewsItemCommentResource(DirectModelResource):
         bundle.data['post'] = bundle.obj.post.title
         return bundle
 
+@require_permission('approve_comment')
 def NewsItemCommentModerateAction(request, comment_id):
     if not request.method == "POST":
         return api.error(405)
@@ -229,17 +232,13 @@ def NewsItemCommentModerateAction(request, comment_id):
 
     return api.response(status=201)
 
+@require_permission('view_shards')
 def ShardsResource(request):
-    if request.user.level < permissions['view_shards']:
-        return api.error(403)
-
     rpc = RPC()
     return api.response(rpc.client.listShards())
 
+@require_permission('find_user')
 def FindAccountFromAvId(request):
-    if request.user.level < permissions['find_user']:
-        return api.error(403)
-
     avId = request.GET['avId']
 
     rpc = RPC()
