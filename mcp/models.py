@@ -39,7 +39,7 @@ class Bulletin(models.Model):
         return self.read_by.filter(id=user_id).count() != 0
 
 class ShardCheckIn(models.Model):
-    district = models.CharField(max_length=100)
+    district = models.CharField(max_length=100, db_index=True)
     district_id = models.IntegerField()
     channel = models.IntegerField()
 
@@ -49,7 +49,7 @@ class ShardCheckIn(models.Model):
     invasion = models.CharField(max_length=255, blank=True, null=True)
     population = models.IntegerField()
 
-    timestamp = models.IntegerField()
+    timestamp = models.IntegerField(db_index=True)
 
     class Meta:
         ordering = ['-timestamp']
