@@ -37,3 +37,19 @@ class Bulletin(models.Model):
 
     def check_read(self, user_id):
         return self.read_by.filter(id=user_id).count() != 0
+
+class ShardCheckIn(models.Model):
+    district = models.CharField(max_length=100)
+    district_id = models.IntegerField()
+    channel = models.IntegerField()
+
+    frame_rate = models.DecimalField(max_digits=8, decimal_places=5)
+    heap_objects = models.IntegerField()
+    heap_garbage = models.IntegerField()
+    invasion = models.CharField(max_length=255, blank=True, null=True)
+    population = models.IntegerField()
+
+    timestamp = models.IntegerField()
+
+    class Meta:
+        ordering = ['-timestamp']
