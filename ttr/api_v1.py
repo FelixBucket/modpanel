@@ -249,3 +249,15 @@ def FindAccountFromAvId(request):
     accountId = rpc.client.getAccountByAvatarID(avId=avId)
     response = {"accountId": accountId}
     return api.response(response)
+
+class BasicShardHistoryResource(DirectModelResource):
+    class Meta:
+        queryset = ShardCheckIn.objects.all()
+        resource_name = 'basic_shard_history'
+        filtering = {
+            'district': ALL,
+        }
+        excludes = ['district_id', 'channel', 'heap_objects', 'heap_garbage']
+        limit = 200
+        max_limit = None
+        authorization = ReadOnlyUserLevelAuthorization('view_basic_shard_history', MODE_MATCH_LEVEL)

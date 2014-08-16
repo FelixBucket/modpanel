@@ -10,6 +10,7 @@ v1_api.register(BulletinResource())
 v1_api.register(UserResource())
 v1_api.register(ToonNameResource())
 v1_api.register(NewsItemCommentResource())
+v1_api.register(BasicShardHistoryResource())
 
 urlpatterns = patterns('',
     # API Endpoints First
