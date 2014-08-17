@@ -38,7 +38,9 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
             var _this = this;
 
             this.$el.find('.moderation-name').addClass('done');
-            app.pending_counts.set('toon_names', app.pending_counts.get('toon_names')-1);
+            if (app.pending_counts.get('toon_names') >= 1) {
+                app.pending_counts.set('toon_names', app.pending_counts.get('toon_names')-1);
+            }
 
             var collection = this.model.collection;
             this.model.set('processed', true);  //Yes I know this isn't a realistic value, but it doesn't matter
@@ -54,7 +56,9 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
         },
         moderated_remotely: function(approve, moderator){
             this.$el.find('.moderation-name').addClass('done');
-            app.pending_counts.set('toon_names', app.pending_counts.get('toon_names')-1);
+            if (app.pending_counts.get('toon_names') >= 1) {
+                app.pending_counts.set('toon_names', app.pending_counts.get('toon_names')-1);
+            }
 
             if (approve){
                 this.$el.find('.approve').addClass('selected').html('<i class="fa fa-check"></i><p>Approved by ' + moderator + '</p><p>' + this.model.get('candidate_name') + '</p>');
