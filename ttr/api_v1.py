@@ -272,7 +272,12 @@ class BasicShardHistoryResource(DirectModelResource):
 
 @require_permission('view_basic_shard_history')
 def PopulationHistoryResource(request):
+    # Load population data
     cursor = connection.cursor()
-    cursor.execute("SELECT fetched as timestamp, SUM(population) as population FROM mcp_shardcheckin GROUP BY fetched;")
+    cursor.execute("SELECT fetched as timestamp, SUM(population) as population FROM mcp_shardcheckin GROUP BY fetched ORDER BY fetched DESC;")
     population = cursor.fetchall()
-    return api.response(population)
+
+    # Convert to a nicer format
+    points = [dict(timestamp=p[0], population=int(p[1])) for p in population]
+
+    return api.response(points)
