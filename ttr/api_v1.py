@@ -183,16 +183,23 @@ def ToonNameModerateAction(request, name_id):
 
     rpc = RPC()
 
+    # message code 100 = name approved
+    # message code 101 = name rejected
+
     if int(request.POST.get('approve', 0)) == 1:
         name.was_rejected = False
         if rpc.client.approveName(avId=name.toon_id, name=name.candidate_name) == None:
             name.save()
             Activity.objects.log(user.get_mini_name() + ' approved the name "' + name.candidate_name + '".', user)
+            # Alert the user that their name was approved.
+            rpc.client.messageAvatar(avId=name.toon_id, code=100, params=[])
     else:
         name.was_rejected = True
         if rpc.client.rejectName(avId=name.toon_id) == None:
             name.save()
             Activity.objects.log(user.get_mini_name() + ' rejected the name "' + name.candidate_name + '".', user)
+            # Alert the user that their name was denied.
+            rpc.client.messageAvatar(avId=name.toon_id, code=101, params=[])
 
     util.send_pusher_message('toon_names', 'moderated', dict(toon_name_id=name.id, moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
 
