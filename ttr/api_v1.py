@@ -236,16 +236,17 @@ def ToonNameModerateAction(request, name_id):
         name.was_rejected = False
         if rpc.client.approveName(avId=name.toon_id, name=name.candidate_name) == None:
             name.save()
+            Action.objects.log(user, 'approved', 'Toon Name', points, related_id=name_id)
             # Alert the user that their name was approved.
             rpc.client.messageAvatar(avId=name.toon_id, code=100, params=[])
     else:
         name.was_rejected = True
         if rpc.client.rejectName(avId=name.toon_id) == None:
             name.save()
+            Action.objects.log(user, 'rejected', 'Toon Name', points, related_id=name_id)
             # Alert the user that their name was denied.
             rpc.client.messageAvatar(avId=name.toon_id, code=101, params=[])
 
-    Action.objects.log(user, ' ', 'Toon Name', points, related_id=name_id)
     util.send_pusher_message('toon_names', 'moderated', dict(toon_name_id=name.id, moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
 
     return api.response(status=201)
@@ -280,10 +281,11 @@ def NewsItemCommentModerateAction(request, comment_id):
     if int(request.POST.get('approve', 0)) == 1:
         comment.approved = True
         comment.save()
+        Action.objects.log(user, 'approved', 'Comment', 1, related_id=comment_id)
     else:
+        Action.objects.log(user, 'rejected', 'Comment', 1, related_content=comment.body)
         comment.delete()
 
-    Action.objects.log(user, ' ', 'Comment', 1, related_content=comment_id)
     util.send_pusher_message('news_comments', 'moderated', dict(comment_id=int(comment_id), moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
 
     return api.response(status=201)

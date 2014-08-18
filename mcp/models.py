@@ -23,17 +23,17 @@ class ActionStory(models.Model):
 
         # Write the story! Gather all the actions directly
         cursor = connection.cursor()
-        cursor.execute("SELECT action_type, related_model, COUNT(*), SUM(points) FROM mcp_action WHERE story_id=" + str(self.id) + " GROUP BY related_model, action_type;")
+        cursor.execute("SELECT related_model, COUNT(*), SUM(points) FROM mcp_action WHERE story_id=" + str(self.id) + " GROUP BY related_model;")
         story_actions = cursor.fetchall()
 
         # Calculate points
         points = 0
         for actions in story_actions:
-            points += int(actions[3])
-        story = self.user.get_mini_name() + " earned " + "{:,}".format(points) + " points for reviewing"
+            points += int(actions[2])
+        story = self.user.get_mini_name() + " earned " + "{:,}".format(points) + " point" + s(points) + " for reviewing"
 
         # Build the story
-        story_parts = [action[0] + ' ' + str(action[2]) + ' ' + action[1].lower() + s(action[2]) for action in story_actions]
+        story_parts = [' ' + str(action[1]) + ' ' + action[0].lower() + s(action[1]) for action in story_actions]
 
         if len(story_parts) > 1:
             story = story + ', '.join(story_parts[:-1]) + ' and ' + story_parts[-1] + '.'
