@@ -170,7 +170,7 @@ class UserResource(DirectModelResource):
     class Meta:
         queryset = User.objects.all()
         resource_name = 'users'
-        excludes = ['password']
+        excludes = ['password', 'totp_secret']
         filtering = {
             'id': ALL,
             'username': ALL,
