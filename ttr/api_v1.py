@@ -1,4 +1,4 @@
-import datetime, time
+import datetime, time, copy
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.db import connection
@@ -36,20 +36,43 @@ def user_dict(bundle, user_prop_name):
 
 @csrf_exempt
 def LoginResource(request):
+    ###
+    # This method handles both phases of Two-Factor Authentication
+    # If a value of tfa_userid is present, it will treat it as the second
+    # leg of two-factor auth. If it is not, it will be the first leg.
+    ###
+
     # Check to make sure the user isn't logged in already, if they are we'll return the same data below
     if not request.user.is_authenticated():
-        user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
-        if user is not None:
-            if user.is_active:
-                if user.level >= 200:
-                    # Login
-                    auth.login(request, user)
-                else:
-                    return api.error(403, errors='You are not authorized to come in here.')
+
+        if request.POST.get('tfa_userid'):
+            ### The second leg of TFA ###
+            user = auth.authenticate(session=request.session, user_id=request.POST.get('tfa_userid'), token=request.POST.get('tfa_token'), signature=request.POST.get('tfa_signature'))
+
+            if user is not None:
+                auth.login(request, user)
             else:
-                return api.error(403, errors='Your account was disabled by the administrator.')
+                return api.error(400, errors='Your authentication token was invalid.')
         else:
-            return api.error(400, errors='Your username or password was incorrect.')
+            ### The first leg of TFA, or potentially no TFA at all ###
+            user = auth.authenticate(username=request.POST.get('username'), password=request.POST.get('password'))
+
+            if user is not None:
+                if user.is_active:
+                    if user.level >= 200:
+
+                        # The user has successfully verified their password and is authorized to login
+                        # But first, let's see if they have two step auth enabled
+                        if user.totp_secret:
+                            return api.response(user.begin_two_factor_authentication(request.session))
+                        else:
+                            auth.login(request, user)
+                    else:
+                        return api.error(403, errors='You are not authorized to come in here.')
+                else:
+                    return api.error(403, errors='Your account was disabled by the administrator.')
+            else:
+                return api.error(400, errors='Your username or password was incorrect.')
     else:
         user = request.user
 

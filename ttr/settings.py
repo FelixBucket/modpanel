@@ -80,6 +80,7 @@ DATABASES = {'default': dj_database_url.config()}
 # Users and Auth
 
 AUTH_USER_MODEL = 'ttr.User'
+AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', 'ttr.two_factor_auth.TwoFactorAuthBackend')
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher', # Force compatibility with Play
 )
