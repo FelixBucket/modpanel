@@ -26,19 +26,19 @@ class ActionStory(models.Model):
         cursor.execute("SELECT action_type, related_model, COUNT(*), SUM(points) FROM mcp_action WHERE story_id=" + str(self.id) + " GROUP BY related_model, action_type;")
         story_actions = cursor.fetchall()
 
-        # Build the story
-        story_parts = [action[0] + ' ' + str(action[2]) + ' ' + action[1].lower() + s(action[2]) for action in story_actions]
-
-        if len(story_parts) > 1:
-            story = self.user.get_mini_name() + ' ' + ', '.join(story_parts[:-1]) + ' and ' + story_parts[-1] + '.'
-        else:
-            story = self.user.get_mini_name() + ' ' + story_parts[-1] + '.'
-
         # Calculate points
         points = 0
         for actions in story_actions:
             points += int(actions[3])
-        story = story + " They earned " + "{:,}".format(points) + " points."
+        story = self.user.get_mini_name() + " earned " + "{:,}".format(points) + " points for reviewing"
+
+        # Build the story
+        story_parts = [action[0] + ' ' + str(action[2]) + ' ' + action[1].lower() + s(action[2]) for action in story_actions]
+
+        if len(story_parts) > 1:
+            story = story + ', '.join(story_parts[:-1]) + ' and ' + story_parts[-1] + '.'
+        else:
+            story = story + story_parts[-1] + '.'
 
         # Save the story
         self.content = story
