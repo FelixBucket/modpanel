@@ -23,7 +23,7 @@ class TwoFactorAuthBackend(ModelBackend):
             return None
 
         # Verify the token from the user
-        expected_token = str(get_totp_token(user.totp_secret.upper()))
+        expected_token = str(get_totp_token(user.totp_secret.upper())).zfill(6)
         if expected_token == token:
             return user
 
