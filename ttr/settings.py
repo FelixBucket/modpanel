@@ -76,6 +76,7 @@ STATIC_URL = '/static/' + VERSION + '/'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 import dj_database_url
 DATABASES = {'default': dj_database_url.config()}
+DATABASES['default']['CONN_MAX_AGE'] = None
 
 # Users and Auth
 
