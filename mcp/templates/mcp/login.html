@@ -40,6 +40,8 @@
     <meta name="msapplication-TileColor" content="#2d89ef">
     <meta name="msapplication-TileImage" content="{% static "img/mcp/favicons/mstile-144x144.png" %}">
     <meta name="msapplication-config" content="{% static "img/mcp/favicons/browserconfig.xml" %}">
+
+    <script data-main="{% static "js/mcp/login_main.js" %}" src="{% static "lib/require.js" %}"></script>
 </head>
 <body id="login-page">
     <div class="container">
@@ -54,17 +56,16 @@
                                 </div>
                             </header>
                             <div id="login-box-inner">
-                                {% if auth_message_type %}
-                                <div class="alert alert-{{ auth_message_type }}">{{ auth_message }}</div>
-                                {% endif %}
-                                <form role="form" action="{% url "mcp:login" %}" method="POST">{% csrf_token %}
+                                <div class="alert" style="display:none"></div>
+
+                                <form role="form" id="login-form">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                        <input class="form-control" type="text" name="username" placeholder="Username">
+                                        <input class="form-control" type="text" name="username" placeholder="Username" id="username">
                                     </div>
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                        <input type="password" class="form-control" name="password" placeholder="Password">
+                                        <input type="password" class="form-control" name="password" placeholder="Password" id="password">
                                     </div>
                                     <div id="remember-me-wrapper">
                                         <div class="row">
@@ -81,6 +82,19 @@
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <button type="submit" class="btn btn-success col-xs-12">Login</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <form role="form" id="login-form-2fa" style="display:none">
+                                    <p><strong>Looks like you have Two-Factor Authentication on! What's the token?</strong></p>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                        <input class="form-control" type="text" name="token" placeholder="Authentication Token" id="token">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <button type="submit" class="btn btn-success col-xs-12">There, now let me in!</button>
                                         </div>
                                     </div>
                                 </form>

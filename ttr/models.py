@@ -74,6 +74,7 @@ class User(AbstractBaseUser):
         tfa_sig = base64.b16encode(pbkdf2(tfa_key + self.password, tfa_salt, 1000, 24))
 
         return {
+            'status': 'tfa',
             'tfa_userid': self.id,
             'tfa_signature': tfa_sig
         }

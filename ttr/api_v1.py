@@ -61,6 +61,12 @@ def LoginResource(request):
                 if user.is_active:
                     if user.level >= 200:
 
+                        # Before we continue, check the remember_me option
+                        if int(request.POST.get('remember_me', 0)) == 0:
+                            # The user doesn't want us to remember them
+                            # Tell the cookie to expire when the browser closes
+                            request.session.set_expiry(0)
+
                         # The user has successfully verified their password and is authorized to login
                         # But first, let's see if they have two step auth enabled
                         if user.totp_secret:
@@ -77,7 +83,7 @@ def LoginResource(request):
         user = request.user
 
     if not hasattr(user, 'mod_profile'):
-        return api.error(400, errors='Please login from the website to set up your account for the first time.')
+        return api.response({'status': 'pls_create_mod_profile'})
 
     # Fetch user information
     permissions = user.get_permissions()
@@ -86,6 +92,7 @@ def LoginResource(request):
     csrf_holder.update(csrf(request))
 
     response = {
+        'status': 'success',
         'user': {
             'id': request.user.id,
             'mini_name': user.get_mini_name(),
