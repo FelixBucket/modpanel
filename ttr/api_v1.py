@@ -243,7 +243,7 @@ def ToonNameModerateAction(request, name_id):
         name.was_rejected = True
         if rpc.client.rejectName(avId=name.toon_id) == None:
             name.save()
-            Action.objects.log(user, 'approved', 'Toon Name', points, related_id=name_id)
+            Action.objects.log(user, 'rejected', 'Toon Name', points, related_id=name_id)
             # Alert the user that their name was denied.
             rpc.client.messageAvatar(avId=name.toon_id, code=101, params=[])
 
