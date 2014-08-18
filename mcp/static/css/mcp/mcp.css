@@ -226,24 +226,21 @@ div#content-wrapper{
 /* Name Moderation */
 .moderation-name{
     padding: 15px 15px 15px 15px;
-    height: 130px;
+    height: 150px;
     width: 100%;
     position: relative;
+}
+.moderation-name .moderation-name-table-wrapper{
     display: table;
+    width: 100%;
 }
-.moderation-name:hover{
-    cursor: pointer;
-}
-.moderation-name.done:hover{
-    cursor: default;
-}
-.moderation-name > .moderation-name-text-wrapper{
+.moderation-name .moderation-name-text-wrapper{
     display: table-cell;
-    height: 70px;
+    height: 44px;
     vertical-align: middle;
     text-align: center;
 }
-.moderation-name > .moderation-name-text-wrapper > .moderation-name-text{
+.moderation-name .moderation-name-text-wrapper > .moderation-name-text{
     color: transparent;
     text-shadow: 0px 0px 0px black;
     margin: 0px;
@@ -252,68 +249,83 @@ div#content-wrapper{
     font-size: 1.15em;
     font-weight: bold;
 
+    cursor: pointer;
+
     -moz-transition: text-shadow 0.15s linear;
     -o-transition: text-shadow 0.15s linear;
     -webkit-transition: text-shadow 0.15s linear;
     transition: text-shadow 0.15s linear;
 }
-.moderation-name:hover > .moderation-name-text-wrapper > .moderation-name-text, .moderation-name.done > .moderation-name-text-wrapper > .moderation-name-text{
+.moderation-name.done .moderation-name-text-wrapper > .moderation-name-text{
     text-shadow: 0px 0px 10px black;
+    cursor: default;
 }
 .moderation-name > .moderation-name-action{
     position: absolute;
-    top: 0px;
-    height: 100%;
+    top: 70px;
+    height: 80px;
     width: 33%;
     text-align: center;
     font-weight: bold;
-    padding: 10px;
-    opacity: 0;
+    padding: 6px 10px 10px 10px;
+    opacity: 1.0;
 
-    -moz-transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
-    -o-transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
-    -webkit-transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
-    transition: opacity 0.15s linear, width 0.1s linear, background-color 0.15s linear;
+    background-color: rgba(220, 220, 220, 0.4);
+    color: rgba(210,210,210,1.0);
+
+    -moz-transition: opacity 0.15s linear, width 0.1s linear, height 0.1s linear, top 0.1s linear, background-color 0.15s linear;
+    -o-transition: opacity 0.15s linear, width 0.1s linear, height 0.1s linear, top 0.1s linear, background-color 0.15s linear;
+    -webkit-transition: opacity 0.15s linear, width 0.1s linear, height 0.1s linear, top 0.1s linear, background-color 0.15s linear;
+    transition: opacity 0.15s linear, width 0.1s linear, height 0.1s linear, top 0.1s linear, background-color 0.15s linear;
 }
 .moderation-name:hover > .moderation-name-action{
     opacity: 1.0;
+    cursor: pointer;
+}
+.moderation-name.done > .moderation-name-action{
+    cursor: default;
 }
 .moderation-name > .moderation-name-action > i{
     font-size: 3em;
 }
 .moderation-name > .approve{
     left: 0;
-    background-color: rgba(34, 139, 34, 0.6);
-    color: rgba(0, 115, 0, 1.0);
-    border-radius: 3px 0px 0px 3px;
+    border-radius: 0px 0px 0px 3px;
 }
 .moderation-name > .reject{
     right: 0;
-    background-color: rgba(139, 34, 34, 0.6);
-    color: rgba(115, 0, 0, 1.0);
-    border-radius: 0px 3px 3px 0px
+    border-radius: 0px 0px 3px 0px
 }
 .moderation-name > .discuss{
     left: 33%;
     width: 34%;
-    background-color: rgba(51, 143, 235, 0.6);
-    color: rgba(0, 0, 115, 1.0);
 }
 .moderation-name > .approve:hover, .moderation-name > .approve.selected{
     background-color: rgba(64, 199, 64, 0.6);
+    color: rgba(0, 115, 0, 1.0);
 }
 .moderation-name > .reject:hover, .moderation-name > .reject.selected{
     background-color: rgba(199, 64, 64, 0.6);
+    color: rgba(115, 0, 0, 1.0);
 }
 .moderation-name > .discuss:hover, .moderation-name > .discuss.selected{
     background-color: rgba(101, 193, 255, 0.6);
+    color: rgba(0, 0, 115, 1.0);
 }
 .moderation-name > .moderation-name-action.selected{
     width: 100%;
+    height: 100%;
+    top: 0px;
     opacity: 1.0 !important;
+    border-radius: 3px;
 }
 .moderation-name > .moderation-name-action.not-selected{
     opacity: 0;
+}
+@media(max-width:420px){
+    .moderation-name > .moderation-name-action{
+        font-size: 1.15em;
+    }
 }
 
 /* Morris Graphs */

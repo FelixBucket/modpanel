@@ -1,6 +1,6 @@
 define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_template.html', 'server', 'pusher'], function(app, Marionette, util, template, comment_template, server, pusher){
 
-    comments = util.collections.readyFactory('news_item_comments');
+    var comments;
 
     var loadMoreComments = function(){
         server.get('/api/v1/news_item_comments/?approved=false').done(function(loaded){
@@ -75,6 +75,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_tem
 
     return Marionette.View.extend({
         initialize: function(){
+            comments = util.collections.readyFactory('news_item_comments');
             this.channel = pusher.subscribe('news_comments');
             this.channel.bind('moderated', this.remoteModeration, this);
         },

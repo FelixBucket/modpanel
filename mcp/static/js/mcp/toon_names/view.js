@@ -1,6 +1,6 @@
 define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_template.html', 'server', 'bootbox', 'pusher', 'text!./guidelines.html', 'modal'], function(app, Marionette, util, template, name_template, server, bootbox, pusher, guidelines, Modal){
 
-    names = util.collections.readyFactory('news_item_comments');
+    var names;
 
     var loadMoreNames = function(){
         server.get('/api/v1/toon_names/?processed=None').done(function(loaded){
@@ -14,6 +14,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
             'click .approve': 'approve',
             'click .reject': 'reject',
             'click .discuss': 'discuss',
+            'click .moderation-name-text': 'google',
         },
         modelEvents:{
             'moderated_remotely': 'moderated_remotely',
@@ -33,6 +34,9 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
         discuss: function(){
             if (this.model.get('processed')) return;
             bootbox.alert("Whoa there cowboy, you can't discuss Toon Names yet. You'll be able to soon!");
+        },
+        google: function(){
+            window.open('https://www.google.com/search?q=' + this.model.get('candidate_name'));
         },
         moderate: function(approve){
             var _this = this;
@@ -82,6 +86,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
 
     return Marionette.View.extend({
         initialize: function(){
+            names = util.collections.readyFactory('news_item_comments');
             this.channel = pusher.subscribe('toon_names');
             this.channel.bind('moderated', this.remoteModeration, this);
         },
