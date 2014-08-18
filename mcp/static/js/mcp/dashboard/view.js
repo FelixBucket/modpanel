@@ -32,7 +32,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'sh
             bulletins = util.collections.readyFactory('bulletins');
             bulletins.fetch();
 
-            recent_activity = util.collections.readyFactory('activities');
+            recent_activity = util.collections.readyFactory('action_stories');
             recent_activity.fetch();
         },
         render: function(){

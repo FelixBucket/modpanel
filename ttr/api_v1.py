@@ -3,6 +3,7 @@ from django.contrib import auth
 from django.core.context_processors import csrf
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.dateformat import format
 from tastypie import fields
 from tastypie.authorization import Authorization
 from tastypie.exceptions import Unauthorized
@@ -117,15 +118,15 @@ def DashboardStatsResource(request):
 
     accounts_count = User.objects.all().count()
     playtimes_count = ScheduledSession.objects.all().count()
-    actions_today_count = Activity.objects.filter(action=True, timestamp__gte=today_timestamp).count()
-    total_actions_count = Activity.objects.filter(action=True).count()
+    actions_today_count = Action.objects.filter(timestamp__gte=today_timestamp).count()
+    total_actions_count = Action.objects.all().count()
     return api.response(dict(accounts=accounts_count, playtimes=playtimes_count,
                             actions_today=actions_today_count, total_actions=total_actions_count))
 
-class ActivityResource(DirectModelResource):
+class ActionStoryResource(DirectModelResource):
     class Meta:
-        queryset = Activity.objects.all()
-        resource_name = 'activities'
+        queryset = ActionStory.objects.all()
+        resource_name = 'action_stories'
         limit = 50
         max_limit = None
 
@@ -163,7 +164,7 @@ class BulletinResource(DirectModelResource):
         user = bundle.request.user
         bundle = super(BulletinResource, self).obj_create(bundle, author=user)
         bundle.obj.read_by.add(user)
-        Activity.objects.log(user.get_mini_name() + ' posted a bulletin titled "' + bundle.obj.title + '".', user)
+        Action.objects.log(user, 'posted', 'Bulletin', 0, related_id=bundle.obj.id)
         return bundle
 
 class UserResource(DirectModelResource):
@@ -216,18 +217,33 @@ def ToonNameModerateAction(request, name_id):
     # message code 100 = name approved
     # message code 101 = name rejected
 
+    # Calculate the number of points to award based on the time the name has been waiting
+    # The thought process is that the harder names will sit longer, so we will award more
+    # points to those. It will vary from 1 to 3.
+    # We will also reward a bonus point for a very quick moderation. (30 seconds)
+    time_submitted = int(format(name.received, u'U'))
+    time_delta = int(time.time()) - time_submitted
+    print time_delta
+    points = 1
+    if (time_delta <= 30):
+        points = 2
+    elif (time_delta >= 1800): # 30 minutes
+        points = 2
+    elif (time_delta >= 10800): # 3 hours
+        points = 3
+
     if int(request.POST.get('approve', 0)) == 1:
         name.was_rejected = False
         if rpc.client.approveName(avId=name.toon_id, name=name.candidate_name) == None:
             name.save()
-            Activity.objects.log(user.get_mini_name() + ' approved the name "' + name.candidate_name + '".', user)
+            Action.objects.log(user, 'approved', 'Toon Name', points, related_id=name_id)
             # Alert the user that their name was approved.
             rpc.client.messageAvatar(avId=name.toon_id, code=100, params=[])
     else:
         name.was_rejected = True
         if rpc.client.rejectName(avId=name.toon_id) == None:
             name.save()
-            Activity.objects.log(user.get_mini_name() + ' rejected the name "' + name.candidate_name + '".', user)
+            Action.objects.log(user, 'approved', 'Toon Name', points, related_id=name_id)
             # Alert the user that their name was denied.
             rpc.client.messageAvatar(avId=name.toon_id, code=101, params=[])
 
@@ -265,9 +281,9 @@ def NewsItemCommentModerateAction(request, comment_id):
     if int(request.POST.get('approve', 0)) == 1:
         comment.approved = True
         comment.save()
-        Activity.objects.log(user.get_mini_name() + ' approved the comment "' + comment.body + '".', user)
+        Action.objects.log(user, 'approved', 'Comment', 1, related_id=comment_id)
     else:
-        Activity.objects.log(user.get_mini_name() + ' rejected the comment "' + comment.body + '".', user)
+        Action.objects.log(user, 'rejected', 'Comment', 1, related_content=comment.body)
         comment.delete()
 
     util.send_pusher_message('news_comments', 'moderated', dict(comment_id=int(comment_id), moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
