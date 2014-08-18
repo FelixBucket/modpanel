@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_template.html', 'server', 'bootbox', 'pusher'], function(app, Marionette, util, template, name_template, server, bootbox, pusher){
+define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_template.html', 'server', 'bootbox', 'pusher', 'text!./guidelines.html', 'modal'], function(app, Marionette, util, template, name_template, server, bootbox, pusher, guidelines, Modal){
 
     names = util.collections.readyFactory('news_item_comments');
 
@@ -89,6 +89,10 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./name_templa
             var _this = this;
             loadMoreNames();
             this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT}));
+
+            this.$el.find('#tn-approval-guidelines').click(function(){
+                new Modal(guidelines);
+            });
 
             var NameCollectionView =  Marionette.CollectionView.extend({
                 collection: names,

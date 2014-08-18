@@ -22,6 +22,7 @@ requirejs.config({
         server: 'shared/services/server',
         util: 'shared/services/util',
         pusher: 'shared/services/pusher',
+        modal: 'shared/modal/modal',
     },
     shim: {
         bootstrap: ['jquery'],
