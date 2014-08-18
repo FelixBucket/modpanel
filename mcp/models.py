@@ -28,7 +28,11 @@ class ActionStory(models.Model):
 
         # Build the story
         story_parts = [action[0] + ' ' + str(action[2]) + ' ' + action[1].lower() + s(action[2]) for action in story_actions]
-        story = self.user.get_mini_name() + ' ' + ', '.join(story_parts[:-1]) + ' and ' + story_parts[-1] + '.'
+
+        if len(story_parts) > 1:
+            story = self.user.get_mini_name() + ' ' + ', '.join(story_parts[:-1]) + ' and ' + story_parts[-1] + '.'
+        else:
+            story = self.user.get_mini_name() + ' ' + story_parts[-1] + '.'
 
         # Calculate points
         points = 0
