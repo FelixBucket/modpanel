@@ -15,6 +15,7 @@
     <link href="{% static "css/morris.css" %}" type="text/css" rel="stylesheet" />
     <link href="{% static "css/mcp/nanoscroller.css" %}" type="text/css" rel="stylesheet" />
     <link href="{% static "css/toastr.min.css" %}" type="text/css" rel="stylesheet" />
+    <link href="{% static "lib/hookjs/hook.css" %}" type="text/css" rel="stylesheet" />
 
     <!-- google font libraries -->
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,300|Titillium+Web:200,300,400' rel='stylesheet' type='text/css'>
@@ -47,6 +48,8 @@
 </head>
 <body>
 
+    <div class="hook" id="hook"><div class="hook-loader"><div class="hook-spinner"></div></div></div>
+
     <header class="navbar" id="header-navbar">
         <div class="container">
             <a href="#" id="logo" class="navbar-brand">
@@ -74,6 +77,8 @@
 
             </div>
         </div>
+    </div>
+
     </div>
 
     <script>
