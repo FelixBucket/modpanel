@@ -18,8 +18,6 @@ requirejs.config({
         'pusher-lib': '//js.pusher.com/2.2/pusher.min',
         raphael: '../../lib/raphael-min',
         morris: '../../lib/morris.min',
-        mousewheel: '../../lib/hookjs/mousewheel',
-        hook: '../../lib/hookjs/hook.min',
 
         server: 'shared/services/server',
         util: 'shared/services/util',
@@ -50,8 +48,6 @@ requirejs.config({
         },
         'bootstrap-wysiwyg': ['jquery', 'bootstrap', 'hotkeys'],
         morris: ['jquery', 'raphael'],
-        mousewheel: ['jquery'],
-        hook: ['mousewheel'],
     },
 });
 

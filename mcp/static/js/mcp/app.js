@@ -1,4 +1,4 @@
-define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'bootstrap', 'underscore-string', 'hook'], function(Backbone, Marionette, Router, pusher, $, toastr){
+define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'bootstrap', 'underscore-string'], function(Backbone, Marionette, Router, pusher, $, toastr){
     //Prepare underscore mixins
     _.mixin(_.string.exports());
 
@@ -11,7 +11,6 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
         if (this.activeController) this.activeController.destroy();
         this.activeController = false;
         this.activeControllerClass = controller;
-        this.activeControllerArgs = args;
         this.trigger('viewChange', controller);
         require([controller], function(Controller){
             _this.activeController = new Controller();
@@ -69,7 +68,6 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
 
     app.activeController = false;
     app.activeControllerClass = false;
-    app.activeControllerArgs = false;
 
     app.addRegions({
         headerRegion: '#navbarRegion',
@@ -102,14 +100,6 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
 
         //Initialize Header and Sidebar
         require(['shared/header/header', 'shared/sidebar/sidebar']);
-
-        //Initialize pull to refresh
-        $('#hook').hook({
-            reloadPage: false,
-            reloadEl: function(){
-                swapController.call(app, app.activeControllerClass, app.activeControllerArgs);
-            },
-        });
     });
 
     app.setTitle = function(title){
