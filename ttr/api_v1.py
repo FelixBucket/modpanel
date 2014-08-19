@@ -1,4 +1,5 @@
 import datetime, time, copy
+from datetime import timedelta
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.db import connection
@@ -24,6 +25,12 @@ from ttr.rpc import RPC
 def user_dict(bundle, user_prop_name):
     try:
         user = getattr(bundle.obj, user_prop_name)
+        return user_dict_direct(user)
+    except:
+        return None
+
+def user_dict_direct(user):
+    try:
         profile = user.get_mod_profile()
         return {
             'id': user.id,
@@ -327,3 +334,35 @@ def PopulationHistoryResource(request):
     points = [dict(timestamp=p[0], population=int(p[1])) for p in population]
 
     return api.response(points)
+
+def LeaderboardsResource(request):
+    cursor = connection.cursor()
+
+    now = datetime.datetime.now()
+    leaderboards = {}
+
+    # Daily
+    today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
+    today_timestamp = str(time.mktime(today.timetuple()))
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + today_timestamp + " GROUP BY user_id ORDER BY total DESC LIMIT 5;")
+    leaderboards['daily'] = cursor.fetchall()
+
+    # Weekly
+    week_start = today - timedelta(days=today.weekday() + 1 % 7)
+    week_start_timestamp = str(time.mktime(week_start.timetuple()))
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + week_start_timestamp + " GROUP BY user_id ORDER BY total DESC LIMIT 5;")
+    leaderboards['weekly'] = cursor.fetchall()
+
+    # All Time
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action GROUP BY user_id LIMIT 5;")
+    leaderboards['all_time'] = cursor.fetchall()
+
+    # Fill in details
+    real_leaderboards = []
+    for timeperiod, board in leaderboards.iteritems():
+        pretty_board = []
+        for leader in board:
+            pretty_board.append(dict(user=user_dict_direct(User.objects.get(pk=leader[0])), points=leader[1]))
+        leaderboards[timeperiod] = pretty_board
+
+    return api.response(leaderboards)
