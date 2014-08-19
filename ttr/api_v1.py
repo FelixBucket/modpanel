@@ -354,7 +354,7 @@ def LeaderboardsResource(request):
     leaderboards['weekly'] = cursor.fetchall()
 
     # All Time
-    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action GROUP BY user_id LIMIT 5;")
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action GROUP BY user_id ORDER BY total DESC LIMIT 5;")
     leaderboards['all_time'] = cursor.fetchall()
 
     # Fill in details
