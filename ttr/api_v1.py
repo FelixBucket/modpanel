@@ -305,6 +305,8 @@ def ShardsResource(request):
 @require_permission('find_user')
 def FindAccountFromAvId(request):
     avId = request.GET['avId']
+    if not avId:
+        return api.response(status=201, errors='You must specifiy an avId')
 
     rpc = RPC()
     accountId = rpc.client.getAccountByAvatarID(avId=avId)
