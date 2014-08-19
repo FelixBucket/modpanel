@@ -380,3 +380,56 @@ ul.guidelines > li > p.examples{
         -moz-columns: 2;
     }
 }
+
+/* Leaderboards */
+.leaderboards .profile-box-header{
+    padding: 15px;
+    min-height: 200px;
+}
+.leaderboards .leaderboards-title h3{
+    border: none;
+    margin-top: 0px;
+    margin-bottom: 7px;
+}
+.leaderboards .leaderboard-toggles{
+    margin-bottom: 10px;
+}
+.leaderboards .leaderboard-toggles > a{
+    color: rgba(255,255,255,0.7);
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 6px;
+}
+.leaderboards .leaderboard-toggles > a:hover{
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+}
+.leaderboards .leaderboard-toggles > a.active{
+    color: white;
+}
+.leaderboards .leaderboard-runners-up li{
+    position: relative;
+    height: 62px;
+    display: block;
+    border-bottom: 1px solid #EAEAEA;
+}
+.leaderboards .leaderboard-runners-up li:last-child{
+    border-bottom: none;
+}
+.leaderboards .leaderboard-runners-up p{
+    font-size: 1.01em;
+    padding-top: 21px;
+}
+.leaderboards .leaderboard-runners-up img{
+    width: auto;
+    margin-top: 5px;
+    max-height: 90%;
+    margin-right: 5px;
+}
+.leaderboards .leaderboard-runners-up p.leaderboard-runner-up-points{
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    font-weight: bold;
+    color: rgb(16,174,83);
+}

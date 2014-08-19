@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'shared/wysiwygModal/view', 'text!./bulletins/template.html', 'text!./activities/template.html', 'bootbox', 'server', 'slimscroll', 'livestamp', 'clamp'], function(app, Marionette, util, template, StatsView, WysiwygModal, bulletin_template, activity_template, bootbox, server){
+define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', './leaderboards/view', 'shared/wysiwygModal/view', 'text!./bulletins/template.html', 'text!./activities/template.html', 'bootbox', 'server', 'slimscroll', 'livestamp', 'clamp'], function(app, Marionette, util, template, StatsView, LeaderboardsView, WysiwygModal, bulletin_template, activity_template, bootbox, server){
 
     //Bulletin Definitions
     var bulletins;
@@ -42,13 +42,16 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'sh
             //Stats
             this.stats_view = new StatsView({el: this.$el.find('#dashboard-stats')});
 
+            //Leaderboards
+            this.leaderboards_view = new LeaderboardsView({el: this.$el.find('#leaderboards')});
+
             //Bulletins Widget
             this.bulletins_view = util.views.readyCollectionViewFactory(bulletins, BulletinView, {el: this.$el.find('#bulletins-list')});
             this.$el.find('.bulletins-inner').slimScroll({
-                height: '391px',
+                height: '369px',
                 alwaysVisible: false,
                 railVisible: true,
-                wheelStep: 6,
+                wheelStep: 25,
                 allowPageScroll: false
             });
             this.$el.find('#dashboard-new-bulletin-task').click(function(){
@@ -63,15 +66,16 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', 'sh
             //Recent Activity Widget
             this.recent_activity_view = util.views.readyCollectionViewFactory(recent_activity, ActivityView, {el: this.$el.find('#activity-list')});
             this.$el.find('.activity-inner').slimScroll({
-                height: '400px',
+                height: '378px',
                 alwaysVisible: false,
                 railVisible: true,
-                wheelStep: 6,
+                wheelStep: 25,
                 allowPageScroll: false
             });
         },
         onDestroy: function(){
             this.stats_view.destroy();
+            this.leaderboards_view.destroy();
             this.bulletins_view.destroy();
             this.recent_activity_view.destroy();
         }

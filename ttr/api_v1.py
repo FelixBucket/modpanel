@@ -362,7 +362,7 @@ def LeaderboardsResource(request):
     for timeperiod, board in leaderboards.iteritems():
         pretty_board = []
         for leader in board:
-            pretty_board.append(dict(user=user_dict_direct(User.objects.get(pk=leader[0])), points=leader[1]))
+            pretty_board.append(dict(user=user_dict_direct(User.objects.get(pk=leader[0])), points=int(leader[1])))
         leaderboards[timeperiod] = pretty_board
 
     return api.response(leaderboards)
