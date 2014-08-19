@@ -309,8 +309,16 @@ def FindAccountFromAvId(request):
         return api.response(status=201, errors='You must specifiy an avId')
 
     rpc = RPC()
+
+    # Get the account ID
     accountId = rpc.client.getAccountByAvatarID(avId=avId)
-    response = {"accountId": accountId}
+    accountId = {"accountId": accountId}
+
+    # Get the avatar details
+    avatarDetails = rpc.client.getAvatarDetails(avId=avId)
+
+    # Merge them all together, Thats what it's all about!
+    response = dic(accountId.items() + avatarDetails.items())
     return api.response(response)
 
 class BasicShardHistoryResource(DirectModelResource):
