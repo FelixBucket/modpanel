@@ -29,18 +29,6 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'ut
             var _this = this;
             server.get('/api/v1/leaderboards/').done(function(leaderboards){
                 _this.leaderboards = leaderboards;
-
-                /*** Remove before pushing ***/
-                var entry = function(name, points){
-                    return {points: points, user: { avatar: "", mini_name: name}};
-                }
-                _this.leaderboards = {
-                    daily: [entry('Nicole E.', 9001), entry('Luke S.', 9000), entry('Eric G.', 10), entry('Lisosaurus', -2), entry('CHRIS Else', -10)],
-                    weekly: [entry('Luke S.', 9002), entry('Nicole E.', 4500), entry('Eric G.', 69), entry('Lisosaurus', -2), entry('Someone Else', -10)],
-                    all_time: [entry('Nicole E.', 15000), entry('Luke S.', 12000), entry('Badminton G.', 10), entry('Lisosaurus', -2), entry('Someone Else', -10)],
-                }
-                /*** End remove before pushing ***/
-
                 _this.render(_this.mode);
             });
         },
