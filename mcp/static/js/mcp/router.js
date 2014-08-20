@@ -10,8 +10,9 @@ define(['backbone'], function(Backbone){
         },
 
         routes: {
-            "name_approval/*subroute"  : "invokeNameApprovalApp",
+            "name_approval/*subroute"    : "invokeNameApprovalApp",
             "comment_approval/*subroute" : "invokeCommentApprovalApp",
+            "accounts/*subroute"         : "invokeAccountsApp",
             "*subroute"  : "invokePanelApp"
         },
         invokeNameApprovalApp: function(subroute) {
@@ -24,6 +25,12 @@ define(['backbone'], function(Backbone){
             if (routers.comment_approval) return;
             require(['news_comments/router'], function(AppRouter){
                 routers.comment_approval = new AppRouter("comment_approval/", {createTrailingSlashRoutes: true});
+            });
+        },
+        invokeAccountsApp: function(subroute) {
+            if (routers.accounts) return;
+            require(['accounts/router'], function(AppRouter){
+                routers.accounts = new AppRouter("accounts/", {createTrailingSlashRoutes: true});
             });
         },
         invokePanelApp: function(subroute) {
