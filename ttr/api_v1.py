@@ -400,6 +400,11 @@ class AccountResource(DirectModelResource):
         queryset = User.objects.all()
         resource_name = 'accounts'
         excludes = ['password', 'totp_secret', 'gs_user_id', 'toonbook_user_id']
+        filtering = {
+            'id': ALL,
+            'username': ALL,
+            'email': ALL,
+        }
         limit = 1
         max_limit = 1
         authorization = ReadOnlyUserLevelAuthorization('view_account', MODE_MATCH_LEVEL)
