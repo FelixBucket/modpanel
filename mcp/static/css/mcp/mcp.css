@@ -471,6 +471,7 @@ ul.guidelines > li > p.examples{
   text-decoration: none;
   outline: 0;
   background-color: #428bca;
+  cursor: pointer;
 }
 
 /* Accounts */
