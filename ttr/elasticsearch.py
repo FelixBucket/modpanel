@@ -1,4 +1,5 @@
 from django.conf import settings
+from datetime import datetime
 import requests
 import json
 
@@ -21,14 +22,23 @@ class ElasticSearch():
     @param: term can be anything you want, format it the same way
             you would in kibana
     @param: amount is the number of objects you want returned in the response
+    @param: fromDate: The time you want to start reading logs from
+    @param: toDate: The time you want to stop reading logs from
+
+    The default for fromDate and toDate is 1 day ago to now
 
     Example call:
     logs = ElasticSearch()
     logs.search('ttr-2014.08.20', "type:(\"chat-said\" \"whisper-said\")", 20)
-    This would return 20 logs total for both chat-said and whisper-said in 
+    This would return 20 logs total for both chat-said and whisper-said in
     the same response
     """
-    def search(self, date, term, amount=100):
+    def search(self, date, term, amount=100, fromDate=datetime.utcnow() - timedelta(days=1), toDate=datetime.utcnow()):
+        # Convert the date to a format elastic search likes
+        # time4hax
+        fromDate = fromDate.isoformat().split('.')[0]
+        toDate = toDate.isoformat().split('.')[0]
+
         # Give the endpoint the required date
         endpoint = self.endpoint % {'date': date}
 
@@ -42,6 +52,20 @@ class ElasticSearch():
                                         {
                                             "query_string": {
                                                 "query": term # I only care about this
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "filter": {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "range": {
+                                                "@timestamp": {
+                                                    "from": fromDate,
+                                                    "to": toDate
+                                                }
                                             }
                                         }
                                     ]
@@ -60,9 +84,19 @@ class ElasticSearch():
                         ]
                     },
                     "size": amount, # And this
-                    "sort": [
+                    "sort": [ # And lets not forget about sorting
                         {
-                            "@timestamp": "desc" # And lets not forget sorting
+                            "@timestamp": {
+                                "order": "desc"
+                            }
+                        },
+                        {
+                            "@timestamp": {
+                                "order": "desc"
+                            }
+                        },
+                        {
+                            "@timestamp": "desc"
                         }
                     ]
                 }
@@ -72,4 +106,4 @@ class ElasticSearch():
         request = requests.post(endpoint, auth=(self.username, self.password), data=json.dumps(payload))
 
         # We are all set, lets give the data back
-        print request.json()
+        return request.json()
