@@ -15,7 +15,7 @@ class ElasticSearch():
     """
     Searche's kibana for any given type.
 
-    Three values are required: date, search term, and amount
+    Two values are required: date and search term
 
     @param: date is in the format of 'ttr-YYYY.MM.DD'
     @param: term can be anything you want, format it the same way
@@ -25,9 +25,10 @@ class ElasticSearch():
     Example call:
     logs = ElasticSearch()
     logs.search('ttr-2014.08.20', "type:(\"chat-said\" \"whisper-said\")", 20)
-    This would return logs for both chat-said and whisper-said in the same response
+    This would return 20 logs total for both chat-said and whisper-said in 
+    the same response
     """
-    def search(self, date, term, amount):
+    def search(self, date, term, amount=100):
         # Give the endpoint the required date
         endpoint = self.endpoint % {'date': date}
 
