@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 import json
 
-class ElasticSearch():
+class ElasticSearch:
 
     def __init__(self, kibana=settings.KIBANA_ROOT, username=settings.KIBANA_USERNAME, password=settings.KIBANA_PASSWORD):
         # To access the API we need to specify a date
