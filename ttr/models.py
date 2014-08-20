@@ -186,11 +186,12 @@ class Infraction(models.Model):
     no_community_areas  = models.BooleanField(default=False) # parties, estates
 
     class Meta:
-        db_table = 'infractions_infraction'
+        managed = False
+        db_table = 'infraction'
 
 class InfractionSubject(models.Model):
     identifier_type = models.CharField(max_length=30)
-    identifier = models.CharField(max_length=39)        # Maximum length for IPv6
+    identifier = models.CharField(max_length=255)        # Maximum length for IPv6
     infraction = models.ForeignKey(Infraction)
 
     ### Barbed Subjects ###
@@ -200,5 +201,10 @@ class InfractionSubject(models.Model):
     # It also works in reverse.
     barbed = models.BooleanField(default=False)
 
+    # If this subject was created because of a barb, we will reference it here.
+    # A value of NULL means it was set directly by the moderator.
+    pricked_by = models.ForeignKey('self', blank=True, null=True)
+
     class Meta:
-        db_table = 'infractions_subject'
+        managed = False
+        db_table = 'infraction_subject'
