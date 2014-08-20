@@ -11,6 +11,35 @@
             </div>
         </div>
 
-        <p>Coming soon!</p>
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="media">
+                    <a class="pull-left" href="#">
+                        <img class="media-object" src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" style="border-radius:50%;max-height: 100px">
+                    </a>
+                    <div class="media-body text-left" style="padding-left: 5px">
+                        <h2 class="media-heading" style="margin-left:0px;padding-left:0px"><%= account.username %></h2>
+                        <h4 class="media-heading"><%= account.email %></h4>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <% _.each(account.toons, function(toon){ %>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><%= toon.name %></h3>
+                        </div>
+                        <div class="panel-body">
+                            <%= toon.species %> (<%= toon.hp %> / <%= toon.maxHp %>)
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
     </div>
 </div>
