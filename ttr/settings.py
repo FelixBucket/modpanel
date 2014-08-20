@@ -141,6 +141,6 @@ RPC_USERNAME = os.environ.get('RPC_USERNAME', '')
 RPC_PASSWORD = os.environ.get('RPC_PASSWORD', '')
 
 # Kibana Settings
-KIBANA_ROOT = 'http://204.45.16.221:9202/'
-KIBANA_USERNAME = 'controlpanel'
-KIBANA_PASSWORD = 'fMSUOl{shu<>R{)?-dLVU1Z5kCRF7G'
+KIBANA_ROOT = os.environ.get('KIBANA_ROOT', '')
+KIBANA_USERNAME = os.environ.get('KIBANA_USERNAME', '')
+KIBANA_PASSWORD = os.environ.get('KIBANA_PASSWORD', '')
