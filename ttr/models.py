@@ -1,4 +1,4 @@
-import base64, hashlib, uuid
+import base64, hashlib, uuid, datetime
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager
 from django.utils.crypto import pbkdf2
@@ -152,3 +152,53 @@ class ToonName(models.Model):
         managed = False
         db_table = 'toon_name'
         ordering = ['received']
+
+# Infractions System
+class Infraction(models.Model):
+    # Internal can only be seen by staff, external will be shown to the user.
+    # Internal is technically optional, but will almost always be filled with details.
+    external_reason = models.TextField()
+    internal_reason = models.TextField(blank=True, null=True)
+
+    # The user who created/reported the infraction
+    moderator = models.ForeignKey(User)
+
+    # The date the infraction was first created (not necessarily approved)
+    created = models.DateTimeField(default=datetime.datetime.now)
+
+    # Approved can either be True, False or NULL. Null means it is awaiting a decision.
+    # We want to keep it even if it is not approved because it is good to have on record.
+    # When this decision is made, the decided field will be populated with the current DateTime.
+    approved = models.NullBooleanField(blank=True, null=True)
+    decided = models.DateTimeField(blank=True, null=True)
+
+    # If expiration is NULL it lasts forever.
+    expiration = models.DateTimeField(blank=True, null=True)
+
+    ### Consequence Types ###
+    # Defaults are passive, meaning they have no effect on the user
+    # unless they are explicitly set to something.
+    # For example, change_level is NULL by default, so it will only
+    # change their level if it has a value such as 100.
+    change_level        = models.IntegerField(blank=True, null=True)
+    speedchat_only      = models.BooleanField(default=False)
+    no_true_friends     = models.BooleanField(default=False)
+    no_community_areas  = models.BooleanField(default=False) # parties, estates
+
+    class Meta:
+        db_table = 'infractions_infraction'
+
+class InfractionSubject(models.Model):
+    identifier_type = models.CharField(max_length=30)
+    identifier = models.CharField(max_length=39)        # Maximum length for IPv6
+    infraction = models.ForeignKey(Infraction)
+
+    ### Barbed Subjects ###
+    # If a subject is covered in barbs, any contact with it will cause
+    # the infraction to spread. So if 123.456.77.31 is barbed and Anth
+    # logs in from that IP, Anth will be added as an infraction subject.
+    # It also works in reverse.
+    barbed = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'infractions_subject'
