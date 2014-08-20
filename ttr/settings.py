@@ -139,3 +139,8 @@ PUSHER_SECRET = os.environ.get('PUSHER_SECRET', '1d25d81aa43375f641ac')
 RPC_ENDPOINT = os.environ.get('RPC_ENDPOINT', '')
 RPC_USERNAME = os.environ.get('RPC_USERNAME', '')
 RPC_PASSWORD = os.environ.get('RPC_PASSWORD', '')
+
+# Kibana Settings
+KIBANA_ROOT = 'http://204.45.16.221:9202/'
+KIBANA_USERNAME = 'controlpanel'
+KIBANA_PASSWORD = 'fMSUOl{shu<>R{)?-dLVU1Z5kCRF7G'

@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.db import connection
+from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.dateformat import format
 from tastypie import fields
@@ -380,3 +381,39 @@ def LeaderboardsResource(request):
         leaderboards[timeperiod] = pretty_board
 
     return api.response(leaderboards)
+
+@require_permission('view_account')
+def FindAccountsResource(request, search):
+    results = []
+
+    for user in User.objects.filter(Q(username__contains=search) | Q(email__startswith=search)):
+        results.append({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+        })
+
+    return api.response(results)
+
+class AccountResource(DirectModelResource):
+    class Meta:
+        queryset = User.objects.all()
+        resource_name = 'accounts'
+        excludes = ['password', 'totp_secret', 'gs_user_id', 'toonbook_user_id']
+        limit = 1
+        max_limit = 1
+        authorization = ReadOnlyUserLevelAuthorization('view_account', MODE_MATCH_LEVEL)
+
+    def dehydrate(self, bundle):
+        rpc = RPC()
+        try:
+            gsId = rpc.client.getGSIDByAccount(accountId=bundle.obj.id)
+            avatar_ids = rpc.client.getAvatarsForGSID(gsId=gsId)
+            toons = []
+            for avId in avatar_ids:
+                if avId > 0:
+                    toons.append(rpc.client.getAvatarDetails(avId=avId))
+        except:
+            toons = []
+        bundle.data['toons'] = toons
+        return bundle
