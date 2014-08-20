@@ -318,7 +318,7 @@ def FindAccountFromAvId(request):
     avatarDetails = rpc.client.getAvatarDetails(avId=avId)
 
     # Merge them all together, Thats what it's all about!
-    response = dic(accountId.items() + avatarDetails.items())
+    response = dict(accountId.items() + avatarDetails.items())
     return api.response(response)
 
 class BasicShardHistoryResource(DirectModelResource):
