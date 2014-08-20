@@ -386,7 +386,7 @@ def LeaderboardsResource(request):
 def FindAccountsResource(request, search):
     results = []
 
-    for user in User.objects.filter(Q(username__contains=search) | Q(email__startswith=search)):
+    for user in User.objects.filter(Q(username__contains=search) | Q(email__startswith=search))[:5]:
         results.append({
             'id': user.id,
             'username': user.username,
