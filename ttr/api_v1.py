@@ -231,7 +231,7 @@ def ToonNameModerateAction(request, name_id):
     # We will also reward a bonus point for a very quick moderation. (30 seconds)
     time_submitted = int(format(name.received, u'U'))
     time_delta = int(time.time()) - time_submitted
-    print time_delta
+
     points = 1
     if (time_delta <= 30):
         points = 2
