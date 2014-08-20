@@ -26,9 +26,8 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server'], function
                 b: 'Bear',
                 s: 'Pig',
             };
-
             _.each(account.toons, function(toon){
-                //toon.species = types[toon.headType.substr(0,1)];
+                toon.species = types[toon.dna.headType.substr(0,1)];
             });
 
             this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, account: account}));

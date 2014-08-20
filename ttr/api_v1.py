@@ -418,7 +418,9 @@ class AccountResource(DirectModelResource):
             for avId in avatar_ids:
                 if avId > 0:
                     toons.append(rpc.client.getAvatarDetails(avId=avId))
+                else:
+                    toons.append(None)
         except:
-            toons = []
+            toons = [None, None, None, None, None, None]
         bundle.data['toons'] = toons
         return bundle

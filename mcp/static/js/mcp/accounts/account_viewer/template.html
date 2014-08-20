@@ -32,10 +32,16 @@
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><%= toon.name %></h3>
+                            <h3 class="panel-title">
+                                <%= (toon ? toon.name : '(No Toon)') %>
+                            </h3>
                         </div>
                         <div class="panel-body">
-                            Health: <%= toon.hp %> / <%= toon.maxHp %>
+                            <% if (toon){ %>
+                            <%= toon.species %> (<%= toon.hp %> / <%= toon.maxHp %>)
+                            <% }else { %>
+                            There is no toon living in this slot yet!
+                            <% } %>
                         </div>
                     </div>
                 </div>
