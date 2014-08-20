@@ -6,6 +6,7 @@ requirejs.config({
         bootstrap: '../../lib/bootstrap.min',
         backbone: '../../lib/backbone-min',
         marionette: '../../lib/backbone.marionette.min',
+        'backbone.subroute': '../../lib/backbone.subroute.min',
         moment: '../../lib/moment.min',
         livestamp: '../../lib/livestamp.min',
         bootbox: '../../lib/bootbox.min',
@@ -38,6 +39,7 @@ requirejs.config({
             deps: ['backbone'],
             exports: 'Marionette',
         },
+        'backbone.subroute': ['backbone'],
         moment: {
             exports: 'moment',
         },

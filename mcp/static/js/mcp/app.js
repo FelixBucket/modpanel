@@ -5,17 +5,6 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
     //Configure toastr
     toastr.options.newestOnTop = false;
 
-    //Private App Methods
-    var swapController = function(controller, args){
-        var _this = this;
-        if (this.activeController) this.activeController.destroy();
-        this.activeController = false;
-        this.activeControllerClass = controller;
-        this.trigger('viewChange', controller);
-        require([controller], function(Controller){
-            _this.activeController = new Controller();
-        });
-    }
     var prepareCSRFToken = function(){
         function getCookie(name) {
             var cookieValue = null;
@@ -66,8 +55,7 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
     //App Definition
     var app = new Marionette.Application();
 
-    app.activeController = false;
-    app.activeControllerClass = false;
+    app.activeView = false;
 
     app.addRegions({
         headerRegion: '#navbarRegion',
@@ -95,7 +83,6 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
 
         //Initialize and start the router
         app.router = new Router();
-        app.listenTo(app.router, 'route', swapController);
         Backbone.history.start({pushState: false, root: window.SITE_ROOT});
 
         //Initialize Header and Sidebar
@@ -108,6 +95,12 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
 
     app.api = function(resource){
         return app.SITE_ROOT + 'api/v1/' + resource;
+    }
+
+    app.swapView = function(view){
+        if (app.activeView) app.activeView.destroy();
+        app.activeView = view;
+        app.mainRegion.show(app.activeView);
     }
 
     app.SITE_ROOT = window.SITE_ROOT;

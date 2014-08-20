@@ -23,7 +23,7 @@ define(['app', 'marionette', 'text!./template.html', 'jquery', 'bootbox'], funct
                 }
             });
 
-            this.listenTo(app, 'viewChange', this.updateHighlightedRoute);
+            this.listenTo(app.router, 'sidebar_change', this.updateHighlightedRoute);
             this.updateHighlightedRoute();
 
             this.listenTo(app.pending_counts, 'change', this.updateCounts);
@@ -48,9 +48,9 @@ define(['app', 'marionette', 'text!./template.html', 'jquery', 'bootbox'], funct
             this.$el.find('#sidebar-ct-comments').text(emptyIfZero(app.pending_counts.get('comments')));
         },
         updateHighlightedRoute: function(){
-            var controller = app.activeControllerClass;
+            var app_name = app.router.currentSidebarApp;
             this.$el.find('#sidebar-items > li').removeClass('active');
-            this.$el.find('#sidebar-items > li[data-controller="' + controller + '"]').addClass('active');
+            this.$el.find('#sidebar-items > li[data-app="' + app_name + '"]').addClass('active');
         },
     });
 });
