@@ -13,7 +13,7 @@
             <img src="<%= static.pathForUserAvatar(leaders[0].user.avatar, leaders[0].user.email) %>" alt="" class="profile-img img-responsive" />
             <h2><%= leaders[0].user.mini_name %></h2>
             <div class="leaderboard-top-points">
-                <%= leaders[0].points %>
+                <%= _.numberFormat(leaders[0].points) %>
             </div>
             <% } %>
         </div>
@@ -26,7 +26,7 @@
                     <li>
                         <img src="<%= static.pathForUserAvatar(leaders[l].user.avatar, leaders[l].user.email) %>" alt="" class="profile-img img-responsive" />
                         <p><%= leaders[l].user.mini_name %></p>
-                        <p class="leaderboard-runner-up-points"><%= leaders[l].points %></span>
+                        <p class="leaderboard-runner-up-points"><%= _.numberFormat(leaders[l].points) %></span>
                     </li>
                     <% }else{ %>
                     <li>
