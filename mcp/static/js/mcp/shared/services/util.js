@@ -1,4 +1,4 @@
-define(['app', 'backbone', 'marionette', 'underscore', 'md5'], function(app, Backbone, Marionette, _){
+define(['app', 'backbone', 'marionette', 'underscore', 'md5', 'scrollbar'], function(app, Backbone, Marionette, _){
 
     app.collection_classes = {};
     app.model_classes = {};
@@ -82,11 +82,25 @@ define(['app', 'backbone', 'marionette', 'underscore', 'md5'], function(app, Bac
         }
     };
 
+    var scrollbars = {
+        start: function($el, height, width, options){
+            if (height) $el.height(height);
+            if (width) $el.width(width);
+
+            $el.css('position', 'relative').css('overflow', 'hidden');
+
+            setTimeout(function(){
+                $el.perfectScrollbar();
+            }, 100);
+        },
+    };
+
     return {
         static: staticUtil,
         collections: collections,
         models: models,
         views: views,
+        scrollbars: scrollbars,
     }
 
 });

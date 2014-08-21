@@ -11,8 +11,8 @@ requirejs.config({
         livestamp: '../../lib/livestamp.min',
         bootbox: '../../lib/bootbox.min',
         toastr: '../../lib/toastr.min',
-        nanoscroller: '../../lib/jquery.nanoscroller.min',
-        slimscroll: '../../lib/jquery.slimscroll.min',
+        mousewheel: '../../lib/jquery.mousewheel.min',
+        scrollbar: '../../lib/perfect-scrollbar.min',
         clamp: '../../lib/clamp.min',
         hotkeys: '../../lib/jquery.hotkeys',
         'bootstrap-wysiwyg': '../../lib/bootstrap-wysiwyg',
@@ -53,6 +53,7 @@ requirejs.config({
         'bootstrap-wysiwyg': ['jquery', 'bootstrap', 'hotkeys'],
         morris: ['jquery', 'raphael'],
         typeahead: ['jquery'],
+        scrollbar: ['mousewheel'],
     },
 });
 

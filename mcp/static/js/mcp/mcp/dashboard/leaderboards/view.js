@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'util', 'morris'], function(app, Marionette, underscore, template, server, util){
+define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'util', 'scrollbar', 'morris'], function(app, Marionette, underscore, template, server, util){
     return Marionette.View.extend({
         constructor: function(){
             var _this = this;
@@ -19,15 +19,7 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'ut
                 leaders: this.leaderboards[board],
             }));
 
-            this.$el.find('.leaderboard-runners-up').slimScroll({
-                height: '247',
-                alwaysVisible: false,
-                railVisible: false,
-                size: 0,
-                wheelStep: 12,
-                allowPageScroll: true,
-                touchScrollStep: 200,
-            });
+            util.scrollbars.start(this.$el.find('.leaderboard-runners-up'), 247);
 
             //Leaderboard toggles
             this.$el.find('.leaderboard-toggles > a').click(function(e){
@@ -39,6 +31,8 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'ut
             var _this = this;
             server.get('/api/v1/leaderboards/').done(function(leaderboards){
                 _this.leaderboards = leaderboards;
+                var entry = _this.leaderboards['daily'][0];
+                _this.leaderboards['daily'] = [entry, entry, entry, entry, entry, entry,entry, entry, entry, entry, entry, entry];
                 _this.render(_this.mode);
             });
         },
