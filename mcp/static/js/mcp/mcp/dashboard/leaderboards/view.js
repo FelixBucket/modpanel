@@ -31,8 +31,6 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'ut
             var _this = this;
             server.get('/api/v1/leaderboards/').done(function(leaderboards){
                 _this.leaderboards = leaderboards;
-                var entry = _this.leaderboards['daily'][0];
-                _this.leaderboards['daily'] = [entry, entry, entry, entry, entry, entry,entry, entry, entry, entry, entry, entry];
                 _this.render(_this.mode);
             });
         },
