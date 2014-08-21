@@ -65,6 +65,24 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util'], 
             this.$el.find('.toon-picker').on('click', function(){
                 if (_this.format) new Audio(app.STATIC_ROOT + "sounds/mcp/pick_a_toon/click." + _this.format).play();
             });
+
+            //Pick a Toon Music
+            var music = new Audio(app.STATIC_ROOT + 'sounds/mcp/pick_a_toon/music.' + this.format);
+            music.addEventListener('ended', function() {
+                this.currentTime = 0;
+                this.play();
+            }, false);
+            this.$el.find('#pat-music-toggle').click(function(){
+                var label = $(this).text();
+                if (label == "Let there be music!"){
+                    $(this).text("I don't like music.");
+                    music.currentTime = 0;
+                    music.play();
+                }else{
+                    $(this).text("Let there be music!");
+                    music.pause();
+                }
+            });
         },
     });
 });
