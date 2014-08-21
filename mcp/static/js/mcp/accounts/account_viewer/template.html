@@ -37,7 +37,7 @@
         <div class="row account-toons">
             <% _.each(account.toons, function(toon, toon_idx){ %>
                 <div class="col-md-4 text-center">
-                    <div class="toon-picker">
+                    <div class="toon-picker" <% if (!toon){ %>style="opacity:0.5"<% } %>>
                         <div class="toon-picker-bg" style="background-color: rgb(<%= pat_styles[toon_idx].background %>);-ms-transform: rotate(<%= pat_styles[toon_idx].rotation %>deg);-webkit-transform: rotate(<%= pat_styles[toon_idx].rotation %>deg);transform:rotate(<%= pat_styles[toon_idx].rotation %>deg);"></div>
                         <% if (toon){ %>
                             <h4 class="toon-name"><%= toon.name %></h4>
