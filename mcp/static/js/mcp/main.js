@@ -20,6 +20,7 @@ requirejs.config({
         raphael: '../../lib/raphael-min',
         morris: '../../lib/morris.min',
         typeahead: '../../lib/typeahead.bundle.min',
+        md5: '../../lib/md5',
 
         server: 'shared/services/server',
         util: 'shared/services/util',

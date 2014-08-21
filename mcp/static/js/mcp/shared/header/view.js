@@ -1,7 +1,7 @@
-define(['app', 'marionette', 'text!./template.html', 'jquery'], function(app, Marionette, template, $){
+define(['app', 'marionette', 'text!./template.html', 'jquery', 'util'], function(app, Marionette, template, $, util){
     return Marionette.View.extend({
         render: function(){
-            this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, user: app.user}));
+            this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, user: app.user, util: util}));
 
             var $search = this.$el.find('.mobile-search');
             $search.click(function(e) {

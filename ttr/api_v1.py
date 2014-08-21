@@ -39,6 +39,7 @@ def user_dict_direct(user):
             'short_name': user.get_short_name(),
             'long_name': user.get_long_name(),
             'avatar': profile.get('avatar'),
+            'email': user.email,
         }
     except:
         return None
