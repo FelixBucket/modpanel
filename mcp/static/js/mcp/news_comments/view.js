@@ -30,10 +30,9 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_tem
             this.moderate(0);
         },
         moderate: function(approve){
+            var _this = this;
+
             this.$el.find('.moderation-comment').addClass('done');
-            if (app.pending_counts.get('comments') >= 1) {
-                app.pending_counts.set('comments', app.pending_counts.get('comments')-1);
-            }
 
             var collection = this.model.collection;
             this.model.set('processed', true);  //Yes I know this isn't a realistic value, but it doesn't matter
@@ -43,15 +42,13 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'text!./comment_tem
                 if (collection.where({processed: undefined}) == 0) loadMoreComments();
             }).fail(function(){
                 _this.model.set('processed', false);
-                app.pending_counts.set('comments', app.pending_counts.get('comments')+1);
+                app.pending_counts.increment('comments');
                 _this.render();
             });
         },
         moderated_remotely: function(approve, moderator){
             this.$el.find('.moderation-comment').addClass('done');
-            if (app.pending_counts.get('comments') >= 1) {
-                app.pending_counts.set('comments', app.pending_counts.get('comments')-1);
-            }
+            app.pending_counts.decrement('comments');
 
             if (approve){
                 this.$el.find('.approve').addClass('selected').html('<i class="fa fa-check"></i><p>Approved by ' + moderator + '</p>');

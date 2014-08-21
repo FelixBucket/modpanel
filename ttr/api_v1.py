@@ -16,7 +16,7 @@ from .tasty_util import *
 from .models import *
 from mcp.models import *
 from mcp.permissions import permissions
-from mcp.util import require_permission
+from mcp.util import *
 from ttr.rpc import RPC
 
 ### TTR Model Resources
@@ -117,9 +117,7 @@ def LoginResource(request):
     return api.response(response)
 
 def PendingCountsResource(request):
-    toon_names_count = ToonName.objects.filter(processed=None).count()
-    comments_count = NewsItemComment.objects.filter(approved=False).count()
-    return api.response(dict(toon_names=toon_names_count, comments=comments_count))
+    return api.response(get_pending_counts())
 
 def DashboardStatsResource(request):
     today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
@@ -257,6 +255,7 @@ def ToonNameModerateAction(request, name_id):
             rpc.client.messageAvatar(avId=name.toon_id, code=101, params=[])
 
     util.send_pusher_message('toon_names', 'moderated', dict(toon_name_id=name.id, moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
+    broadcast_pending_counts()
 
     return api.response(status=201)
 
@@ -296,6 +295,7 @@ def NewsItemCommentModerateAction(request, comment_id):
         comment.delete()
 
     util.send_pusher_message('news_comments', 'moderated', dict(comment_id=int(comment_id), moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
+    broadcast_pending_counts()
 
     return api.response(status=201)
 

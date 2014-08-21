@@ -56,6 +56,7 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
     var app = new Marionette.Application();
 
     app.activeView = false;
+    app.pageTitle = "";
 
     app.addRegions({
         headerRegion: '#navbarRegion',
@@ -87,10 +88,29 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
 
         //Initialize Header and Sidebar
         require(['shared/header/header', 'shared/sidebar/sidebar']);
+
+        //Subscribe to pusher for pending_counts
+        var counts_channel = pusher.subscribe('pending_counts');
+        counts_channel.bind('change', function(new_counts){
+            app.pending_counts.set(new_counts);
+        });
     });
 
     app.setTitle = function(title){
-        document.title = title + ' | Toontown Rewritten MCP';
+        app.pageTitle = title;
+        app.updateTitle();
+    }
+    app.updateTitle = function(){
+        var title = app.pageTitle + ' | Toontown Rewritten MCP';
+
+        //Tally up counts
+        var sum = 0;
+        _.each(app.pending_counts.attributes, function(c){
+            sum += c;
+        });
+        if (sum > 0) title = "(" + sum + ") " + title;
+
+        document.title = title;
     }
 
     app.api = function(resource){
@@ -102,6 +122,25 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
         app.activeView = view;
         app.mainRegion.show(app.activeView);
     }
+
+    //Model for pending counts
+    var PendingCountsModel = Backbone.Model.extend({
+        url: '/api/v1/pending_counts/',
+        increment: function(prop){
+            if (!isNaN(this.get(prop))) this.set(prop, this.get(prop) + 1);
+        },
+        decrement: function(prop){
+            if (this.get(prop) > 0) this.set(prop, this.get(prop) - 1);
+        },
+    });
+    app.pending_counts = new PendingCountsModel();
+    app.pending_counts.on('change', app.updateTitle);
+    app.pending_counts.fetch();
+
+    //For now, update the pending counts every minute. Eventually this will all be done through pusher.
+    setInterval(function(){
+        app.pending_counts.fetch();
+    }, 60000);
 
     app.SITE_ROOT = window.SITE_ROOT;
     app.STATIC_ROOT = window.STATIC_ROOT;
