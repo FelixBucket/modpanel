@@ -21,7 +21,7 @@
         <div class="profile-box-content clearfix">
             <ul class="menu-items leaderboard-runners-up">
                 <% if (leaders){ %>
-                <% for (var l = 1; l < 5; l++){ %>
+                <% for (var l = 1; l < leaders.length || l < 5; l++){ %>
                     <% if (leaders[l]) { %>
                     <li>
                         <img src="<%= static.pathForUserAvatar(leaders[l].user.avatar, leaders[l].user.email) %>" alt="" class="profile-img img-responsive" />

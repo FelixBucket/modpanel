@@ -19,6 +19,16 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'ut
                 leaders: this.leaderboards[board],
             }));
 
+            this.$el.find('.leaderboard-runners-up').slimScroll({
+                height: '247',
+                alwaysVisible: false,
+                railVisible: false,
+                size: 0,
+                wheelStep: 12,
+                allowPageScroll: true,
+                touchScrollStep: 200,
+            });
+
             //Leaderboard toggles
             this.$el.find('.leaderboard-toggles > a').click(function(e){
                 e.preventDefault();

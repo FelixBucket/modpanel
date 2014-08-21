@@ -48,11 +48,12 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', './
             //Bulletins Widget
             this.bulletins_view = util.views.readyCollectionViewFactory(bulletins, BulletinView, {el: this.$el.find('#bulletins-list')});
             this.$el.find('.bulletins-inner').slimScroll({
-                height: '369px',
+                height: '368px',
                 alwaysVisible: false,
                 railVisible: true,
-                wheelStep: 25,
-                allowPageScroll: false
+                wheelStep: 12,
+                allowPageScroll: true,
+                touchScrollStep: 200,
             });
             this.$el.find('#dashboard-new-bulletin-task').click(function(){
                 var editor = new WysiwygModal('Post a New Bulletin', '', true);
@@ -66,11 +67,12 @@ define(['app', 'marionette', 'util', 'text!./template.html', './stats/view', './
             //Recent Activity Widget
             this.recent_activity_view = util.views.readyCollectionViewFactory(recent_activity, ActivityView, {el: this.$el.find('#activity-list')});
             this.$el.find('.activity-inner').slimScroll({
-                height: '378px',
+                height: '377px',
                 alwaysVisible: false,
                 railVisible: true,
-                wheelStep: 25,
-                allowPageScroll: false
+                wheelStep: 12,
+                allowPageScroll: true,
+                touchScrollStep: 200,
             });
         },
         onDestroy: function(){

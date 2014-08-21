@@ -365,17 +365,17 @@ def LeaderboardsResource(request):
     # Daily
     today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
     today_timestamp = str(time.mktime(today.timetuple()))
-    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + today_timestamp + " GROUP BY user_id ORDER BY total " + order_mode + " LIMIT 5;")
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + today_timestamp + " GROUP BY user_id ORDER BY total " + order_mode + ";")
     leaderboards['daily'] = cursor.fetchall()
 
     # Weekly
     week_start = today - timedelta(days=today.weekday() + 1 % 7)
     week_start_timestamp = str(time.mktime(week_start.timetuple()))
-    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + week_start_timestamp + " GROUP BY user_id ORDER BY total " + order_mode + " LIMIT 5;")
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + week_start_timestamp + " GROUP BY user_id ORDER BY total " + order_mode + ";")
     leaderboards['weekly'] = cursor.fetchall()
 
     # All Time
-    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action GROUP BY user_id ORDER BY total " + order_mode + " LIMIT 5;")
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action GROUP BY user_id ORDER BY total " + order_mode + ";")
     leaderboards['all_time'] = cursor.fetchall()
 
     # Fill in details
