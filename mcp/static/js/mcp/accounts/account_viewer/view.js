@@ -67,8 +67,8 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util'], 
             });
 
             //Pick a Toon Music
-            var music = new Audio(app.STATIC_ROOT + 'sounds/mcp/pick_a_toon/music.' + this.format);
-            music.addEventListener('ended', function() {
+            this.music = new Audio(app.STATIC_ROOT + 'sounds/mcp/pick_a_toon/music.' + this.format);
+            this.music.addEventListener('ended', function() {
                 this.currentTime = 0;
                 this.play();
             }, false);
@@ -76,13 +76,17 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util'], 
                 var label = $(this).text();
                 if (label == "Let there be music!"){
                     $(this).text("I don't like music.");
-                    music.currentTime = 0;
-                    music.play();
+                    _this.music.currentTime = 0;
+                    _this.music.play();
                 }else{
                     $(this).text("Let there be music!");
-                    music.pause();
+                    _this.music.pause();
                 }
             });
+        },
+        onDestroy: function(){
+            this.music.pause();
+            this.music = null;
         },
     });
 });
