@@ -9,7 +9,6 @@ define(['app', 'backbone', 'marionette', 'underscore', 'md5'], function(app, Bac
                 if (!email){
                     return app.STATIC_ROOT + 'img/mcp/default_avatar.png';
                 }else{
-                    console.log(email);
                     //Use gravatar if we don't have an image on file but have an email address
                     var default_avatar = encodeURIComponent('http://cp.toontownrewritten.com' + app.STATIC_ROOT + 'img/mcp/default_avatar.png');
                     return "http://www.gravatar.com/avatar/" + CryptoJS.MD5(email).toString() + "?s=150&d=" + default_avatar;

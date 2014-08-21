@@ -19,7 +19,7 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'mo
                 xkey: 'timestamp',
                 ykeys: ['population'],
                 labels: ['Population'],
-                pointSize: 3,
+                pointSize: 0,
                 hideHover: 'auto',
                 gridTextColor: '#ffffff',
                 gridLineColor: 'rgba(255, 255, 255, 0.3)',
