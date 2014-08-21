@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'util', 'text!./template.html', 'server'], function(app, Marionette, util, template, server){
+define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util'], function(app, Marionette, util, template, server, util){
 
     return Marionette.View.extend({
         constructor: function(account_id){
@@ -14,6 +14,23 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server'], function
             });
         },
         renderAccount: function(account){
+            var _this = this;
+
+            //Preload sounds
+            var audio = new Audio();
+            this.format = null;
+
+            //Force Mp3 for now
+            /*if (audio.canPlayType('audio/ogg')){
+                this.format = 'ogg'
+            }else */if (audio.canPlayType('audio/mp3')){
+                this.format = 'mp3';
+            }
+
+            if (this.format){
+                new Audio(app.STATIC_ROOT + "sounds/mcp/pick_a_toon/rollover." + this.format);
+                new Audio(app.STATIC_ROOT + "sounds/mcp/pick_a_toon/click." + this.format);
+            }
 
             //Add in the species for now
             var types = {
@@ -30,7 +47,24 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server'], function
                 if (toon) toon.species = types[toon.dna.headType.substr(0,1)];
             });
 
-            this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, account: account}));
+            //Pick a toon styling
+            var pat_styles = [
+                {background: "252,75,81", rotation: 5},
+                {background: "162,221,79", rotation: -9},
+                {background: "143,85,231", rotation: 2},
+                {background: "63,167,255", rotation: -5},
+                {background: "233,96,186", rotation: 3},
+                {background: "245,215,65", rotation: -4},
+            ];
+
+            this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, account: account, pat_styles: pat_styles, util: util}));
+
+            this.$el.find('.toon-picker').on('mouseenter', function(){
+                if (_this.format) new Audio(app.STATIC_ROOT + "sounds/mcp/pick_a_toon/rollover." + _this.format).play();
+            });
+            this.$el.find('.toon-picker').on('click', function(){
+                if (_this.format) new Audio(app.STATIC_ROOT + "sounds/mcp/pick_a_toon/click." + _this.format).play();
+            });
         },
     });
 });

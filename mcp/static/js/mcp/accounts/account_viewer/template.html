@@ -16,7 +16,7 @@
 
                 <div class="media">
                     <a class="pull-left" href="#">
-                        <img class="media-object" src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" style="border-radius:50%;max-height: 100px">
+                        <img class="media-object" src="<%= util.static.pathForUserAvatar(null, account.email) %>" style="border-radius:50%;max-height: 100px">
                     </a>
                     <div class="media-body text-left" style="padding-left: 5px">
                         <h2 class="media-heading" style="margin-left:0px;padding-left:0px"><%= account.username %></h2>
@@ -27,22 +27,18 @@
             </div>
         </div>
 
-        <div class="row">
-            <% _.each(account.toons, function(toon){ %>
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <%= (toon ? toon.name : '(No Toon)') %>
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            <% if (toon){ %>
-                            <%= toon.species %> (<%= toon.hp %> / <%= toon.maxHp %>)
-                            <% }else { %>
-                            There is no toon living in this slot yet!
-                            <% } %>
-                        </div>
+        <div class="row account-toons">
+            <% _.each(account.toons, function(toon, toon_idx){ %>
+                <div class="col-md-4 text-center">
+                    <div class="toon-picker">
+                        <div class="toon-picker-bg" style="background-color: rgb(<%= pat_styles[toon_idx].background %>);-ms-transform: rotate(<%= pat_styles[toon_idx].rotation %>deg);-webkit-transform: rotate(<%= pat_styles[toon_idx].rotation %>deg);transform:rotate(<%= pat_styles[toon_idx].rotation %>deg);"></div>
+                        <% if (toon){ %>
+                            <h4 class="toon-name"><%= toon.name %></h4>
+                            <img class="toon-head" src="<%= STATIC_ROOT %>img/mcp/default_avatar.png" />
+                            <h4 class="toon-picker-text view-toon">VIEW THIS TOON</h4>
+                        <% }else{ %>
+                            <h4 class="toon-picker-text">NO TOON YET</h4>
+                        <% } %>
                     </div>
                 </div>
             <% }); %>
