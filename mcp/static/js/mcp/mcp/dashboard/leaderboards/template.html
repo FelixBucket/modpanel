@@ -9,7 +9,7 @@
                     <a href="#" data-mode="all_time" <% if (mode == "all_time"){ %>class="active"<% } %>>All Time</a>
                 </div>
             </div>
-            <% if (leaders){ %>
+            <% if (leaders && leaders[0]){ %>
             <img src="<%= static.pathForUserAvatar(leaders[0].user.avatar) %>" alt="" class="profile-img img-responsive" />
             <h2><%= leaders[0].user.mini_name %></h2>
             <div class="leaderboard-top-points">
@@ -22,11 +22,17 @@
             <ul class="menu-items leaderboard-runners-up">
                 <% if (leaders){ %>
                 <% for (var l = 1; l < 5; l++){ %>
-                <li>
-                    <img src="<%= static.pathForUserAvatar(leaders[l].user.avatar) %>" alt="" class="profile-img img-responsive" />
-                    <p><%= leaders[l].user.mini_name %></p>
-                    <p class="leaderboard-runner-up-points"><%= leaders[l].points %></span>
-                </li>
+                    <% if (leaders[l]) { %>
+                    <li>
+                        <img src="<%= static.pathForUserAvatar(leaders[l].user.avatar) %>" alt="" class="profile-img img-responsive" />
+                        <p><%= leaders[l].user.mini_name %></p>
+                        <p class="leaderboard-runner-up-points"><%= leaders[l].points %></span>
+                    </li>
+                    <% }else{ %>
+                    <li>
+                        <p style="padding-left:10px">No one yet!</p>
+                    </li>
+                    <% } %>
                 <% } %>
                 <% }else{ %>
                 <li><a></a></li>
