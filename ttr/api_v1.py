@@ -337,9 +337,14 @@ class BasicShardHistoryResource(DirectModelResource):
 
 @require_permission('view_basic_shard_history')
 def PopulationHistoryResource(request):
+    # Number of days to fetch, default to a week
+    days = int(request.GET.get('days', 7))
+    now = int(time.time())
+    minimum = now - days * 86400
+
     # Load population data
     cursor = connection.cursor()
-    cursor.execute("SELECT fetched as timestamp, SUM(population) as population FROM mcp_shardcheckin GROUP BY fetched ORDER BY fetched DESC;")
+    cursor.execute("SELECT fetched as timestamp, SUM(population) as population FROM mcp_shardcheckin WHERE fetched >= " + str(minimum) + " GROUP BY fetched ORDER BY fetched DESC;")
     population = cursor.fetchall()
 
     # Convert to a nicer format

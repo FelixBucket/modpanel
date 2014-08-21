@@ -354,6 +354,34 @@ div#content-wrapper{
     white-space: nowrap;
     margin: 0.1em 0
 }
+.graph-title{
+    display: inline-block;
+}
+.graph-toggles{
+    display: inline-block;
+    float: right;
+    margin-top: 5px;
+    margin-right: 20px;
+}
+.graph-toggles > a{
+    color: rgba(255,255,255,0.7);
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 6px;
+}
+.graph-toggles > a:hover{
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+}
+.graph-toggles > a.active{
+    color: white;
+}
+@media(max-width:550px){
+    .graph-toggles{
+        float:none;
+        margin-left: 6px;
+    }
+}
 
 /* Guidelines */
 ul.guidelines{
