@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util'], function(app, Marionette, util, template, server, util){
+define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', 'konami'], function(app, Marionette, util, template, server, util){
 
     return Marionette.View.extend({
         constructor: function(account_id){
@@ -38,6 +38,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util'], 
                 c: 'Cat',
                 m: 'Mouse',
                 r: 'Rabbit',
+                h: 'Horse',
                 f: 'Duck',
                 p: 'Monkey',
                 b: 'Bear',
@@ -59,34 +60,39 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util'], 
 
             this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, account: account, pat_styles: pat_styles, util: util}));
 
-            this.$el.find('.toon-picker').on('mouseenter', function(){
+            this.$el.find('.panel-toon').on('mouseenter', function(){
                 if (_this.format) new Audio(app.STATIC_ROOT + "sounds/mcp/pick_a_toon/rollover." + _this.format).play();
+
+                var $panel = $(this);
+                var bg = pat_styles[$panel.data('idx')].background;
+                $panel.find('.panel-heading').css('background-color', 'rgba(' + bg + ', 0.65');
+                $panel.find('.panel-body').css('background-color', 'rgba(' + bg + ', 0.2');
             });
-            this.$el.find('.toon-picker').on('click', function(){
+            this.$el.find('.panel-toon').on('mouseleave', function(){
+                var $panel = $(this);
+                var bg = pat_styles[$panel.data('idx')].background;
+                $panel.find('.panel-heading').css('background-color', 'rgba(' + bg + ', 0.45');
+                $panel.find('.panel-body').css('background-color', 'rgba(' + bg + ', 0.1');
+            });
+            this.$el.find('.panel-toon').on('click', function(){
                 if (_this.format) new Audio(app.STATIC_ROOT + "sounds/mcp/pick_a_toon/click." + _this.format).play();
             });
 
             //Pick a Toon Music
-            this.music = new Audio(app.STATIC_ROOT + 'sounds/mcp/pick_a_toon/music.' + this.format);
-            this.music.addEventListener('ended', function() {
+            window.music = new Audio(app.STATIC_ROOT + 'sounds/mcp/pick_a_toon/music.' + this.format);
+            window.music.addEventListener('ended', function() {
                 this.currentTime = 0;
                 this.play();
             }, false);
-            this.$el.find('#pat-music-toggle').click(function(){
-                var label = $(this).text();
-                if (label == "Let there be music!"){
-                    $(this).text("I don't like music.");
-                    _this.music.currentTime = 0;
-                    _this.music.play();
-                }else{
-                    $(this).text("Let there be music!");
-                    _this.music.pause();
-                }
+            $(window).konami({
+                cheat: function(){
+                    window.music.pause();
+                    window.music.currentTime = 0;
+                    window.music.play();
+                },
             });
         },
         onDestroy: function(){
-            this.music.pause();
-            this.music = null;
         },
     });
 });

@@ -61,7 +61,7 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
     app.addRegions({
         headerRegion: '#navbarRegion',
         sidebarRegion: '#nav-col',
-        mainRegion: '#content-wrapper',
+        mainRegion: '#mainRegion',
     });
 
     app.addInitializer(function(){
@@ -81,6 +81,9 @@ define(['backbone', 'marionette', 'router', 'pusher', 'jquery', 'toastr', 'boots
     app.on('start', function(){
         //Connect to pusher
         pusher.startWithAppKey(window.PUSHER_KEY_ID);
+
+        //Prepare the content wrapper
+        $('#content-wrapper').css('min-height', $(window).height()-50);
 
         //Initialize and start the router
         app.router = new Router();

@@ -21,6 +21,7 @@ requirejs.config({
         morris: '../../lib/morris.min',
         typeahead: '../../lib/typeahead.bundle.min',
         md5: '../../lib/md5',
+        konami: '../../lib/konami',
 
         server: 'shared/services/server',
         util: 'shared/services/util',
@@ -54,6 +55,7 @@ requirejs.config({
         morris: ['jquery', 'raphael'],
         typeahead: ['jquery'],
         scrollbar: ['mousewheel'],
+        konami: ['jquery'],
     },
 });
 
