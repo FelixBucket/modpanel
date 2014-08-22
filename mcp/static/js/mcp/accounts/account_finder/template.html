@@ -11,8 +11,25 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-md-offset-3">
-          <input class="typeahead form-control account-finder" type="text" placeholder="Start typing to find an account...">
+        <div class="col-md-12">
+            <h4><i class="fa fa-search"> Search</i></h4>
+            <input class="typeahead form-control account-finder" type="text" placeholder="Start typing to search by username or email address..." />
+        </div>
+
+        <div class="col-md-12" style="margin-top: 20px">
+            <h4><i class="fa">Or, if you already know what you are looking for...</i></h4>
+            <p>Just type it in and hit enter!</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <input class="form-control account-finder" id="goto-username" type="text" placeholder="Username" />
+                </div>
+                <div class="col-md-4">
+                    <input class="form-control account-finder" id="goto-webid" type="text" placeholder="Web ID" />
+                </div>
+                <div class="col-md-4">
+                    <input class="form-control account-finder" id="goto-avatarid" type="text" placeholder="Avatar ID" disabled="disabled" />
+                </div>
+            </div>
         </div>
     </div>
 </div>

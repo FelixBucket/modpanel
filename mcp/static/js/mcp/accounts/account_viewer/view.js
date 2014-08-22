@@ -11,6 +11,8 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '
 
             server.get('/api/v1/accounts/' + this.account_id + '/').done(function(account){
                 _this.renderAccount(account);
+            }).fail(function(){
+                _this.$el.html('<div class="row"><div class="col-md-12"><p><strong><i class="fa fa-warning"></i> I couldn\'t find that account!</strong></p></div></div>')
             });
         },
         renderAccount: function(account){
