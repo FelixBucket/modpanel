@@ -15,6 +15,5 @@ permissions = {
     'view_account': 200,
 
     ### 400 ###
-    'find_user': 400,
     'view_shards': 400,
 }

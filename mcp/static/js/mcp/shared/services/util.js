@@ -1,4 +1,4 @@
-define(['app', 'backbone', 'marionette', 'underscore', 'md5', 'scrollbar'], function(app, Backbone, Marionette, _){
+define(['app', 'backbone', 'marionette', 'underscore', 'moment', 'md5', 'scrollbar'], function(app, Backbone, Marionette, _, moment){
 
     app.collection_classes = {};
     app.model_classes = {};
@@ -101,6 +101,7 @@ define(['app', 'backbone', 'marionette', 'underscore', 'md5', 'scrollbar'], func
         models: models,
         views: views,
         scrollbars: scrollbars,
+        moment: moment,
     }
 
 });

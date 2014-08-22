@@ -508,10 +508,17 @@ input.account-finder{
     height: 60px;
     background-color: white !important;
 }
+.account-profile .account-profile-labels{
+    text-align: center;
+}
+.account-profile .account-profile-labels > .profile-label{
+    display: inline-block;
+    margin: 0px 5px 5px 5px;
+}
 
 /* Toon Picker */
 .account-toons{
-    margin: 20px 0px 10px 0px;
+    margin: 3px 0px 10px 0px;
 }
 .panel-toon:hover{
     cursor: pointer;
@@ -526,6 +533,7 @@ input.account-finder{
 .panel-toon img.toon-head{
     width: 110px;
     height: 110px;
+    max-width: 90%;
     border-radius: 50%;
 }
 .panel-toon .laff{

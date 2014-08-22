@@ -48,6 +48,38 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '
                 if (toon) toon.species = types[toon.dna.headType.substr(0,1)];
             });
 
+            //Add in account labels
+            account.labels = [];
+
+            var level_label = "Member";
+            var level = account.level;
+            if (level >= 500){
+                level_label = "System Admin";
+            }else if (level >= 400){
+                level_label = "Admin";
+            }else if (level >= 300){
+                level_label = "Moderator";
+            }else if (level >= 200){
+                level_label = "Name Mod";
+            }
+
+            var label_classes = {
+                "Member": "default",
+                "Admin": "primary",
+                "System Admin": "danger",
+
+                "Name Mod": "primary",
+                "Moderator": "primary",
+            }
+            var label_colors = {
+                "Name Mod": "pink",
+                "Moderator": "purple",
+            }
+
+            account.labels.push({label: level_label + " (" + account.level + ")", type: label_classes[level_label], color: label_colors[level_label]});
+            if (account.keyed) account.labels.push({label: 'Keyed', type: 'success'});
+            if (!account.activated) account.labels.push({label: 'Banned', type: 'danger'});
+
             //Pick a toon styling
             var pat_styles = [
                 {background: "252,75,81", rotation: 5},

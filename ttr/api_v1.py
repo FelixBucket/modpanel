@@ -186,7 +186,7 @@ class UserResource(DirectModelResource):
         }
         limit = 100
         max_limit = None
-        authorization = ReadOnlyUserLevelAuthorization('find_user', MODE_MATCH_LEVEL)
+        authorization = ReadOnlyUserLevelAuthorization('view_account', MODE_MATCH_LEVEL)
 
 class ToonNameResource(DirectModelResource):
     class Meta:
@@ -419,6 +419,7 @@ class AccountResource(DirectModelResource):
         rpc = RPC()
         try:
             gsId = rpc.client.getGSIDByAccount(accountId=bundle.obj.id)
+            bundle.data['gs_id'] = gsId
             avatar_ids = rpc.client.getAvatarsForGSID(gsId=gsId)
             toons = []
             for avId in avatar_ids:
@@ -430,5 +431,6 @@ class AccountResource(DirectModelResource):
                     toons.append(None)
         except:
             toons = [None, None, None, None, None, None]
+            bundle.data['gs_id'] = -1
         bundle.data['toons'] = toons
         return bundle

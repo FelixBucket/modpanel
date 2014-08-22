@@ -11,24 +11,53 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-12">
+        <div class="row account-profile" id="user-profile">
+            <div class="col-md-3">
+                <div class="main-box">
+                    <header class="main-box-header">
+                        <h2><%= account.username %></h2>
+                    </header>
 
-                <div class="media">
-                    <a class="pull-left" href="#">
-                        <img class="media-object" src="<%= util.static.pathForUserAvatar(null, account.email) %>" style="border-radius:50%;max-height: 100px">
-                    </a>
-                    <div class="media-body text-left" style="padding-left: 5px">
-                        <h2 class="media-heading" style="margin-left:0px;padding-left:0px"><%= account.username %></h2>
-                        <h4 class="media-heading"><%= account.email %></h4>
+                    <div class="main-box-body">
+
+                        <img class="profile-img img-responsive center-block" src="<%= util.static.pathForUserAvatar(null, account.email) %>" style="max-height: 150px" />
+
+                        <div class="account-profile-labels">
+                            <% _.each(account.labels, function(label){ %>
+                            <div class="profile-label">
+                                <span class="label label-<%= label.type %>" <% if (label.color){ %>style="background-color: <%= label.color %>;"<% } %>><%= label.label %></span>
+                            </div>
+                            <% }) %>
+                        </div>
+
+                        <div class="text-center">
+                            <%= account.email %>
+                        </div>
+
+                        <div class="profile-since">
+                            Member since: <%= util.moment(account.register_date).format('MMMM Do, YYYY') %>
+                        </div>
+
+                        <div class="profile-details">
+                            <ul class="fa-ul">
+                                <li><i class="fa-li fa fa-user"></i>ID: <%= account.id %></li>
+                                <li><i class="fa-li fa fa-gamepad"></i>GS ID: <%= account.gs_id %></li>
+                            </ul>
+                        </div>
+
+                        <div class="profile-message-btn center-block text-center">
+                            <a href="#" class="btn btn-primary" disabled="disabled">
+                                <i class="fa fa-key"></i>
+                                Issue New Beta Key
+                            </a>
+                        </div>
                     </div>
+
                 </div>
-
             </div>
-        </div>
 
-        <div class="row account-toons">
-            <% _.each(account.toons, function(toon, toon_idx){ %>
+            <div class="col-md-9 account-toons">
+                <% _.each(account.toons, function(toon, toon_idx){ %>
                 <div class="col-md-4 col-sm-6 text-center">
                     <div class="panel panel-toon" style="border-color: rgba(<%= pat_styles[toon_idx].background %>, 0.6);" data-idx="<%= toon_idx %>">
                         <div class="panel-heading" style="background-color: rgba(<%= pat_styles[toon_idx].background %>, 0.45);border-bottom-color: rgba(<%= pat_styles[toon_idx].background %>, 0.6);">
@@ -47,6 +76,5 @@
                 </div>
             <% }); %>
         </div>
-        <div class="clearfix"></div>
     </div>
 </div>
