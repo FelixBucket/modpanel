@@ -304,7 +304,7 @@ def ShardsResource(request):
     rpc = RPC()
     return api.response(rpc.client.listShards())
 
-@require_permission('find_user')
+@require_permission('view_account')
 def FindAccountFromAvId(request):
     avId = request.GET['avId']
     if not avId:
