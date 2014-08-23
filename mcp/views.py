@@ -31,6 +31,7 @@ def app(request):
             'long_name': request.user.get_long_name(),
             'avatar': request.user.mod_profile.avatar,
             'email': request.user.email,
+            'level': request.user.level,
         },
         'permissions': permissions,
         'version': settings.VERSION,

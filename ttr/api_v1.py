@@ -401,6 +401,34 @@ def FindAccountsResource(request, search):
 
     return api.response(results)
 
+@require_permission('edit_level_bits')
+def UserChangeLevelResource(request, user_id):
+    # Pull up the user we are changing the level of
+    try:
+        user = User.objects.get(pk=user_id)
+    except:
+        return api.error(404)
+
+    # Perform Checks
+    user_base_level = int(user.level/100) * 100
+    if user_base_level > request.user.level:
+        return api.error(403, "You can't change the level of someone higher than you.")
+
+    if int(user_id) == request.user.id:
+        return api.error(403, "You can't change your own level!")
+
+    # Check if the base level is being changed
+    # If it is, verify we have permission to do so
+    new_base_level = int(int(request.POST.get('level'))/100) * 100
+    if new_base_level != user_base_level:
+        if permissions['edit_levels'] > request.user.level:
+            return api.error(403, "You don't have permission to edit base levels!")
+
+    # All good! Let's save the new level!
+    user.level = int(request.POST.get('level'))
+    user.save()
+    return api.response()
+
 class AccountResource(DirectModelResource):
     class Meta:
         queryset = User.objects.all()

@@ -16,4 +16,8 @@ permissions = {
 
     ### 400 ###
     'view_shards': 400,
+    'edit_level_bits': 400,
+
+    ### 500 ###
+    'edit_levels': 500,
 }

@@ -33,6 +33,7 @@ urlpatterns = patterns('',
 
     # Accounts APIs #
     url(r'^api/v1/find_accounts/([\w\-]+)/$', 'ttr.api_v1.FindAccountsResource'),
+    url(r'^api/v1/users/(\d+)/change_level/$', 'ttr.api_v1.UserChangeLevelResource'),
 
     # Utility APIs #
     url(r'^api/v1/shards/$', 'ttr.api_v1.ShardsResource'),

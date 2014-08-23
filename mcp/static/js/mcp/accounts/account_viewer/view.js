@@ -1,4 +1,30 @@
-define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', 'konami'], function(app, Marionette, util, template, server, util){
+define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '../level_editor/level_editor', 'konami'], function(app, Marionette, util, template, server, util, LevelEditor){
+
+    var getLevelLabel = function(level){
+        var level_label = "Member";
+        if (level >= 500){
+            level_label = "System Admin";
+        }else if (level >= 400){
+            level_label = "Admin";
+        }else if (level >= 300){
+            level_label = "Moderator";
+        }else if (level >= 200){
+            level_label = "Name Mod";
+        }
+        return level_label;
+    }
+    var label_classes = {
+        "Member": "default",
+        "Admin": "primary",
+        "System Admin": "danger",
+
+        "Name Mod": "primary",
+        "Moderator": "primary",
+    }
+    var label_colors = {
+        "Name Mod": "pink",
+        "Moderator": "purple",
+    }
 
     return Marionette.View.extend({
         constructor: function(account_id){
@@ -53,30 +79,8 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '
             //Add in account labels
             account.labels = [];
 
-            var level_label = "Member";
+            var level_label = getLevelLabel(account.level);
             var level = account.level;
-            if (level >= 500){
-                level_label = "System Admin";
-            }else if (level >= 400){
-                level_label = "Admin";
-            }else if (level >= 300){
-                level_label = "Moderator";
-            }else if (level >= 200){
-                level_label = "Name Mod";
-            }
-
-            var label_classes = {
-                "Member": "default",
-                "Admin": "primary",
-                "System Admin": "danger",
-
-                "Name Mod": "primary",
-                "Moderator": "primary",
-            }
-            var label_colors = {
-                "Name Mod": "pink",
-                "Moderator": "purple",
-            }
 
             account.labels.push({label: level_label + " (" + account.level + ")", type: label_classes[level_label], color: label_colors[level_label]});
             if (account.keyed) account.labels.push({label: 'Keyed', type: 'success'});
@@ -125,6 +129,23 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '
                     window.music.play();
                 },
             });
+
+            //Level Editor
+            //Throw out the extra bits, we just care about the first number
+            var user_level = Math.floor(app.user.level/100);
+            var account_level = Math.floor(account.level/100);
+            var $level = this.$el.find('.profile-label').first().find('.label');
+            if (app.user.hasPermission('edit_level_bits') && user_level >= account_level){
+                $level.addClass('interactive').on('click', function(){
+                    var editor = new LevelEditor(account.level, account.id).on('change', function(new_level){
+                        account.level = new_level;
+                        $level.removeClass('label-default').removeClass('label-primary').removeClass('label-danger').css('background-color', '');
+                        var label = getLevelLabel(new_level);
+                        $level.text(label + " (" + new_level + ")").addClass('label-' + label_classes[label]);
+                        if (label_colors[label]) $level.css('background-color', label_colors[label]);
+                    });
+                });
+            }
         },
         onDestroy: function(){
         },

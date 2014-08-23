@@ -515,6 +515,24 @@ input.account-finder{
     display: inline-block;
     margin: 0px 5px 5px 5px;
 }
+.account-profile .account-profile-labels > .profile-label .label.interactive:hover{
+    box-shadow: 1px 1px 3px #777;
+    cursor: pointer;
+}
+.account-level-editor .extra-flags{
+    margin-top: 20px;
+}
+.account-level-editor .new-level{
+    margin-top: 20px;
+    padding: 20px;
+
+    border-radius: 10px;
+    border: 3px solid rgb(52,152,219);
+    color: rgb(0,100,177);
+
+    font-size: 1.2em;
+    font-weight: bold;
+}
 
 /* Toon Picker */
 .account-toons{
