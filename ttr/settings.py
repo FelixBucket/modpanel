@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'ttr.wsgi.application'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-VERSION = '34'
+VERSION = '35'
 STATIC_ROOT = BASE_DIR + '/static/'
 STATIC_URL = '/static/' + VERSION + '/'
 
