@@ -401,6 +401,22 @@ def FindAccountsResource(request, search):
 
     return api.response(results)
 
+@require_permission('view_account')
+def UserIPsResource(request, user_id):
+    cursor = connection.cursor()
+
+    cursor.execute('SELECT ip, COUNT(ip) FROM account_event WHERE user_id=' + user_id + ' GROUP BY ip;')
+    raw_ips = cursor.fetchall()
+
+    ips = []
+    for ip in raw_ips:
+        ips.append({
+            'ip': ip[0],
+            'occurances': ip[1],
+        })
+
+    return api.response(ips)
+
 @require_permission('edit_level_bits')
 def UserChangeLevelResource(request, user_id):
     # Pull up the user we are changing the level of
