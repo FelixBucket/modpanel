@@ -113,7 +113,10 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '
                 $panel.find('.panel-body').css('background-color', 'rgba(' + bg + ', 0.1');
             });
             this.$el.find('.panel-toon').on('click', function(){
+                var avatar_id = $(this).data('avatar-id');
+                if (!avatar_id) return;
                 if (_this.format) new Audio(app.STATIC_ROOT + "sounds/mcp/pick_a_toon/click." + _this.format).play();
+                app.router.navigate('accounts/toon/' + avatar_id + '/', {trigger: true});
             });
 
             //Pick a Toon Music

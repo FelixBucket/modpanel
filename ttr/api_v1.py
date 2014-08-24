@@ -429,6 +429,16 @@ def UserChangeLevelResource(request, user_id):
     user.save()
     return api.response()
 
+@require_permission('view_account')
+def ToonResource(request, avatar_id):
+    rpc = RPC()
+    toon = rpc.client.getAvatarDetails(avId=avatar_id)
+    if toon is None:
+        return api.error(404, "That toon does not exist.")
+    else:
+        toon['id'] = avatar_id
+    return api.response(toon)
+
 class AccountResource(DirectModelResource):
     class Meta:
         queryset = User.objects.all()

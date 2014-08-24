@@ -59,7 +59,7 @@
             <div class="col-md-9 account-toons">
                 <% _.each(account.toons, function(toon, toon_idx){ %>
                 <div class="col-md-4 col-sm-6 text-center">
-                    <div class="panel panel-toon" style="border-color: rgba(<%= pat_styles[toon_idx].background %>, 0.6);" data-idx="<%= toon_idx %>">
+                    <div class="panel panel-toon" <% if (toon){ %>data-avatar-id="<%= toon.avatar_id %>"<% } %> style="border-color: rgba(<%= pat_styles[toon_idx].background %>, 0.6);" data-idx="<%= toon_idx %>">
                         <div class="panel-heading" style="background-color: rgba(<%= pat_styles[toon_idx].background %>, 0.45);border-bottom-color: rgba(<%= pat_styles[toon_idx].background %>, 0.6);">
                             <%= toon ? toon.name : 'No Toon Yet' %>
                         </div>
