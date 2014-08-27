@@ -453,16 +453,9 @@ def ToonBadNameResource(request, avatar_id):
 
     rpc = RPC()
 
-    try:
-        if rpc.client.rejectName(avId=avatar_id) == None:
-            Action.objects.log(request.user, 'bad named', 'Toon', 1, related_id=avatar_id)
-
-            # Alert the user that their name was rejected.
-            rpc.client.messageAvatar(avId=avatar_id, code=101, params=[])
-
-            return api.response()
-    except KeyError as e:
-        return api.error(400, "It looks like their name has already been revoked.")
+    if rpc.client.rejectName(avId=avatar_id) == None:
+        Action.objects.log(request.user, 'bad named', 'Toon', 1, related_id=avatar_id)
+        return api.response()
 
     return api.error(status=500)
 
