@@ -57,6 +57,27 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'bootbox'
                     }
                 }
             });
+
+            this.$el.find('#goto-avatarid').on('keyup', function(e){
+                if (e.keyCode == 13){
+                    var val = $(this).val();
+                    if (val) {
+                        var input = $(this);
+                        input.prop('disabled', true);
+                        $.get('/api/v1/avatar/?avId=' + val).always(function(){
+                            input.prop('disabled', false);
+                        }).done(function(response) {
+                            if (response.length == 1) {
+                                app.router.navigate('accounts/' + response[0].accountId + '/', {trigger: true});
+                            } else {
+                                bootbox.alert("Hmm, I couldn't find an account associated with that avatar ID.");
+                            }
+                        }).fail(function() {
+                             bootbox.alert("Hmm, I couldn't find an account associated with that avatar ID.");
+                        });
+                    }
+                }
+            });
         },
         onDestroy: function(){
 
