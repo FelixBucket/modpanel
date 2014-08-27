@@ -454,7 +454,7 @@ def ToonBadNameResource(request, avatar_id):
     rpc = RPC()
 
     if rpc.client.rejectName(avId=avatar_id) == None:
-        Action.objects.log(request.user, 'bad named', 'Toon', 1, related_id=avatar_id)
+        Action.objects.log(request.user, 'bad named', 'Toon', 0, related_id=avatar_id)
         return api.response()
 
     return api.error(status=500)
