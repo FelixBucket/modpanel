@@ -1,0 +1,51 @@
+<div class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Modify Account Level</h4>
+            </div>
+            <div class="modal-body text-center account-level-editor">
+                <h4>Base Level</h4>
+                <div class="btn-group btn-group-justified" data-toggle="buttons" id="base-levels">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="base_level" data-val="100"> 100
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="base_level" data-val="200"> 200
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="base_level" data-val="300"> 300
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="base_level" data-val="400"> 400
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="base_level" data-val="500"> 500
+                    </label>
+                </div>
+
+                <h4 class="extra-flags">Additional Flags</h4>
+                <div class="btn-group btn-group-justified" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="flag-dev"> Dev
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="flag-qa"> QA
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="checkbox" name="flag-test"> Test
+                    </label>
+                </div>
+
+                <div class="text-center">
+                    <p class="new-level"></p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="acct-level-save">Save</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

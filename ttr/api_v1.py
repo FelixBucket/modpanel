@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.db import connection
+from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.dateformat import format
 from tastypie import fields
@@ -15,7 +16,7 @@ from .tasty_util import *
 from .models import *
 from mcp.models import *
 from mcp.permissions import permissions
-from mcp.util import require_permission
+from mcp.util import *
 from ttr.rpc import RPC
 
 ### TTR Model Resources
@@ -38,6 +39,7 @@ def user_dict_direct(user):
             'short_name': user.get_short_name(),
             'long_name': user.get_long_name(),
             'avatar': profile.get('avatar'),
+            'email': user.email,
         }
     except:
         return None
@@ -115,9 +117,7 @@ def LoginResource(request):
     return api.response(response)
 
 def PendingCountsResource(request):
-    toon_names_count = ToonName.objects.filter(processed=None).count()
-    comments_count = NewsItemComment.objects.filter(approved=False).count()
-    return api.response(dict(toon_names=toon_names_count, comments=comments_count))
+    return api.response(get_pending_counts())
 
 def DashboardStatsResource(request):
     today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
@@ -186,7 +186,7 @@ class UserResource(DirectModelResource):
         }
         limit = 100
         max_limit = None
-        authorization = ReadOnlyUserLevelAuthorization('find_user', MODE_MATCH_LEVEL)
+        authorization = ReadOnlyUserLevelAuthorization('view_account', MODE_MATCH_LEVEL)
 
 class ToonNameResource(DirectModelResource):
     class Meta:
@@ -230,7 +230,7 @@ def ToonNameModerateAction(request, name_id):
     # We will also reward a bonus point for a very quick moderation. (30 seconds)
     time_submitted = int(format(name.received, u'U'))
     time_delta = int(time.time()) - time_submitted
-    print time_delta
+
     points = 1
     if (time_delta <= 30):
         points = 2
@@ -255,6 +255,7 @@ def ToonNameModerateAction(request, name_id):
             rpc.client.messageAvatar(avId=name.toon_id, code=101, params=[])
 
     util.send_pusher_message('toon_names', 'moderated', dict(toon_name_id=name.id, moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
+    broadcast_pending_counts()
 
     return api.response(status=201)
 
@@ -294,6 +295,7 @@ def NewsItemCommentModerateAction(request, comment_id):
         comment.delete()
 
     util.send_pusher_message('news_comments', 'moderated', dict(comment_id=int(comment_id), moderator=user.get_mini_name(), approve=int(request.POST.get('approve', 0))))
+    broadcast_pending_counts()
 
     return api.response(status=201)
 
@@ -301,25 +303,6 @@ def NewsItemCommentModerateAction(request, comment_id):
 def ShardsResource(request):
     rpc = RPC()
     return api.response(rpc.client.listShards())
-
-@require_permission('find_user')
-def FindAccountFromAvId(request):
-    avId = request.GET['avId']
-    if not avId:
-        return api.response(status=201, errors='You must specifiy an avId')
-
-    rpc = RPC()
-
-    # Get the account ID
-    accountId = rpc.client.getAccountByAvatarID(avId=avId)
-    accountId = {"accountId": accountId}
-
-    # Get the avatar details
-    avatarDetails = rpc.client.getAvatarDetails(avId=avId)
-
-    # Merge them all together, Thats what it's all about!
-    response = dic(accountId.items() + avatarDetails.items())
-    return api.response(response)
 
 class BasicShardHistoryResource(DirectModelResource):
     class Meta:
@@ -335,9 +318,14 @@ class BasicShardHistoryResource(DirectModelResource):
 
 @require_permission('view_basic_shard_history')
 def PopulationHistoryResource(request):
+    # Number of days to fetch, default to a week
+    days = int(request.GET.get('days', 7))
+    now = int(time.time())
+    minimum = now - days * 86400
+
     # Load population data
     cursor = connection.cursor()
-    cursor.execute("SELECT fetched as timestamp, SUM(population) as population FROM mcp_shardcheckin GROUP BY fetched ORDER BY fetched DESC;")
+    cursor.execute("SELECT fetched as timestamp, SUM(population) as population FROM mcp_shardcheckin WHERE fetched >= " + str(minimum) + " GROUP BY fetched ORDER BY fetched DESC;")
     population = cursor.fetchall()
 
     # Convert to a nicer format
@@ -358,17 +346,17 @@ def LeaderboardsResource(request):
     # Daily
     today = datetime.datetime.now().replace(hour=0,minute=0,second=0,microsecond=0)
     today_timestamp = str(time.mktime(today.timetuple()))
-    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + today_timestamp + " GROUP BY user_id ORDER BY total " + order_mode + " LIMIT 5;")
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + today_timestamp + " GROUP BY user_id ORDER BY total " + order_mode + ";")
     leaderboards['daily'] = cursor.fetchall()
 
     # Weekly
     week_start = today - timedelta(days=today.weekday() + 1 % 7)
     week_start_timestamp = str(time.mktime(week_start.timetuple()))
-    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + week_start_timestamp + " GROUP BY user_id ORDER BY total " + order_mode + " LIMIT 5;")
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action WHERE timestamp >= " + week_start_timestamp + " GROUP BY user_id ORDER BY total " + order_mode + ";")
     leaderboards['weekly'] = cursor.fetchall()
 
     # All Time
-    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action GROUP BY user_id ORDER BY total " + order_mode + " LIMIT 5;")
+    cursor.execute("SELECT user_id, SUM(points) as total FROM mcp_action GROUP BY user_id ORDER BY total " + order_mode + ";")
     leaderboards['all_time'] = cursor.fetchall()
 
     # Fill in details
@@ -380,3 +368,134 @@ def LeaderboardsResource(request):
         leaderboards[timeperiod] = pretty_board
 
     return api.response(leaderboards)
+
+@require_permission('view_account')
+def FindAccountsResource(request, search):
+    results = []
+
+    for user in User.objects.filter(Q(username__icontains=search) | Q(email__istartswith=search))[:5]:
+        results.append({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+        })
+
+    return api.response(results)
+
+@require_permission('view_account')
+def UserIPsResource(request, user_id):
+    cursor = connection.cursor()
+
+    cursor.execute('SELECT ip, COUNT(ip) FROM account_event WHERE user_id=' + user_id + ' GROUP BY ip;')
+    raw_ips = cursor.fetchall()
+
+    ips = []
+    for ip in raw_ips:
+        ips.append({
+            'ip': ip[0],
+            'occurances': ip[1],
+        })
+
+    return api.response(ips)
+
+@require_permission('edit_level_bits')
+def UserChangeLevelResource(request, user_id):
+    # Pull up the user we are changing the level of
+    try:
+        user = User.objects.get(pk=user_id)
+    except:
+        return api.error(404)
+
+    # Perform Checks
+    user_base_level = int(user.level/100) * 100
+    if user_base_level > request.user.level:
+        return api.error(403, "You can't change the level of someone higher than you.")
+
+    if int(user_id) == request.user.id:
+        return api.error(403, "You can't change your own level!")
+
+    # Check if the base level is being changed
+    # If it is, verify we have permission to do so
+    new_base_level = int(int(request.POST.get('level'))/100) * 100
+    if new_base_level != user_base_level:
+        if permissions['edit_levels'] > request.user.level:
+            return api.error(403, "You don't have permission to edit base levels!")
+
+    # All good! Let's save the new level!
+    user.level = int(request.POST.get('level'))
+    user.save()
+    return api.response()
+
+@require_permission('view_account')
+def ToonResource(request, avatar_id):
+    rpc = RPC()
+    toon = rpc.client.getAvatarDetails(avId=avatar_id)
+    if toon is None:
+        return api.error(404, "That toon does not exist.")
+    else:
+        try:
+            account_id = rpc.client.getAccountByAvatarID(avId=avatar_id)
+            toon['web_id'] = account_id
+            toon['web_username'] = User.objects.get(pk=account_id).username
+            toon['id'] = avatar_id
+        except:
+            return api.error(500)
+
+    return api.response(toon)
+
+@require_permission('approve_name')
+def ToonBadNameResource(request, avatar_id):
+    if request.method != 'POST':
+        return api.error(405)
+
+    if not avatar_id:
+        return api.error(status=400)
+
+    rpc = RPC()
+
+    if rpc.client.rejectName(avId=avatar_id) == None:
+        Action.objects.log(request.user, 'bad named', 'Toon', 0, related_id=avatar_id)
+
+        try:
+            # Return their new name
+            toon = rpc.client.getAvatarDetails(avId=avatar_id)
+            return api.response(toon.get('name', ''))
+        except:
+            # Something went wrong with the second RPC call, but it was still rejected
+            return api.response(204)
+
+    return api.error(status=500)
+
+class AccountResource(DirectModelResource):
+    class Meta:
+        queryset = User.objects.all()
+        resource_name = 'accounts'
+        excludes = ['password', 'totp_secret', 'gs_user_id', 'toonbook_user_id']
+        filtering = {
+            'id': ALL,
+            'username': ALL,
+            'email': ALL,
+        }
+        limit = 1
+        max_limit = 1
+        authorization = ReadOnlyUserLevelAuthorization('view_account', MODE_MATCH_LEVEL)
+
+    def dehydrate(self, bundle):
+        rpc = RPC()
+        try:
+            gsId = rpc.client.getGSIDByAccount(accountId=bundle.obj.id)
+            bundle.data['gs_id'] = gsId
+            avatar_ids = rpc.client.getAvatarsForGSID(gsId=gsId)
+            toons = []
+            for avId in avatar_ids:
+                if avId > 0:
+                    toon_details = rpc.client.getAvatarDetails(avId=avId)
+                    toon_details['avatar_id'] = avId
+                    toons.append(toon_details)
+                else:
+                    toons.append(None)
+        except:
+            toons = [None, None, None, None, None, None]
+            bundle.data['gs_id'] = -1
+        bundle.data['toons'] = toons
+        return bundle

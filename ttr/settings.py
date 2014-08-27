@@ -68,7 +68,7 @@ WSGI_APPLICATION = 'ttr.wsgi.application'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-VERSION = '13'
+VERSION = '38'
 STATIC_ROOT = BASE_DIR + '/static/'
 STATIC_URL = '/static/' + VERSION + '/'
 
@@ -139,3 +139,8 @@ PUSHER_SECRET = os.environ.get('PUSHER_SECRET', '1d25d81aa43375f641ac')
 RPC_ENDPOINT = os.environ.get('RPC_ENDPOINT', '')
 RPC_USERNAME = os.environ.get('RPC_USERNAME', '')
 RPC_PASSWORD = os.environ.get('RPC_PASSWORD', '')
+
+# Kibana Settings
+KIBANA_ROOT = os.environ.get('KIBANA_ROOT', '')
+KIBANA_USERNAME = os.environ.get('KIBANA_USERNAME', '')
+KIBANA_PASSWORD = os.environ.get('KIBANA_PASSWORD', '')

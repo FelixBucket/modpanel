@@ -1,14 +1,20 @@
-define(['app', 'backbone', 'marionette', 'underscore'], function(app, Backbone, Marionette, _){
+define(['app', 'backbone', 'marionette', 'underscore', 'moment', 'md5', 'scrollbar'], function(app, Backbone, Marionette, _, moment){
 
     app.collection_classes = {};
     app.model_classes = {};
 
     var staticUtil = {
-        pathForUserAvatar: function(img){
+        pathForUserAvatar: function(img, email){
             if (!img){
-                return app.STATIC_ROOT + 'img/mcp/default_avatar.png';
+                if (!email){
+                    return app.STATIC_ROOT + 'img/mcp/default_avatar.png';
+                }else{
+                    //Use gravatar if we don't have an image on file but have an email address
+                    var default_avatar = encodeURIComponent('http://cp.toontownrewritten.com' + app.STATIC_ROOT + 'img/mcp/default_avatar.png');
+                    return "http://www.gravatar.com/avatar/" + CryptoJS.MD5(email).toString() + "?s=150&d=" + default_avatar;
+                }
             }else{
-                //TODO: Point to AWS
+                //TODO: Point to AWS eventually for toon images
                 return "";
             }
         }
@@ -76,11 +82,26 @@ define(['app', 'backbone', 'marionette', 'underscore'], function(app, Backbone, 
         }
     };
 
+    var scrollbars = {
+        start: function($el, height, width, options){
+            if (height) $el.height(height);
+            if (width) $el.width(width);
+
+            $el.css('position', 'relative').css('overflow', 'hidden');
+
+            setTimeout(function(){
+                $el.perfectScrollbar();
+            }, 100);
+        },
+    };
+
     return {
         static: staticUtil,
         collections: collections,
         models: models,
         views: views,
+        scrollbars: scrollbars,
+        moment: moment,
     }
 
 });

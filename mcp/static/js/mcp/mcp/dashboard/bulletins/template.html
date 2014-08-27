@@ -5,7 +5,7 @@
         </div>
         <div class="meta">
             <div class="user">
-                <img class="user-avatar" src="<%= static.pathForUserAvatar(author.avatar) %>" />
+                <img class="user-avatar" src="<%= static.pathForUserAvatar(author.avatar, author.email) %>" />
                 <div class="user-name"><%= author.long_name %></div>
             </div>
             <div class="time" data-livestamp="<%= timestamp %>"></div>

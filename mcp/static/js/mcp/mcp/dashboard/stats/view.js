@@ -12,6 +12,13 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'mo
             var _this = this;
             this.$el.html(template);
 
+            this.$el.find('.graph-toggles > a').click(function(e){
+                e.preventDefault();
+                _this.$el.find('.graph-toggles > a').removeClass('active');
+                $(this).addClass('active');
+                _this.loadPopulation();
+            });
+
             this.graph = Morris.Line({
                 element: this.$el.find('#ds-population-graph')[0],
                 data: [],
@@ -19,7 +26,7 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'mo
                 xkey: 'timestamp',
                 ykeys: ['population'],
                 labels: ['Population'],
-                pointSize: 3,
+                pointSize: 0,
                 hideHover: 'auto',
                 gridTextColor: '#ffffff',
                 gridLineColor: 'rgba(255, 255, 255, 0.3)',
@@ -40,7 +47,8 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'mo
         },
         loadPopulation: function(){
             var _this = this;
-            server.get('/api/v1/population_history/').done(function(pop){
+            var days = this.$el.find('.graph-toggles > a.active').data('days');
+            server.get('/api/v1/population_history/?days=' + days).done(function(pop){
                 _this.updatePopulation(pop);
             });
         },

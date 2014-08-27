@@ -354,6 +354,34 @@ div#content-wrapper{
     white-space: nowrap;
     margin: 0.1em 0
 }
+.graph-title{
+    display: inline-block;
+}
+.graph-toggles{
+    display: inline-block;
+    float: right;
+    margin-top: 5px;
+    margin-right: 20px;
+}
+.graph-toggles > a{
+    color: rgba(255,255,255,0.7);
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 6px;
+}
+.graph-toggles > a:hover{
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+}
+.graph-toggles > a.active{
+    color: white;
+}
+@media(max-width:550px){
+    .graph-toggles{
+        float:none;
+        margin-left: 6px;
+    }
+}
 
 /* Guidelines */
 ul.guidelines{
@@ -432,4 +460,103 @@ ul.guidelines > li > p.examples{
     right: 15px;
     font-weight: bold;
     color: rgb(16,174,83);
+}
+
+/* Twitter Typeahead */
+.tt-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+.tt-suggestion > p {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.428571429;
+  color: #333333;
+  white-space: nowrap;
+}
+.tt-suggestion > p:hover,
+.tt-suggestion > p:focus,
+.tt-suggestion.tt-cursor p {
+  color: #ffffff;
+  text-decoration: none;
+  outline: 0;
+  background-color: #428bca;
+  cursor: pointer;
+}
+
+/* Accounts */
+input.account-finder{
+    width: 100%;
+    height: 60px;
+    background-color: white !important;
+}
+.account-profile .account-profile-labels{
+    text-align: center;
+}
+.account-profile .account-profile-labels > .profile-label{
+    display: inline-block;
+    margin: 0px 5px 5px 5px;
+}
+.account-profile .account-profile-labels > .profile-label .label.interactive:hover{
+    box-shadow: 1px 1px 3px #777;
+    cursor: pointer;
+}
+.account-level-editor .extra-flags{
+    margin-top: 20px;
+}
+.account-level-editor .new-level{
+    margin-top: 20px;
+    padding: 20px;
+
+    border-radius: 10px;
+    border: 3px solid rgb(52,152,219);
+    color: rgb(0,100,177);
+
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Toon Picker */
+.account-toons{
+    margin: 3px 0px 10px 0px;
+}
+.panel-toon:hover{
+    cursor: pointer;
+}
+.panel-toon > .panel-body{
+    min-height: 180px;
+}
+.panel-toon > .panel-body > p.no-toon{
+    position: relative;
+    top: 60px;
+}
+.panel-toon img.toon-head{
+    width: 110px;
+    height: 110px;
+    max-width: 90%;
+    border-radius: 50%;
+}
+.panel-toon .laff{
+    margin-bottom: 0px;
+}
+.panel-toon .species{
+    margin-bottom: 0px;
 }

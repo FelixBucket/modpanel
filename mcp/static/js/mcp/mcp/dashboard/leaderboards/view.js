@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'util', 'morris'], function(app, Marionette, underscore, template, server, util){
+define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'util', 'scrollbar', 'morris'], function(app, Marionette, underscore, template, server, util){
     return Marionette.View.extend({
         constructor: function(){
             var _this = this;
@@ -18,6 +18,8 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'ut
                 static: util.static,
                 leaders: this.leaderboards[board],
             }));
+
+            util.scrollbars.start(this.$el.find('.leaderboard-runners-up'), 247);
 
             //Leaderboard toggles
             this.$el.find('.leaderboard-toggles > a').click(function(e){

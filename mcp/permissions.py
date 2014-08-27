@@ -12,8 +12,12 @@ permissions = {
     'approve_name': 200,
     'approve_comment': 200,
     'view_basic_shard_history': 200,
+    'view_account': 200,
 
     ### 400 ###
-    'find_user': 400,
     'view_shards': 400,
+    'edit_level_bits': 400,
+
+    ### 500 ###
+    'edit_levels': 500,
 }
