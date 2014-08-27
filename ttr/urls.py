@@ -41,7 +41,8 @@ urlpatterns = patterns('',
     url(r'^api/v1/shards/$', 'ttr.api_v1.ShardsResource'),
 
     # Potentially Deprecated APIs #
-    url(r'^api/v1/avatar/$', 'ttr.api_v1.FindAccountFromAvId'),
+    url(r'^api/v1/avatar/find/$', 'ttr.api_v1.FindAccountFromAvId'),
+    url(r'^api/v1/avatar/badname/$', 'ttr.api_v1.BadNameAvatar'),
 
     # All the TastyPie Resources #
     url(r'^api/', include(v1_api.urls)),

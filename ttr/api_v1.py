@@ -323,6 +323,22 @@ def FindAccountFromAvId(request):
     response = dict(accountId.items() + avatarDetails.items())
     return api.response(response)
 
+@require_permission('view_account')
+def BadNameAvatar(request):
+    avId = request.GET['avId']
+    if not avId:
+        return api.response(status=201, errors='You must specifiy an avId')
+
+    rpc = RPC()
+
+    # Pass in the avId to reject it
+    # rejectName returns None on a sucessful reject
+    rejectName = rpc.client.rejectName(avId=avId)
+    if rejectName == None:
+        return api.response({'success': True})
+
+    return api.response(rejectName)
+
 class BasicShardHistoryResource(DirectModelResource):
     class Meta:
         queryset = ShardCheckIn.objects.all()
