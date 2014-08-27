@@ -44,13 +44,9 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util'], 
             var $btn = this.$el.find('#revoke-name');
             $btn.attr('disabled', true);
 
-            server.post('/api/v1/toons/' + toon.id + '/badname/').done(function(){
+            server.post('/api/v1/toons/' + toon.id + '/badname/').done(function(new_name){
                 $btn.removeClass('btn-danger').addClass('btn-primary').html('<i class="fa fa-check"></i> Name Revoked!');
-
-                //Load their new name
-                server.get('/api/v1/toons/' + toon.id + '/').done(function(toon){
-                    _this.$el.find('#toon-name').text(toon.name);
-                });
+                _this.$el.find('#toon-name').text(new_name);
             }).fail(function(){
                 $btn.attr('disabled', false);
             });

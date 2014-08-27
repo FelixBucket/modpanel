@@ -455,7 +455,14 @@ def ToonBadNameResource(request, avatar_id):
 
     if rpc.client.rejectName(avId=avatar_id) == None:
         Action.objects.log(request.user, 'bad named', 'Toon', 0, related_id=avatar_id)
-        return api.response()
+
+        try:
+            # Return their new name
+            toon = rpc.client.getAvatarDetails(avId=avatar_id)
+            return api.response(toon.get('name', ''))
+        except:
+            # Something went wrong with the second RPC call, but it was still rejected
+            return api.response(204)
 
     return api.error(status=500)
 
