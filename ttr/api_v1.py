@@ -304,41 +304,6 @@ def ShardsResource(request):
     rpc = RPC()
     return api.response(rpc.client.listShards())
 
-@require_permission('view_account')
-def FindAccountFromAvId(request):
-    avId = request.GET['avId']
-    if not avId:
-        return api.response(status=201, errors='You must specifiy an avId')
-
-    rpc = RPC()
-
-    # Get the account ID
-    accountId = rpc.client.getAccountByAvatarID(avId=avId)
-    accountId = {"accountId": accountId}
-
-    # Get the avatar details
-    avatarDetails = rpc.client.getAvatarDetails(avId=avId)
-
-    # Merge them all together, Thats what it's all about!
-    response = dict(accountId.items() + avatarDetails.items())
-    return api.response(response)
-
-@require_permission('view_account')
-def BadNameAvatar(request):
-    avId = request.GET['avId']
-    if not avId:
-        return api.response(status=201, errors='You must specifiy an avId')
-
-    rpc = RPC()
-
-    # Pass in the avId to reject it
-    # rejectName returns None on a sucessful reject
-    rejectName = rpc.client.rejectName(avId=avId)
-    if rejectName == None:
-        return api.response({'success': True})
-
-    return api.response(rejectName)
-
 class BasicShardHistoryResource(DirectModelResource):
     class Meta:
         queryset = ShardCheckIn.objects.all()
@@ -468,8 +433,38 @@ def ToonResource(request, avatar_id):
     if toon is None:
         return api.error(404, "That toon does not exist.")
     else:
-        toon['id'] = avatar_id
+        try:
+            account_id = rpc.client.getAccountByAvatarID(avId=avatar_id)
+            toon['web_id'] = account_id
+            toon['web_username'] = User.objects.get(pk=account_id).username
+            toon['id'] = avatar_id
+        except:
+            return api.error(500)
+
     return api.response(toon)
+
+@require_permission('approve_name')
+def ToonBadNameResource(request, avatar_id):
+    if request.method != 'POST':
+        return api.error(405)
+
+    if not avatar_id:
+        return api.error(status=400)
+
+    rpc = RPC()
+
+    try:
+        if rpc.client.rejectName(avId=avatar_id) == None:
+            Action.objects.log(request.user, 'bad named', 'Toon', 1, related_id=avatar_id)
+
+            # Alert the user that their name was rejected.
+            rpc.client.messageAvatar(avId=avatar_id, code=101, params=[])
+
+            return api.response()
+    except KeyError as e:
+        return api.error(400, "It looks like their name has already been revoked.")
+
+    return api.error(status=500)
 
 class AccountResource(DirectModelResource):
     class Meta:

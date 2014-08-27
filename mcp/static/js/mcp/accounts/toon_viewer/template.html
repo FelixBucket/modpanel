@@ -4,7 +4,9 @@
             <div class="col-lg-12">
                 <ol class="breadcrumb">
                     <li>Panel</li>
-                    <li class="active"><span>Accounts</span></li>
+                    <li><a href="#" id="back_to_accounts">Accounts</a></li>
+                    <li><a href="#" id="back_to_account"><%= toon.web_username %></a></li>
+                    <li class="active"><span><%= toon.name %></span></li>
                 </ol>
 
                 <h1>Account</h1>
@@ -15,7 +17,7 @@
             <div class="col-md-3">
                 <div class="main-box">
                     <header class="main-box-header">
-                        <h2><%= toon.name %></h2>
+                        <h2 id="toon-name"><%= toon.name %></h2>
                     </header>
 
                     <div class="main-box-body">
@@ -41,7 +43,7 @@
                         </div>
 
                         <div class="profile-message-btn center-block text-center">
-                            <a href="#" class="btn btn-danger" disabled="disabled">
+                            <a href="#" class="btn btn-danger" id="revoke-name">
                                 <i class="fa fa-ban"></i>
                                 Revoke Toon Name
                             </a>

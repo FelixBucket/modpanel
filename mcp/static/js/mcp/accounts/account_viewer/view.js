@@ -149,6 +149,12 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '
                     });
                 });
             }
+
+            //Back to accounts
+            this.$el.find('#back_to_accounts').click(function(e){
+                e.preventDefault();
+                app.router.navigate('accounts/', {trigger: true});
+            });
         },
         onDestroy: function(){
         },

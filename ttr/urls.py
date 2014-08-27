@@ -31,18 +31,15 @@ urlpatterns = patterns('',
     # News Comments APIs #
     url(r'^api/v1/news_item_comments/(\d+)/moderate/$', 'ttr.api_v1.NewsItemCommentModerateAction'),
 
-    # Accounts APIs #
+    # Account and Toon APIs #
     url(r'^api/v1/find_accounts/([\w\-]+)/$', 'ttr.api_v1.FindAccountsResource'),
     url(r'^api/v1/users/(\d+)/ip_addresses/$', 'ttr.api_v1.UserIPsResource'),
     url(r'^api/v1/users/(\d+)/change_level/$', 'ttr.api_v1.UserChangeLevelResource'),
     url(r'^api/v1/toons/(\d+)/$', 'ttr.api_v1.ToonResource'),
+    url(r'^api/v1/toons/(\d+)/badname/$', 'ttr.api_v1.ToonBadNameResource'),
 
     # Utility APIs #
     url(r'^api/v1/shards/$', 'ttr.api_v1.ShardsResource'),
-
-    # Potentially Deprecated APIs #
-    url(r'^api/v1/avatar/find/$', 'ttr.api_v1.FindAccountFromAvId'),
-    url(r'^api/v1/avatar/badname/$', 'ttr.api_v1.BadNameAvatar'),
 
     # All the TastyPie Resources #
     url(r'^api/', include(v1_api.urls)),
