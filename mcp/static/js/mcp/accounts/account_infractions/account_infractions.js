@@ -29,6 +29,11 @@ define(['backbone', 'marionette', 'jquery', 'text!./template.html', 'server', 's
             this.$el.find('.modal').modal().on('hidden.bs.modal', function (e) {
                 _this.destroy();
             });
+
+            this.$el.find('#ai-add-another').click(function(){
+                _this.$el.find('.modal').modal('hide');
+                var editor = new InfractionEditor(null, [_this.account.username]);
+            });
         },
         render: function(){
             var _this = this;
