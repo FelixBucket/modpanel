@@ -15,6 +15,7 @@
     <link href="{% static "css/morris.css" %}" type="text/css" rel="stylesheet" />
     <link href="{% static "css/perfect-scrollbar.min.css" %}" type="text/css" rel="stylesheet" />
     <link href="{% static "css/toastr.min.css" %}" type="text/css" rel="stylesheet" />
+    <link href="{% static "css/bootstrap-datetimepicker.min.css" %}" type="text/css" rel="stylesheet" />
 
     <!-- google font libraries -->
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,300|Titillium+Web:200,300,400' rel='stylesheet' type='text/css'>
@@ -87,6 +88,7 @@
     window.USER = {{ user|jsonencode|safe }};
     window.USER_PERMISSIONS = {{ permissions|jsonencode|safe }};
     window.PUSHER_KEY_ID = "{{ pusher_key_id }}";
+    window.PUSHER_LIB = "{{ pusher_lib }}";
     </script>
 
 </body>

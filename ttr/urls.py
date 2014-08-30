@@ -34,9 +34,12 @@ urlpatterns = patterns('',
     # Account and Toon APIs #
     url(r'^api/v1/find_accounts/([\w\-]+)/$', 'ttr.api_v1.FindAccountsResource'),
     url(r'^api/v1/users/(\d+)/ip_addresses/$', 'ttr.api_v1.UserIPsResource'),
+    url(r'^api/v1/users/ip_addresses/$', 'ttr.api_v1.UserIPsResource'), # Takes a GET array of usernames instead of one web_id
     url(r'^api/v1/users/(\d+)/change_level/$', 'ttr.api_v1.UserChangeLevelResource'),
     url(r'^api/v1/toons/(\d+)/$', 'ttr.api_v1.ToonResource'),
     url(r'^api/v1/toons/(\d+)/badname/$', 'ttr.api_v1.ToonBadNameResource'),
+    url(r'^api/v1/infractions/$', 'ttr.api_v1.InfractionsResource'),
+    url(r'^api/v1/infractions/(\d+)/$', 'ttr.api_v1.InfractionsResource'),
 
     # Utility APIs #
     url(r'^api/v1/shards/$', 'ttr.api_v1.ShardsResource'),

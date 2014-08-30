@@ -1,9 +1,11 @@
-import datetime, time, copy
+import datetime, time, copy, json
 from datetime import timedelta
 from django.contrib import auth
 from django.core.context_processors import csrf
-from django.db import connection
+from django.db import connection, transaction
 from django.db.models import Q
+from django.forms import model_to_dict
+from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.dateformat import format
 from tastypie import fields
@@ -14,6 +16,7 @@ from . import api
 from . import util
 from .tasty_util import *
 from .models import *
+from .forms import *
 from mcp.models import *
 from mcp.permissions import permissions
 from mcp.util import *
@@ -234,9 +237,9 @@ def ToonNameModerateAction(request, name_id):
     points = 1
     if (time_delta <= 30):
         points = 2
-    elif (time_delta >= 1800): # 30 minutes
+    elif (time_delta >= 900): # 15 minutes
         points = 2
-    elif (time_delta >= 10800): # 3 hours
+    elif (time_delta >= 2700): # 45 minutes
         points = 3
 
     if int(request.POST.get('approve', 0)) == 1:
@@ -383,10 +386,25 @@ def FindAccountsResource(request, search):
     return api.response(results)
 
 @require_permission('view_account')
-def UserIPsResource(request, user_id):
+def UserIPsResource(request, user_id=None):
     cursor = connection.cursor()
 
-    cursor.execute('SELECT ip, COUNT(ip) FROM account_event WHERE user_id=' + user_id + ' GROUP BY ip;')
+    if user_id:
+        # We are looking it for a specific user_id
+        cursor.execute('SELECT ip, COUNT(ip) as occurances FROM account_event WHERE user_id=' + user_id + ' GROUP BY ip ORDER BY occurances DESC;')
+    else:
+        # We have been passed an array of usernames via GET
+        username_list = request.GET.getlist('usernames[]')
+        user_ids = []
+        for username in username_list:
+            try:
+                user_ids.append(str(User.objects.get(username=username).id))
+            except:
+                pass
+        if len(user_ids) > 0:
+            cursor.execute('SELECT ip, COUNT(ip) as occurances FROM account_event WHERE user_id IN (' + ','.join(user_ids) + ') GROUP BY ip ORDER BY occurances DESC;')
+        else:
+            return api.response([])
     raw_ips = cursor.fetchall()
 
     ips = []
@@ -426,46 +444,6 @@ def UserChangeLevelResource(request, user_id):
     user.save()
     return api.response()
 
-@require_permission('view_account')
-def ToonResource(request, avatar_id):
-    rpc = RPC()
-    toon = rpc.client.getAvatarDetails(avId=avatar_id)
-    if toon is None:
-        return api.error(404, "That toon does not exist.")
-    else:
-        try:
-            account_id = rpc.client.getAccountByAvatarID(avId=avatar_id)
-            toon['web_id'] = account_id
-            toon['web_username'] = User.objects.get(pk=account_id).username
-            toon['id'] = avatar_id
-        except:
-            return api.error(500)
-
-    return api.response(toon)
-
-@require_permission('approve_name')
-def ToonBadNameResource(request, avatar_id):
-    if request.method != 'POST':
-        return api.error(405)
-
-    if not avatar_id:
-        return api.error(status=400)
-
-    rpc = RPC()
-
-    if rpc.client.rejectName(avId=avatar_id) == None:
-        Action.objects.log(request.user, 'bad named', 'Toon', 0, related_id=avatar_id)
-
-        try:
-            # Return their new name
-            toon = rpc.client.getAvatarDetails(avId=avatar_id)
-            return api.response(toon.get('name', ''))
-        except:
-            # Something went wrong with the second RPC call, but it was still rejected
-            return api.response(204)
-
-    return api.error(status=500)
-
 class AccountResource(DirectModelResource):
     class Meta:
         queryset = User.objects.all()
@@ -499,3 +477,122 @@ class AccountResource(DirectModelResource):
             bundle.data['gs_id'] = -1
         bundle.data['toons'] = toons
         return bundle
+
+@require_permission('view_account')
+def ToonResource(request, avatar_id):
+    rpc = RPC()
+    toon = rpc.client.getAvatarDetails(avId=avatar_id)
+    if toon is None:
+        return api.error(404, "That toon does not exist.")
+    else:
+        try:
+            account_id = rpc.client.getAccountByAvatarID(avId=avatar_id)
+            toon['web_id'] = account_id
+            toon['web_username'] = User.objects.get(pk=account_id).username
+            toon['id'] = avatar_id
+        except:
+            return api.error(500)
+
+    return api.response(toon)
+
+@require_POST
+@require_permission('approve_name')
+def ToonBadNameResource(request, avatar_id):
+    if not avatar_id:
+        return api.error(status=400)
+
+    rpc = RPC()
+
+    if rpc.client.rejectName(avId=avatar_id) == None:
+        Action.objects.log(request.user, 'bad named', 'Toon', 0, related_id=avatar_id)
+
+        try:
+            # Return their new name
+            toon = rpc.client.getAvatarDetails(avId=avatar_id)
+            return api.response(toon.get('name', ''))
+        except:
+            # Something went wrong with the second RPC call, but it was still rejected
+            return api.response(204)
+
+    return api.error(status=500)
+
+@require_permission('edit_infractions')
+@transaction.atomic
+def InfractionsResource(request, id=None):
+    ### GET will simply load (limit) infractions, or a specific infraction ###
+    if request.method == "GET":
+
+        # Pull up the infraction(s)
+        if id is None:
+            raw_infractions = Infraction.objects.all()[request.GET.get('offset', 0):(request.GET.get('offset', 0) + request.GET.get('limit', 10))]
+        else:
+            raw_infractions = Infraction.objects.filter(pk=id)
+
+        # Add additional data to the infractions
+        infractions = [raw.toDetailedDict() for raw in raw_infractions]
+
+        return api.response(infractions)
+
+    elif request.method == "POST":
+        # Get the existing infraction if it exists
+        try:
+            infraction = Infraction.objects.get(pk=id)
+        except:
+            infraction = None
+
+        # Save/Update the infraction itself
+        post = json.loads(request.body)
+        new_subjects = post.get('subjects', [])
+        post['moderator'] = request.user.id
+        post['created'] = datetime.datetime.now()
+
+        ### TEMPORARY ###
+        post['approved'] = True
+        post['decided'] = datetime.datetime.now()
+        ### END TEMPORARY ###
+
+        # Some pre-validation
+        if len(new_subjects) == 0:
+            return api.error("It could be helpful to provide at least one subject for the infraction.")
+
+        # Prepare the infraction form and save it
+        form = InfractionForm(post, instance=infraction)
+        if not form.is_valid():
+            return api.error(400, form.errors)
+        infraction = form.save()
+
+        ### Process the new list of subjects ###
+        old_subjects = infraction.subjects.all()
+
+        def subjects_match(sub1, sub2):
+            return sub1['identifier_type'] == sub2['identifier_type'] and sub1['identifier'] == sub2['identifier'] and sub1['infraction'] == sub2['infraction']
+
+        # Start by deleting any subjects no longer in the list
+        for old in old_subjects:
+            old_dict = model_to_dict(old)
+            matched = False
+            for new in new_subjects:
+                if subjects_match(old_dict, new):
+                    matched = True
+                    break
+            if not matched:
+                old.delete()
+
+        # Now we can create/update based on the items in new_subjects
+        print new_subjects
+        for new in new_subjects:
+            print new
+            subj_instance = None
+            for old in old_subjects:
+                if subjects_match(model_to_dict(old), new):
+                    subj_instance = old
+                    break
+            new['infraction'] = infraction.id
+            form = InfractionSubjectForm(new, instance=subj_instance)
+            form.save()
+
+        # Return the final infraction
+        return api.response(infraction.toDetailedDict(), status=201)
+
+    # Wasn't GET or POST
+    return api.error(405)

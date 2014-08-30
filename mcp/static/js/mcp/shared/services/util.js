@@ -1,4 +1,4 @@
-define(['app', 'backbone', 'marionette', 'underscore', 'moment', 'md5', 'scrollbar'], function(app, Backbone, Marionette, _, moment){
+define(['app', 'backbone', 'marionette', 'underscore', 'moment', 'md5', 'scrollbar', 'blockUI'], function(app, Backbone, Marionette, _, moment){
 
     app.collection_classes = {};
     app.model_classes = {};
@@ -95,6 +95,30 @@ define(['app', 'backbone', 'marionette', 'underscore', 'moment', 'md5', 'scrollb
         },
     };
 
+    var blocker = {
+        blockWithSpinner: function(message){
+            var messages = ["Hang tight...", "Just a sec...", "Hold on...", "I'm on it...", "Working on it...", "Sure thing...", "Orders received..."];
+            if (!message) message = messages[Math.floor(Math.random()*messages.length)];
+            $.blockUI({
+                css: {
+                    border: 'none',
+                    padding: '15px',
+                    'font-size': '1.2em',
+                    backgroundColor: '#000',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    opacity: .5,
+                    color: '#fff',
+                },
+                message: '<i class="fa fa-spin fa-spinner"></i> ' + message,
+                baseZ: 9000,
+            });
+        },
+        unblock: function(){
+            $.unblockUI();
+        },
+    };
+
     return {
         static: staticUtil,
         collections: collections,
@@ -102,6 +126,7 @@ define(['app', 'backbone', 'marionette', 'underscore', 'moment', 'md5', 'scrollb
         views: views,
         scrollbars: scrollbars,
         moment: moment,
+        blocker: blocker,
     }
 
 });

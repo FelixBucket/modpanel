@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '../level_editor/level_editor', 'konami'], function(app, Marionette, util, template, server, util, LevelEditor){
+define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '../level_editor/level_editor', '../infraction_editor/infraction_editor', 'konami'], function(app, Marionette, util, template, server, util, LevelEditor, InfractionEditor){
 
     var getLevelLabel = function(level){
         var level_label = "Member";
@@ -96,7 +96,7 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '
                 {background: "245,215,65", rotation: -4},
             ];
 
-            this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, account: account, pat_styles: pat_styles, util: util}));
+            this.$el.html(_.template(template, {STATIC_ROOT: app.STATIC_ROOT, account: account, pat_styles: pat_styles, util: util, app_user: app.user}));
 
             this.$el.find('.panel-toon').on('mouseenter', function(){
                 if (_this.format) new Audio(app.STATIC_ROOT + "sounds/mcp/pick_a_toon/rollover." + _this.format).play();
@@ -154,6 +154,14 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '
             this.$el.find('#back_to_accounts').click(function(e){
                 e.preventDefault();
                 app.router.navigate('accounts/', {trigger: true});
+            });
+
+            //Infractions
+            var $infractions_btn = $('#acct-issue-infraction');
+            $infractions_btn.on('click', function(e){
+                e.preventDefault();
+
+                var editor = new InfractionEditor(null, [account.username]);
             });
         },
         onDestroy: function(){

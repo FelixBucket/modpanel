@@ -1,0 +1,105 @@
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="text-left first">Details</h3>
+
+        <div class="row text-left">
+            <div class="col-md-6">
+                <h5>External Reason</h5>
+                <textarea class="form-control backbone-bind" rows="3" data-field="external_reason" style="width:100%" placeholder="Required"><%= infraction.external_reason %></textarea>
+                <span class="help-block">This will be shown to the user.</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Internal Reason</h5>
+                <textarea class="form-control backbone-bind" rows="3" data-field="internal_reason" style="width:100%" placeholder="Optional"><%= infraction.internal_reason %></textarea>
+                <span class="help-block">This will only be visible by TTR Staff.</p>
+            </div>
+        </div>
+
+        <div class="row text-left">
+            <div class="col-md-6">
+                <h5>Expiration Date</h5>
+                <input type="text" class="form-control backbone-bind datetime-picker" data-field="expiration" value="<%= infraction.expiration ? moment(infraction.expiration).format('MM/DD/YYYY h:mm A') : '' %>" />
+                <span class="help-block">Leave this empty to make it permanent.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-12 text-left">
+        <h3 style="margin-bottom:5px">Consequences</h3>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="checkbox-nice">
+                    <input type="checkbox" id="ei-change-level" <% if (infraction.change_level !== null){ %>checked="checked"<% } %> />
+                    <label for="ei-change-level">
+                        Change Access Level
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <input class="form-control" id="ei-new-level" placeholder="New Access Level (0 = Banned)" <% if (infraction.change_level === null){ %>style="display:none"<% }else{ %> value="<%= infraction.change_level %>" <% } %> />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="checkbox-nice">
+                    <input class="backbone-bind" type="checkbox" id="ei-speedchat-only" disabled="disabled" data-field="speedchat_only" <% if (infraction.speedchat_only){ %>checked="checked"<% } %> />
+                    <label for="ei-speedchat-only" class="text-muted">
+                        Can only use Speedchat
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="checkbox-nice">
+                    <input class="backbone-bind" type="checkbox" id="ei-no-true-friends" disabled="disabled" data-field="no_true_friends" <% if (infraction.no_true_friends){ %>checked="checked"<% } %> />
+                    <label for="ei-no-true-friends" class="text-muted">
+                        Can't have Secret Friends
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="checkbox-nice">
+                    <input class="backbone-bind" type="checkbox" id="ei-no-community-areas" disabled="disabled" data-field="no_community_areas" <% if (infraction.no_community_areas){ %>checked="checked"<% } %> />
+                    <label for="ei-no-community-areas" class="text-muted">
+                        Can't enter Community Areas (Estates, Parties, etc.)
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<hr>
+<div class="row text-left">
+    <div class="col-md-12">
+        <h3>Subjects</h3>
+        <p>Click on a username or ip address to toggle its status.</p>
+        <table class="table table-striped table-hover table-condensed table-responsive">
+            <thead>
+                <th>Username</th>
+                <th width="100px">Status</th>
+            </thead>
+            <tbody id="ei-subjects-usernames">
+            </tbody>
+        </table>
+        <table class="table table-striped table-hover table-condensed table-responsive">
+            <thead>
+                <th>IP Address</th>
+                <th>Occurances</th>
+                <th>Percentage</th>
+                <th width="100px">Status</th>
+            </thead>
+            <tbody id="ei-subjects-ips">
+            </tbody>
+        </table>
+    </div>
+</div>

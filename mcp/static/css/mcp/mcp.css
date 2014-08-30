@@ -12,6 +12,27 @@ div#content-wrapper{
         float: none;
     }
 }
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+.inline{
+    display: inline-block;
+}
+table tr td:first-child{
+    font-size: 12px !important;
+    font-weight: 400 !important;
+}
+.pointer:hover{
+    cursor: pointer;
+}
+.no-highlight, .no-highlight *{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 /* Widget with Nav Tabs and Button */
 .nav.nav-tabs.nav-with-button{
@@ -534,6 +555,26 @@ input.account-finder{
     font-weight: bold;
 }
 
+/* Infractions */
+.infraction-editor{
+
+}
+.infraction-editor h3{
+    padding-left: 0px;
+    margin: 10px 0px 0px 0px;
+    border: none;
+}
+.infraction-editor h3.first{
+    margin-top: 0px;
+    padding-top: 5px;
+}
+.infraction-editor textarea{
+    padding: 5px;
+}
+.infraction-editor .checkbox-nice{
+    margin: 7px 0px;
+}
+
 /* Toon Picker */
 .account-toons{
     margin: 3px 0px 10px 0px;
@@ -559,4 +600,9 @@ input.account-finder{
 }
 .panel-toon .species{
     margin-bottom: 0px;
+}
+
+/* Modal Form Styles */
+.modal-form h3, .modal-form h5{
+    font-weight: bold;
 }

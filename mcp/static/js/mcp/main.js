@@ -16,12 +16,15 @@ requirejs.config({
         clamp: '../../lib/clamp.min',
         hotkeys: '../../lib/jquery.hotkeys',
         'bootstrap-wysiwyg': '../../lib/bootstrap-wysiwyg',
-        'pusher-lib': '//js.pusher.com/2.2/pusher.min',
+        'pusher-lib': window.PUSHER_LIB,
         raphael: '../../lib/raphael-min',
         morris: '../../lib/morris.min',
         typeahead: '../../lib/typeahead.bundle.min',
         md5: '../../lib/md5',
         konami: '../../lib/konami',
+        spin: '../../lib/spin.min',
+        blockUI: '../../lib/jquery.blockUI',
+        datetimepicker: '../../lib/bootstrap-datetimepicker.min',
 
         server: 'shared/services/server',
         util: 'shared/services/util',
@@ -56,6 +59,8 @@ requirejs.config({
         typeahead: ['jquery'],
         scrollbar: ['mousewheel'],
         konami: ['jquery'],
+        blockUI: ['jquery'],
+        datetimepicker: ['jquery'],
     },
 });
 

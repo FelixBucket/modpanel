@@ -47,11 +47,19 @@
                         </div>
 
                         <div class="profile-message-btn center-block text-center">
-                            <a href="#" class="btn btn-primary" disabled="disabled">
+                            <a href="#" class="btn btn-primary btn-block" disabled="disabled">
                                 <i class="fa fa-key"></i>
                                 Issue New Beta Key
                             </a>
                         </div>
+                        <% if (app_user.hasPermission('edit_infractions') && Math.floor(app_user.level/100) >= Math.floor(account.level/100)){ %>
+                        <div class="profile-message-btn center-block text-center" style="margin-top: 10px">
+                            <a href="#" class="btn btn-default btn-block" id="acct-issue-infraction">
+                                <i class="fa fa-warning"></i>
+                                Issue Infraction
+                            </a>
+                        </div>
+                        <% } %>
                     </div>
 
                 </div>

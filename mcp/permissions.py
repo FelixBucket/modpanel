@@ -13,6 +13,7 @@ permissions = {
     'approve_comment': 200,
     'view_basic_shard_history': 200,
     'view_account': 200,
+    'edit_infractions': 200,
 
     ### 400 ###
     'view_shards': 400,

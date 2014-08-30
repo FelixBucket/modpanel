@@ -65,5 +65,8 @@ define(['app', 'marionette', 'underscore', 'text!./template.html', 'server', 'mo
             this.$el.find('#ds-population-now').text(_.numberFormat(pop[0].population));
             this.$el.find('#ds-population-peak').text(_.numberFormat(peak));
         },
+        onDestroy: function(){
+            //TODO: Shutdown graph
+        },
     });
 });

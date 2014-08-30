@@ -1,6 +1,7 @@
 import base64, hashlib, uuid, datetime
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager
+from django.forms import model_to_dict
 from django.utils.crypto import pbkdf2
 from mcp.models import ModProfile
 from mcp.permissions import permissions
@@ -189,10 +190,35 @@ class Infraction(models.Model):
         managed = False
         db_table = 'infraction'
 
+    def toDetailedDict(self):
+        infraction = model_to_dict(self)
+        subjects = []
+
+        for raw_subject in self.subjects.all():
+            subject = model_to_dict(raw_subject)
+
+            if raw_subject.identifier_type == "user":
+                try:
+                    user = model_to_dict(User.objects.get(pk=raw_subject.identifier))
+                    del user['password']
+                    del user['totp_secret']
+                    subject['instance'] = user
+                except:
+                    subject['instance'] = None
+            elif raw_subject.identifier_type == "ip_address":
+                subject['instance'] = raw_subject.identifier
+            else:
+                subject['instance'] = None
+
+            subjects.append(subject)
+
+        infraction['subjects'] = subjects
+        return infraction
+
 class InfractionSubject(models.Model):
     identifier_type = models.CharField(max_length=30)
-    identifier = models.CharField(max_length=255)        # Maximum length for IPv6
-    infraction = models.ForeignKey(Infraction)
+    identifier = models.CharField(max_length=255)
+    infraction = models.ForeignKey(Infraction, related_name='subjects')
 
     ### Barbed Subjects ###
     # If a subject is covered in barbs, any contact with it will cause
