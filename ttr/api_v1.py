@@ -459,6 +459,7 @@ class AccountResource(DirectModelResource):
         authorization = ReadOnlyUserLevelAuthorization('view_account', MODE_MATCH_LEVEL)
 
     def dehydrate(self, bundle):
+        # Load toon information
         rpc = RPC()
         try:
             gsId = rpc.client.getGSIDByAccount(accountId=bundle.obj.id)
@@ -476,6 +477,10 @@ class AccountResource(DirectModelResource):
             toons = [None, None, None, None, None, None]
             bundle.data['gs_id'] = -1
         bundle.data['toons'] = toons
+
+        # Check if they have any infractions
+        bundle.data['num_infractions'] = InfractionSubject.objects.filter(identifier_type='user', identifier=bundle.obj.id).count()
+
         return bundle
 
 @require_permission('view_account')
