@@ -1,4 +1,4 @@
-define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '../level_editor/level_editor', '../infraction_editor/infraction_editor', 'konami'], function(app, Marionette, util, template, server, util, LevelEditor, InfractionEditor){
+define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '../level_editor/level_editor', '../infraction_editor/infraction_editor', '../account_infractions/account_infractions', 'konami'], function(app, Marionette, util, template, server, util, LevelEditor, InfractionEditor, AccountInfractions){
 
     var getLevelLabel = function(level){
         var level_label = "Member";
@@ -162,6 +162,19 @@ define(['app', 'marionette', 'util', 'text!./template.html', 'server', 'util', '
                 e.preventDefault();
 
                 var editor = new InfractionEditor(null, [account.username]);
+                _this.listenTo(editor, 'finish', function(){
+                    _this.hasInfractions(account);
+                });
+            });
+            if (account.num_infractions > 0) this.hasInfractions(account);
+        },
+        hasInfractions: function(account){
+            var $infractions_btn = $('#acct-issue-infraction');
+            $infractions_btn.off().html('<i class="fa fa-warning"></i> View Infractions')
+            .on('click', function(e){
+                e.preventDefault();
+
+                var viewer = new AccountInfractions(account);
             });
         },
         onDestroy: function(){

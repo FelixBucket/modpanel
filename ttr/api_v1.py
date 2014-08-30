@@ -523,12 +523,15 @@ def ToonBadNameResource(request, avatar_id):
 
 @require_permission('edit_infractions')
 @transaction.atomic
-def InfractionsResource(request, id=None):
+def InfractionsResource(request, id=None, user_id=None):
+
     ### GET will simply load (limit) infractions, or a specific infraction ###
     if request.method == "GET":
 
         # Pull up the infraction(s)
-        if id is None:
+        if user_id is not None:
+            raw_infractions = Infraction.objects.filter(subjects__identifier_type='user', subjects__identifier=user_id)
+        elif id is None:
             raw_infractions = Infraction.objects.all()[request.GET.get('offset', 0):(request.GET.get('offset', 0) + request.GET.get('limit', 10))]
         else:
             raw_infractions = Infraction.objects.filter(pk=id)
